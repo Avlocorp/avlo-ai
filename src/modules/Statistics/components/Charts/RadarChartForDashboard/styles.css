@@ -1,0 +1,4 @@
+.custom-datepicker .ant-picker-input input::placeholder {
+  color: white !important;
+  opacity: 1 !important;
+}
