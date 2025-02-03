@@ -1,37 +1,42 @@
-import StatisticsPages from "modules/Statistics/pages/List/list"
-import { lazy } from "react"
+import StatisticsPages from "modules/Statistics/pages/List/list";
+import { lazy } from "react";
 
 // Interface for route objects
 export interface IRoute {
-    path: string
-    element: React.ReactNode
-    inner?: IRoute[]
-    index?: boolean
+  path: string;
+  element: React.ReactNode;
+  inner?: IRoute[];
+  index?: boolean;
 }
 
 // Lazy-loaded components
-const Home = lazy(() => import("pages/Home"))
-const History = lazy(() => import("modules/History"))
+const Home = lazy(() => import("pages/Home"));
+const History = lazy(() => import("modules/History"));
+const Settings = lazy(() => import("modules/settings/pages/account"));
 
 // Route definitions
 const privateRoutes: IRoute[] = [
-    {
-        path: "/",
-        element: <Home />,
-    },
-    {
-        path: "/history",
-        element: <History />,
-    },
-    {
-        path: "/statistics",
-        element: <StatisticsPages />,
-    },
-]
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/history",
+    element: <History />,
+  },
+  {
+    path: "/statistics",
+    element: <StatisticsPages />,
+  },
+  {
+    path: "/settings",
+    element: <Settings />,
+  },
+];
 
-const publicRoutes: IRoute[] = []
+const publicRoutes: IRoute[] = [];
 
-export { privateRoutes, publicRoutes }
+export { privateRoutes, publicRoutes };
 
 //  React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7.You can use the `v7_startTransition` future flag to opt -in early.For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
 // warnOnce @react-router - dom.js ? v = b6508493 : 4374
