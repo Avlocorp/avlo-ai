@@ -1,10 +1,18 @@
-import { Switch } from "antd";
+import { Button, Switch } from "antd";
 import BitrixIcon from "assets/images/bitrix.jpg";
 import AmoCRMImg from "assets/images/amoCRM.png";
+import { useState } from "react";
+import BitrixIntegrationModal from "./bitrix-integration-modal";
 
 const IntegrationsSettings = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const onChange = (checked: boolean) => {
     console.log(`switch to ${checked}`);
+  };
+
+  const handleIntegrate = (values: unknown) => {
+    console.log("Integration values:", values);
+    setIsModalOpen(false);
   };
 
   return (
@@ -31,9 +39,21 @@ const IntegrationsSettings = () => {
               Streamline software projects, sprints, and bug tracking.
             </p>
           </div>
-          <p className="py-4 px-6 text-right text-[#5b9bec] font-semibold text-sm">
-            View integration
-          </p>
+          <div className="py-4 flex justify-end">
+            <Button
+              type="text"
+              className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
+              onClick={() => setIsModalOpen(true)}
+            >
+              View integration
+            </Button>
+
+            <BitrixIntegrationModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onIntegrate={handleIntegrate}
+            />
+          </div>
         </div>
       </li>
       <li className="bg-[#343436] rounded-xl">
@@ -58,9 +78,14 @@ const IntegrationsSettings = () => {
               Link pull requests and automate workflows.
             </p>
           </div>
-          <p className="py-4 px-6 text-right text-[#5b9bec] font-semibold text-sm">
-            View integration
-          </p>
+          <div className="py-4 flex justify-end">
+            <Button
+              type="text"
+              className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
+            >
+              View integration
+            </Button>
+          </div>
         </div>
       </li>
     </ul>

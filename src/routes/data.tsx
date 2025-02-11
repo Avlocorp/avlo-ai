@@ -13,6 +13,9 @@ export interface IRoute {
 const Home = lazy(() => import("pages/Home"));
 const History = lazy(() => import("modules/History"));
 const Settings = lazy(() => import("modules/settings/pages/account"));
+const Billings = lazy(
+  () => import("modules/billing/pages/billing-and-payments")
+);
 
 // Route definitions
 const privateRoutes: IRoute[] = [
@@ -31,6 +34,10 @@ const privateRoutes: IRoute[] = [
   {
     path: "/settings",
     element: <Settings />,
+  },
+  {
+    path: "/billings",
+    element: <Billings />,
   },
 ];
 

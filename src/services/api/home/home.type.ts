@@ -18,7 +18,3 @@ export interface AIResponse {
   examples_for_training: string[];
   conclusion: string;
 }
-
-export interface HomeProps {
-  initialMessage?: string;
-}
