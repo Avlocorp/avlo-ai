@@ -5,11 +5,30 @@ import ChatMain from "modules/AnalysisPage/pages/list";
 import type { AIResponse } from "services/api/home/home.type";
 import { useGetAIResponseMutation } from "services/api/home";
 import SearchInputMain from "components/Serach";
+import { useNavigate } from "react-router-dom";
+
+export interface ErrorResponse {
+  status: number;
+  data: Data;
+}
+
+export interface Data {
+  detail: string;
+  code: string;
+  messages: Message[];
+}
+
+export interface Message {
+  token_class: string;
+  token_type: string;
+  message: string;
+}
 
 export default function Home() {
   const [getAIResponse, { isLoading }] = useGetAIResponseMutation();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [data, setData] = useState<AIResponse | null>(null);
+  const navigate = useNavigate();
 
   const addMessage = async (newMessage: string, audio?: File | null) => {
     try {
@@ -18,9 +37,11 @@ export default function Home() {
         audio: audio || undefined,
       }).unwrap();
       setData(response);
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      const errorResponse = error as ErrorResponse;
+      if (errorResponse.status === 401) {
+        navigate("/login");
+      }
 
       setErrorMessage(
         "An error occurred while analyzing the call. Please try again."
