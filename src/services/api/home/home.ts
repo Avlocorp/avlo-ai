@@ -1,15 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { AIResponse } from "./home.type";
+import { ACCESS_TOKEN_KEY } from "config";
+import storage from "services/storage";
 
 export const homeApi = createApi({
   reducerPath: "homeApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_ROOT_API || "",
     prepareHeaders: (headers) => {
-      headers.set(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MjEyMzExLCJpYXQiOjE3MzkyMTA1MTEsImp0aSI6ImZjMmJhYmI3YWUyZDQ5NzA5MTUwZmJkNTk1YTI0NDEwIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiIn0.23G8NY1OTIUURWtBEnfL9NfyfIIOl9XnqAuKdCsN3No"
-      );
+      const access = storage.get(ACCESS_TOKEN_KEY);
+      console.log(access);
+      headers.set("Authorization", `Bearer ${access}`);
       return headers;
     },
   }),
@@ -24,7 +25,7 @@ export const homeApi = createApi({
           formData.append("file", audio);
         }
         return {
-          url: `analyze/json?custom_prompt=${encodeURIComponent(message)}`,
+          url: `api/analysis/?custom_prompt=${encodeURIComponent(message)}`,
           method: "POST",
           body: audio ? formData : undefined,
         };
