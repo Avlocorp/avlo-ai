@@ -1,157 +1,206 @@
-
-import { useState } from "react"
-import { Tabs, Form, Input, Button, message } from "antd"
+import { useState } from "react";
+import { Form, Button, message } from "antd";
+import UzbekPhoneInput from "./components/uzbekPhoneNumber";
+import InputField from "./components/inputField";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "services/api/auth/Auth.Slice";
+import { AppDispatch } from "store"; // Adjust the import path as necessary
+import useHooks from "../../hooks/useHooks";
+import axios from "axios";
 
 export default function AuthPage() {
-    const [activeTab, setActiveTab] = useState("login")
-    const [showVerification, setShowVerification] = useState(false)
-    const [loading, setLoading] = useState(false)
+    const { navigate } = useHooks();
+    const [isLogin, setIsLogin] = useState(true);
+    const [showVerification, setShowVerification] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const handleTabChange = (key: string) => {
-        setActiveTab(key)
-        setShowVerification(false)
-    }
+    const handleToggleForm = () => {
+        setIsLogin(!isLogin);
+        setShowVerification(false);
+    };
 
-    const onLoginFinish = async (values: { login: string; password: string }) => {
-        setLoading(true)
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setLoading(false)
-
-        // TODO: Implement actual login logic here
-        if (values.login === "akbar" && values.password === "akbar") {
-            message.success("Login successful")
-            // Redirect to home page
-            // window.location.href = '/home'
-        } else {
-            message.error("Invalid login or password")
-        }
-    }
 
     const onRegisterFinish = async () => {
-        setLoading(true)
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setLoading(false)
-
-        message.success("Verification code sent to your Telegram")
-        setShowVerification(true)
-    }
+        setLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setLoading(false);
+        message.success("Verification code sent to your Telegram");
+        setShowVerification(true);
+    };
 
     const onVerificationFinish = async (values: { verificationCode: string }) => {
-        setLoading(true)
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setLoading(false)
+        setLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setLoading(false);
 
-        // TODO: Implement actual verification logic here
         if (values.verificationCode === "123456") {
-            message.success("Verification successful")
-            setActiveTab("login")
-            setShowVerification(false)
+            message.success("Verification successful");
+            setIsLogin(true);
+            setShowVerification(false);
         } else {
-            message.error("Invalid verification code")
+            message.error("Invalid verification code");
         }
+    };
+
+    const LoginForm = () => {
+        const dispatch = useDispatch<AppDispatch>()
+        const { loading, error } = useSelector((state: any) => state.auth)
+
+        // const onLoginFinish = (values: { username: string; password: string }) => {
+        //     try {
+        //         const resultAction = dispatch(login(values))
+        //         if (login.fulfilled.match(resultAction)) {
+        //             navigate("/")
+        //         }
+        //     }
+        //     catch (error) {
+        //         console.log(error)
+        //     }
+        // }
+        // https://avlo.ai
+        //     / api / token /? username = admin & password=admin
+
+        const onLoginFinish = async (values: { username: string; password: string }) => {
+            setLoading(true);
+            try {
+                const response = await axios.post("https://avlo.ai/api/token/", values);
+                const data = response.data;
+
+                if (data.token) {
+                    dispatch(login(values));
+
+                    message.success("Login successful!");
+                    navigate("/");
+                }
+            } catch (error) {
+                message.error("Login yoki parol xato!");
+                console.error("Login error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        return (
+            <Form name="login" onFinish={onLoginFinish} layout="vertical" className="space-y-4">
+                <div>
+                    <p className="text-white text-[22px] flex items-center justify-center my-2 pb-2">Enter your data to login</p>
+                </div>
+                <InputField name="username" label="Username" required />
+                <InputField name="password" label="Password" type="password" required />
+                {error && <div className="text-red-500">{error}</div>}
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading} className="w-full">
+                        Enter
+                    </Button>
+                </Form.Item>
+            </Form>
+        )
     }
 
-    const LoginForm = () => (
-        <Form name="login" onFinish={onLoginFinish} layout="vertical" className="space-y-4">
+    const RegistrationForm = () => (
+        <Form
+            name="register"
+            onFinish={onRegisterFinish}
+            layout="vertical"
+            className="text-white"
+        >
+            <div>
+                <p className="text-white text-[22px] flex items-center justify-center my-2 pb-4">Enter your data to register</p>
+            </div>
+            <InputField name="firstname" label="First Name" required />
+            <InputField name="lastname" label="Last Name" />
             <Form.Item
-                name="login"
-                label={<span className="text-white">Login</span>} // Label uchun oq rang
-                rules={[{ required: true, message: "Please input your login!" }]}
+                name="phone"
+                label={<span className="text-white">Phone</span>}
+                rules={[{ required: true, message: "Please input your phone number!" }]}
             >
-                <Input
-                    className="!text-white bg-[#1A1A1D] border border-[#333] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#444]"
-                    style={{ color: "white" }}
-                />
+                <UzbekPhoneInput />
             </Form.Item>
-
-            <Form.Item
-                name="password"
-                label={<span className="text-white">Password</span>} // Label uchun oq rang
-                rules={[{ required: true, message: "Please input your password!" }]}
-            >
-                <Input.Password
-                    className="!text-white bg-[#1A1A1D] border border-[#333] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#444]"
-                    style={{ color: "white" }}
-                />
-            </Form.Item>
-
+            <InputField name="email" label="Email" type="email" required />
+            <InputField name="username" label="Username" required />
+            <InputField name="password" label="Password" type="password" required />
+            <InputField name="confirmPassword" label="Confirm Password" type="password" required />
             <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} className="w-full">
-                    Kirish
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading}
+                    className="w-full"
+                >
+                    Registration
                 </Button>
             </Form.Item>
         </Form>
     );
 
 
-    const RegistrationForm = () => (
-        <Form name="register" onFinish={onRegisterFinish} layout="vertical" className="text-white">
-            <Form.Item name="fullName" label="F.I.O" >
-                <Input />
-            </Form.Item>
-            <Form.Item name="login" label="Login" rules={[{ required: true, message: "Please input your login!" }]}>
-                <Input />
-            </Form.Item>
-            <Form.Item name="password" label="Password" rules={[{ required: true, message: "Please input your password!" }]}>
-                <Input.Password />
-            </Form.Item>
-            <Form.Item name="phone" label="Phone" rules={[{ required: true, message: "Please input your phone number!" }]}>
-                <Input />
-            </Form.Item>
-            <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} className="w-full">
-                    Ro'yxatdan o'tish
-                </Button>
-            </Form.Item>
-        </Form>
-    )
-
-    const sharedProps = {
-        maxLength: 6,
-        style: { textTransform: 'uppercase' as 'uppercase' }
-    }
 
     const VerificationForm = () => (
-        <Form name="verification" onFinish={onVerificationFinish} layout="vertical" className="text-white">
+        <Form
+            name="verification"
+            onFinish={onVerificationFinish}
+            layout="vertical"
+            className="space-y-4"
+        >
+
             <Form.Item
                 name="verificationCode"
-                label="Verification Code"
-                rules={[{ required: true, message: "Please input the verification code!" }]}
+                label={<span className="text-white">Verification Code</span>}
             >
-                <Input.OTP formatter={(str) => str.toUpperCase()} {...sharedProps} />
+                <input
+                    className="w-full bg-[#1A1A1D] border border-[#333] text-[20px] rounded-lg px-4 py-1 text-white focus:outline-none focus:ring-0 text-center tracking-widest"
+                />
             </Form.Item>
+
             <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} className="w-full">
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading}
+                    className="w-full"
+                >
                     Verify
                 </Button>
             </Form.Item>
+
         </Form>
-    )
+    );
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#1A1A1D] ">
-            <div className="bg-[#2A2A2D] p-8 rounded-lg shadow-md w-full max-w-md ">
-                <Tabs
-                    activeKey={activeTab}
-                    onChange={handleTabChange}
-                    centered
-                    items={[
-                        {
-                            key: "login",
-                            label: "Kirish",
-                            children: <LoginForm />,
-                        },
-                        {
-                            key: "register",
-                            label: "Ro'yxatdan o'tish",
-                            children: showVerification ? <VerificationForm /> : <RegistrationForm />,
-                        },
-                    ]}
-                />
+        <div className="min-h-screen flex items-center justify-center bg-[#1A1A1D]">
+            <div className="bg-[#2A2A2D] p-8 rounded-lg shadow-md w-full max-w-md">
+                {isLogin ? (
+                    <LoginForm />
+                ) : showVerification ? (
+                    <VerificationForm />
+                ) : (
+                    <RegistrationForm />
+                )}
+
+                <div className="text-center mt-4">
+                    {isLogin ? (
+                        <p className="text-gray-400">
+                            Don't have an account?{" "}
+                            <button
+                                onClick={handleToggleForm}
+                                className="text-blue-500 hover:underline"
+                            >
+                                Sign up
+                            </button>
+                        </p>
+                    ) : (
+                        <p className="text-gray-400">
+                            Already have an account?{" "}
+                            <button
+                                onClick={handleToggleForm}
+                                className="text-blue-500 hover:underline"
+                            >
+                                Sign in
+                            </button>
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
-    )
+    );
 }

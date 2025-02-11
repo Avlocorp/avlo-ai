@@ -37,6 +37,7 @@ export interface User {
   id: number;
   type_user: string;
   name: string;
+  username: string;
   email: string;
   additional_info: unknown;
   google_id: unknown;
