@@ -1,32 +1,29 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { LoginFormFields, LoginResponse } from "./Auth.types";
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import storage from "services/storage";
+import { LoginResponse } from "./Auth.types";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
 
-// Define a service using a base URL and expected endpoints
-export const authApi = createApi({
-  reducerPath: "authApi",
-  tagTypes: ["Auth", "get-me"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_ROOT_API || "",
-    prepareHeaders(headers) {
-      const token = storage.get("token");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
+const initialState: Partial<LoginResponse> = {
+  access: storage.get(ACCESS_TOKEN_KEY) || undefined,
+  refresh: storage.get(REFRESH_TOKEN_KEY) || undefined,
+};
+
+export const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    logIn: (state, action: PayloadAction<LoginResponse>) => {
+      const { refresh, access } = action.payload;
+      state.access = access;
+      state.refresh = refresh;
+      storage.set(ACCESS_TOKEN_KEY, access);
+      storage.set(REFRESH_TOKEN_KEY, refresh);
     },
-  }),
-  endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginFormFields>({
-      query: (loginValues) => ({
-        url: "/api/token",
-        method: "POST",
-        body: loginValues,
-      }),
-      invalidatesTags: ["Auth", "get-me"],
-    }),
-  }),
+  },
 });
 
-// ✅ Faqat API uchun `useLoginMutation` ni eksport qilamiz
-export const { useLoginMutation } = authApi;
+// Action creators are generated for each case reducer function
+export const { logIn } = authSlice.actions;
+
+export default authSlice.reducer;
