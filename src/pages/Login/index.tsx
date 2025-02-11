@@ -13,7 +13,6 @@ export default function AuthPage() {
         setIsLogin(!isLogin);
         setShowVerification(false);
     };
-    console.log(isLogin);
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#1A1A1D]">
             <div className="bg-[#2A2A2D] p-8 rounded-lg shadow-md w-full max-w-md">

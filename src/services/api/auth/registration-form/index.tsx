@@ -1,32 +1,24 @@
 import { Button, Form } from "antd";
 import InputField from "pages/Login/components/inputField";
-
 import { RegistrResponse } from "../Auth.types";
 import { useRegistrMutation } from "../Auth.api";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
-
-
 
 export default function RegistrationForm() {
     const [registerPost] = useRegistrMutation();
     const navigate = useNavigate();
-    const [isLogin, setIsLogin] = useState(true);
     const onsubmit = async (data: RegistrResponse) => {
         console.log(data)
         try {
             const response = await registerPost(data).unwrap();
             console.log(response);
-            navigate("/login");
-            setIsLogin(true);
 
+            navigate("/login");
+            window.location.reload();
         } catch (error) {
             console.log(error);
         }
     };
-
-
     return (
         <Form
             name="register"
