@@ -18,6 +18,7 @@ export default defineConfig({
       context: "/src/context",
       modules: "/src/modules",
       store: "/src/store",
+      lib: "/src/lib",
     },
   },
 });

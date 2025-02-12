@@ -1,4 +1,3 @@
-import StatisticsPages from "modules/Statistics/pages/List/list";
 import { lazy } from "react";
 
 // Interface for route objects
@@ -15,6 +14,10 @@ const History = lazy(() => import("modules/History"));
 const Settings = lazy(() => import("modules/settings/pages/account"));
 const Billings = lazy(
   () => import("modules/billing/pages/billing-and-payments")
+);
+const CallCenter = lazy(() => import("modules/call-center/pages/analysis"));
+const StatisticsPages = lazy(
+  () => import("modules/Statistics/pages/List/list")
 );
 
 // Route definitions
@@ -38,6 +41,10 @@ const privateRoutes: IRoute[] = [
   {
     path: "/billings",
     element: <Billings />,
+  },
+  {
+    path: "/call-center",
+    element: <CallCenter />,
   },
 ];
 
