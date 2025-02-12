@@ -21,7 +21,7 @@ export default function AuthPage() {
                 ) : showVerification ? (
                     <VerificationForm />
                 ) : (
-                    <RegistrationForm />
+                    <RegistrationForm onSuccess={() => { setIsLogin(true) }} />
                 )}
 
                 <div className="text-center mt-4">
