@@ -1,2 +1,3 @@
 import useHooks from "./useHooks";
-export { useHooks };
+import useDebounce from "./useDebounce";
+export { useHooks, useDebounce };

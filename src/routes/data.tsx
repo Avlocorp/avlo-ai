@@ -19,6 +19,7 @@ const CallCenter = lazy(() => import("modules/call-center/pages/analysis"));
 const StatisticsPages = lazy(
   () => import("modules/Statistics/pages/List/list")
 );
+const Localization = lazy(() => import("modules/localization"));
 
 // Route definitions
 const privateRoutes: IRoute[] = [
@@ -45,6 +46,10 @@ const privateRoutes: IRoute[] = [
   {
     path: "/call-center",
     element: <CallCenter />,
+  },
+  {
+    path: "/localization",
+    element: <Localization />,
   },
 ];
 
