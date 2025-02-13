@@ -1,5 +1,6 @@
 import { LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
 type TProps = {
@@ -12,7 +13,7 @@ type TProps = {
 
 const NavigationLink = ({ href, label, Icon }: TProps) => {
     const isSame = location.pathname.split("/")[1] === href;
-
+    const { t } = useTranslation();
     return (
         <NavLink
             to={href}
@@ -40,7 +41,7 @@ const NavigationLink = ({ href, label, Icon }: TProps) => {
                         : "text-[#666666]"
                 }
             >
-                {label}
+                {t(label)}
             </span>
         </NavLink>
     );

@@ -1,7 +1,9 @@
 import { Button, Form } from "antd";
 import InputField from "pages/Login/components/inputField";
-import { RegistrResponse } from "../Auth.types";
-import { useRegistrMutation } from "../Auth.api";
+import { useTranslation } from "react-i18next";
+import { useRegistrMutation } from "services/api/auth/Auth.api";
+import { RegistrResponse } from "services/api/auth/Auth.types";
+
 
 interface RegistrationFormProps {
     onSuccess: () => void;
@@ -21,7 +23,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
             console.log(error);
         }
     };
-
+    const { t } = useTranslation();
     return (
         <Form
             name="register"
@@ -31,7 +33,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         >
             <div>
                 <p className="text-white text-[22px] flex items-center justify-center my-2 pb-4">
-                    Enter your data to register
+                    {t("Enter your data to register")}
                 </p>
             </div>
             <InputField name="first_name" label="First Name" required />
@@ -47,7 +49,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                     htmlType="submit"
                     className="w-full"
                 >
-                    Registration
+                    {t("Registration")}
                 </Button>
             </Form.Item>
         </Form>
