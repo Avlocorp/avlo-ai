@@ -1,5 +1,6 @@
 import { Button, Form, message } from "antd";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function VerificationForm() {
     const [loading, setLoading] = useState(false);
@@ -14,6 +15,7 @@ export default function VerificationForm() {
         }
     };
 
+    const { t } = useTranslation();
     return (
         <Form
             name="verification"
@@ -24,7 +26,7 @@ export default function VerificationForm() {
 
             <Form.Item
                 name="verificationCode"
-                label={<span className="text-white">Verification Code</span>}
+                label={<span className="text-white">{t("Verification Code")}</span>}
             >
                 <input
                     className="w-full bg-[#1A1A1D] border border-[#333] text-[20px] rounded-lg px-4 py-1 text-white focus:outline-none focus:ring-0 text-center tracking-widest"
@@ -38,7 +40,7 @@ export default function VerificationForm() {
                     loading={loading}
                     className="w-full"
                 >
-                    Verify
+                    {t("Verify")}
                 </Button>
             </Form.Item>
 

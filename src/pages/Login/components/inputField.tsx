@@ -1,4 +1,5 @@
 import { Form } from "antd";
+import { useTranslation } from "react-i18next";
 
 interface InputFieldProps {
     name: string;
@@ -8,11 +9,12 @@ interface InputFieldProps {
 }
 
 export default function InputField({ name, label, type = "text", required = false }: InputFieldProps) {
+    const { t } = useTranslation()
     return (
         <Form.Item
             name={name}
-            label={<span className="text-white">{label}</span>}
-            rules={required ? [{ required: true, message: `Please input your ${label.toLowerCase()}!` }] : []}
+            label={<span className="text-white">{t(label)}</span>}
+            rules={required ? [{ required: true, message: t(`Please input your ${label.toLowerCase()}!`) }] : []}
         >
             <input
                 type={type}

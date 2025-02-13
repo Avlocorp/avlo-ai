@@ -6,6 +6,7 @@ import PauseIcon from "assets/icons/pauseicon";
 import PlayIcon from "assets/icons/playicon";
 import { ACCESS_TOKEN_KEY } from "config";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface SearchInputMainProps {
   onSendMessage: (message: string, audio?: File | null) => void;
@@ -20,7 +21,7 @@ export default function SearchInputMain({
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (audioFile) {
       audioRef.current = new Audio(URL.createObjectURL(audioFile));
@@ -101,7 +102,7 @@ export default function SearchInputMain({
       <div className="w-full max-w-[686px] px-4 py-3 bg-[#2A2A2D] rounded-2xl">
         <input
           type="text"
-          placeholder="Send a message"
+          placeholder={t("Send a message")}
           className="w-full bg-[#2A2A2D] mb-5 text-[14px] text-white border-none outline-none"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}

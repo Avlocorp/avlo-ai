@@ -13,33 +13,31 @@ export default function MainContent() {
           {t("AvloAI – Intelligent Call Center Analytics")}
         </p>
         <p className="text-[#71727A] text-[16px] items-center w-[554px] text-center">
-          Transform call center data into actionable insights with the power of
-          AI. Analyze, optimize, and enhance customer interactions like never
-          before!
+          {t("Transform call center data into actionable insights with the power of AI. Analyze, optimize, and enhance customer interactions like never before!")}
         </p>
       </div>
       <div>
         <p className="text-center text-[#71727A] text-[16px] mb-4">
-          Ask about:
+          {t("Ask about:")}
         </p>
         <div>
           <div className="flex justify-center gap-4">
             <button className="px-4 py-2 h-10 flex items-center gap-1 rounded-[50px] border border-[#343436] text-[14px] text-white">
-              Сall center performance
+              {t("Сall center performance")}
             </button>
             <button className="px-4 py-2 h-10 flex items-center gap-1 rounded-[50px] border border-[#343436] text-[14px] text-white">
-              Agent efficiency
+              {t("Agent efficiency")}
             </button>
             <button className="px-4 py-2 h-10 flex items-center gap-1 rounded-[50px] border border-[#343436] text-[14px] text-white">
-              Customer satisfaction
+              {t("Customer satisfaction")}
             </button>
           </div>
           <div className="flex justify-center gap-4 mt-4">
             <button className="px-4 py-2 h-10 flex items-center gap-1 rounded-[50px] border border-[#343436] text-[14px] text-white">
-              Сustomer emotions
+              {t("Сustomer emotions")}
             </button>
             <button className="px-4 py-2 h-10 flex items-center gap-1 rounded-[50px] border border-[#343436] text-[14px] text-white">
-              Match voice with account
+              {t("Match voice with account")}
             </button>
           </div>
         </div>
