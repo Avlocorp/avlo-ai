@@ -1,1 +1,2 @@
-export * from "./useHooks/index";
+import useHooks from "./useHooks";
+export { useHooks };

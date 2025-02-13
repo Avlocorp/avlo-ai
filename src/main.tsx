@@ -5,11 +5,12 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "store/index.ts";
+import "services/i18n";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.Suspense fallback="...loading">
-        <Provider store={store}>
-            <BrowserRouter children={<App />} />
-        </Provider>
-    </React.Suspense>
+  <React.Suspense fallback="...loading">
+    <Provider store={store}>
+      <BrowserRouter children={<App />} />
+    </Provider>
+  </React.Suspense>
 );
