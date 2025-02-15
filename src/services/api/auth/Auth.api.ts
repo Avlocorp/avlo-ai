@@ -38,7 +38,23 @@ export const authApi = createApi({
         return response.data as ResponseError;
       },
     }),
+    verifyBitrixAccount: builder.query<
+      void,
+      { code: string; url: string; member_id: string }
+    >({
+      query: ({ code, url, member_id }) => {
+        return {
+          url: "/api/bitrix/authorise/",
+          method: "GET",
+          params: { code, url, member_id },
+        };
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegistrMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegistrMutation,
+  useVerifyBitrixAccountQuery,
+} = authApi;

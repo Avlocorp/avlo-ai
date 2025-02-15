@@ -20,6 +20,7 @@ const StatisticsPages = lazy(
   () => import("modules/Statistics/pages/List/list")
 );
 const Localization = lazy(() => import("modules/localization"));
+const RedirectFromBitrix = lazy(() => import("pages/redirect-from-bitrix"));
 
 // Route definitions
 const privateRoutes: IRoute[] = [
@@ -50,6 +51,10 @@ const privateRoutes: IRoute[] = [
   {
     path: "/localization",
     element: <Localization />,
+  },
+  {
+    path: "/redirect",
+    element: <RedirectFromBitrix />,
   },
 ];
 
