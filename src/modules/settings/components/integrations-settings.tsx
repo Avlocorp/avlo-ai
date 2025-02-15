@@ -3,16 +3,33 @@ import BitrixIcon from "assets/images/bitrix.jpg";
 import AmoCRMImg from "assets/images/amoCRM.png";
 import { useState } from "react";
 import BitrixIntegrationModal from "./bitrix-integration-modal";
+import BitrixAddAccountModal from "./add-accaount";
+import { useGetSettingResponseMutation } from "services/api/settings";
 
 const IntegrationsSettings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const onChange = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
+  const [isModalAddAcc, setIsModalAddAccOpen] = useState(false);
+  const [getSettingResponse] = useGetSettingResponseMutation();
+  const handleAddAccount = async (values: { url: string }) => {
+
+    try {
+      const response = await getSettingResponse({ url: values.url }).unwrap();
+      if (response?.sso_url) {
+        window.open(response.sso_url, "_blank");
+      }
+    } catch (err) {
+      console.error("Xatolik:", err);
+    }
+
+    setIsModalAddAccOpen(false);
   };
 
   const handleIntegrate = (values: unknown) => {
     console.log("Integration values:", values);
     setIsModalOpen(false);
+  };
+  const onChange = (checked: boolean) => {
+    console.log(`switch to ${checked}`);
   };
 
   return (
@@ -39,7 +56,19 @@ const IntegrationsSettings = () => {
               Streamline software projects, sprints, and bug tracking.
             </p>
           </div>
-          <div className="py-4 flex justify-end">
+          <div className="py-4 flex justify-between">
+            <Button
+              type="text"
+              className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
+              onClick={() => setIsModalAddAccOpen(true)}
+            >
+              Add account
+            </Button>
+            <BitrixAddAccountModal
+              isOpen={isModalAddAcc}
+              onClose={() => setIsModalAddAccOpen(false)}
+              onIntegrate={handleAddAccount}
+            />
             <Button
               type="text"
               className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
@@ -67,7 +96,7 @@ const IntegrationsSettings = () => {
                 height={52}
                 className="w-[84px] h-[52px] rounded-lg object-cover"
               />
-              <h4 className="text-white">Bitrix24</h4>
+              <h4 className="text-white">AmoCRM</h4>
               <Switch
                 defaultChecked
                 onChange={onChange}

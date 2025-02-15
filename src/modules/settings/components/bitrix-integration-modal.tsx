@@ -1,5 +1,5 @@
-import { Modal, Form, Input, Button, Typography, ConfigProvider } from "antd";
-import { CopyOutlined, CloseOutlined } from "@ant-design/icons";
+import { Modal, Form, Button, Typography } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import BitrixIcon from "assets/images/bitrix.jpg";
 
 interface BitrixIntegrationModalProps {
@@ -22,10 +22,10 @@ const BitrixIntegrationModal: React.FC<BitrixIntegrationModalProps> = ({
   const [form] = Form.useForm();
   const { Text } = Typography;
 
-  const handleCopyToken = () => {
-    const token = form.getFieldValue("token");
-    navigator.clipboard.writeText(token);
-  };
+  // const handleCopyToken = () => {
+  //   const token = form.getFieldValue("token");
+  //   navigator.clipboard.writeText(token);
+  // };
 
   return (
     <Modal
@@ -45,17 +45,20 @@ const BitrixIntegrationModal: React.FC<BitrixIntegrationModalProps> = ({
       onCancel={onClose}
       closeIcon={<CloseOutlined className="text-white" />}
       footer={[
-        <Button key="cancel" onClick={onClose} style={{ width: "100%" }}>
-          Cancel
-        </Button>,
-        <Button
-          key="integrate"
-          type="primary"
-          onClick={() => form.submit()}
-          style={{ width: "100%", marginLeft: 0, marginTop: "8px" }}
-        >
-          Integrate
-        </Button>,
+        <div className="flex justify-between gap-2 items-center">
+
+          <Button key="cancel" onClick={onClose} style={{ width: "100%" }}>
+            Cancel
+          </Button>
+          <Button
+            key="integrate"
+            type="primary"
+            onClick={() => form.submit()}
+            style={{ width: "100%" }}
+          >
+            Integrate
+          </Button>
+        </div>
       ]}
       width={400}
       centered
@@ -75,71 +78,46 @@ const BitrixIntegrationModal: React.FC<BitrixIntegrationModalProps> = ({
         },
       }}
     >
-      <ConfigProvider
-        theme={{
-          token: {
-            colorBgBase: "#1a1a1d",
-          },
-          components: {
-            Input: {
-              colorPrimary: "#1a1a1d",
-              algorithm: true,
-              colorTextPlaceholder: "#ffffff8a",
-              colorTextBase: "#ffffff",
-            },
-          },
-        }}
+
+
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onIntegrate}
+        style={{ marginTop: "24px" }}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onIntegrate}
-          style={{ marginTop: "24px" }}
+        <Form.Item
+          name="accountType"
+          label={<Text style={{ color: "#fff" }}>Select Account Type</Text>}
+          rules={[{ required: true, message: "Please select an account type" }]}
         >
-          <Form.Item
-            name="login"
-            label={<Text style={{ color: "#fff" }}>Login</Text>}
-            rules={[{ required: true, message: "Please input your login" }]}
+          <select
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "4px",
+              border: "1px solid #d9d9d9",
+              backgroundColor: "#2D2D2D",
+              color: "#fff",
+            }}
           >
-            <Input placeholder="Muhammad@gmail.com" />
-          </Form.Item>
+            <option value="" className="text-[#8C8C8C]" disabled selected hidden>
+              Select an account type
+            </option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            <option value="guest">SuperUser</option>
+          </select>
 
-          <Form.Item
-            name="password"
-            label={<Text style={{ color: "#fff" }}>Password</Text>}
-            rules={[{ required: true, message: "Please input your password" }]}
-          >
-            <Input.Password />
-          </Form.Item>
+        </Form.Item>
 
-          <Form.Item
-            name="token"
-            label={<Text style={{ color: "#fff" }}>Token</Text>}
-            rules={[{ required: true, message: "Please input your token" }]}
-          >
-            <Input
-              placeholder="jfoijjer58209uueiafaiffjdfjkhdjlha"
-              suffix={
-                <Button
-                  type="primary"
-                  icon={<CopyOutlined />}
-                  onClick={handleCopyToken}
-                  style={{ marginRight: "-7px" }}
-                  className="!shadow-none"
-                >
-                  Copy
-                </Button>
-              }
-            />
-          </Form.Item>
+        <Text style={{ color: "#8C8C8C", fontSize: "14px" }}>
+          Go to the settings of your Bitrix24 account, navigate to the
+          "Integrations" or "Webhooks" section, and copy the generated token
+          to use in this field.
+        </Text>
+      </Form>
 
-          <Text style={{ color: "#8C8C8C", fontSize: "14px" }}>
-            Go to the settings of your Bitrix24 account, navigate to the
-            "Integrations" or "Webhooks" section, and copy the generated token
-            to use in this field.
-          </Text>
-        </Form>
-      </ConfigProvider>
     </Modal>
   );
 };
