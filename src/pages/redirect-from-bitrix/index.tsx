@@ -9,16 +9,14 @@ const RedirectFromBitrix = () => {
   const { code, domain, member_id } = qs.parse(location.search, {
     ignoreQueryPrefix: true,
   });
-  console.log(code, domain, member_id);
 
-  const { data, isSuccess, isError, error } = useVerifyBitrixAccountQuery({
+  const { isSuccess, isError, error } = useVerifyBitrixAccountQuery({
     code: code as string,
     url: domain as string,
     member_id: member_id as string,
   });
-  console.log(data, error);
 
-  if (isSuccess) return <Navigate to="/login" replace />;
+  if (isSuccess) return <Navigate to="/" replace />;
   if (isError && (error as { status: number }).status === 401)
     return <Navigate to="/login" />;
   if (isError) return <DashboardError />;
