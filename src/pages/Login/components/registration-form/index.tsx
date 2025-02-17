@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useRegistrMutation } from "services/api/auth/Auth.api";
 import { RegistrResponse } from "services/api/auth/Auth.types";
 
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 interface RegistrationFormProps {
     onSuccess: () => void;
 }
@@ -12,17 +13,20 @@ interface RegistrationFormProps {
 export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     const [registerPost] = useRegistrMutation();
 
+
     const onsubmit = async (data: RegistrResponse) => {
-        console.log(data);
+        // console.log(data);
         try {
             const response = await registerPost(data).unwrap();
             console.log(response);
-
             onSuccess();
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            const err = Object.values(error).join(" ");
+            // Xatolik xabarini chiqarish
+            toast.error(err)
         }
     };
+
     const { t } = useTranslation();
     return (
         <Form

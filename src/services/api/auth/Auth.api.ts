@@ -8,13 +8,16 @@ import {
   RegistrResponseSuccess,
   ResponseError,
 } from "./Auth.types";
+
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: config.API_ROOT,
-    prepareHeaders(headers) {
+    prepareHeaders(headers, { endpoint }) {
       const access = storage.get(ACCESS_TOKEN_KEY);
-      if (access) {
+
+      // Faqat registr endpointiga token yuborilmaydi
+      if (access && endpoint !== "registr" && endpoint !== "login") {
         headers.set("Authorization", `Bearer ${access}`);
       }
       return headers;
@@ -23,20 +26,20 @@ export const authApi = createApi({
 
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponseSuccess, LoginResponse>({
-      query: (formValues) => {
-        return { url: "/api/token/", method: "POST", body: formValues };
-      },
-      transformErrorResponse: (response) => {
-        return response.data as ResponseError;
-      },
+      query: (formValues) => ({
+        url: "/api/token/",
+        method: "POST",
+        body: formValues,
+      }),
+      transformErrorResponse: (response) => response.data as ResponseError,
     }),
     registr: builder.mutation<RegistrResponseSuccess, RegistrResponse>({
-      query: (formValues) => {
-        return { url: "/api/register/", method: "POST", body: formValues };
-      },
-      transformErrorResponse: (response) => {
-        return response.data as ResponseError;
-      },
+      query: (formValues) => ({
+        url: "/api/register/",
+        method: "POST",
+        body: formValues,
+      }),
+      transformErrorResponse: (response) => response.data as ResponseError,
     }),
     verifyBitrixAccount: builder.query<
       void,
