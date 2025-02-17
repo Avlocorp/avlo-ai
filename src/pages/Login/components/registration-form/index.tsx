@@ -21,10 +21,9 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
             console.log(response);
             onSuccess();
         } catch (error: any) {
-            console.log(error.password[0]);
-
+            const err = Object.values(error).join(" ");
             // Xatolik xabarini chiqarish
-            toast.error(error && error?.password[0])
+            toast.error(err)
         }
     };
 
