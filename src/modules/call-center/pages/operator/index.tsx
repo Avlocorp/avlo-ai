@@ -25,7 +25,7 @@ const OperatorPage = () => {
     },
     {
       title: "Link",
-      dataIndex: "detail_link",
+      dataIndex: "name",
       render: (value) => {
         return (
           <div className="flex items-center gap-2">
