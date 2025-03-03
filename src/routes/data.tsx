@@ -21,6 +21,7 @@ const StatisticsPages = lazy(
 );
 const Localization = lazy(() => import("modules/localization"));
 const RedirectFromBitrix = lazy(() => import("pages/redirect-from-bitrix"));
+const OperatorPage = lazy(() => import("modules/call-center/pages/operator"));
 
 // Route definitions
 const privateRoutes: IRoute[] = [
@@ -47,6 +48,10 @@ const privateRoutes: IRoute[] = [
   {
     path: "/call-center",
     element: <CallCenter />,
+  },
+  {
+    path: "/call-center/operator/:operatorId",
+    element: <OperatorPage />,
   },
   {
     path: "/localization",

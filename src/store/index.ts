@@ -4,6 +4,8 @@ import { homeApi } from "services/api/home";
 import AuthReducer from "services/api/auth/Auth";
 import { translationApi } from "services/api/localization";
 import { settingsApi } from "services/api/settings";
+import { operatorsApi } from "services/api/operators/operators.api";
+import { audiosApi } from "services/api/audios/audios.api";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     [homeApi.reducerPath]: homeApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [settingsApi.reducerPath]: settingsApi.reducer,
+    [operatorsApi.reducerPath]: operatorsApi.reducer,
+    [audiosApi.reducerPath]: audiosApi.reducer,
     [translationApi.reducerPath]: translationApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -18,6 +22,8 @@ export const store = configureStore({
       .concat(homeApi.middleware)
       .concat(translationApi.middleware)
       .concat(authApi.middleware)
+      .concat(operatorsApi.middleware)
+      .concat(audiosApi.middleware)
       .concat(settingsApi.middleware),
 });
 
