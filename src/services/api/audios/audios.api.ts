@@ -27,10 +27,33 @@ export const audiosApi = createApi({
           //   sort: "-file_upload_date",
           "filter[operator_id]": operatorId,
           page,
+          include: "operator",
+        },
+      }),
+    }),
+    analyzeAudio: builder.mutation<void, string>({
+      query: (ids) => ({
+        url: `/api/company/analyse/`,
+        method: "POST",
+        body: {
+          audios: ids,
+        },
+      }),
+    }),
+    getSingleAudio: builder.query<OperatorAudiosList, string>({
+      query: (id) => ({
+        url: `/api/company/audios/`,
+        params: {
+          "filter[id]": id,
+          include: "operator",
         },
       }),
     }),
   }),
 });
 
-export const { useGetOperatorAudiosQuery } = audiosApi;
+export const {
+  useGetOperatorAudiosQuery,
+  useAnalyzeAudioMutation,
+  useGetSingleAudioQuery,
+} = audiosApi;

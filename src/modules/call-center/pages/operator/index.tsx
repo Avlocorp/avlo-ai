@@ -1,16 +1,20 @@
-import { Button, Space, Table } from "antd";
+import { Avatar, Badge, Button, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import HomeIcon from "assets/icons/HomeIcon";
-import { ChevronRight, Download } from "lucide-react";
+import { ChevronRight, Cpu, Download, Eye } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useGetOperatorAudiosQuery } from "services/api/audios/audios.api";
+import {
+  useAnalyzeAudioMutation,
+  useGetOperatorAudiosQuery,
+} from "services/api/audios/audios.api";
 import { OperatorAudio } from "services/api/audios/audios.types";
 import AudioFile from "assets/icons/mp3-icon.png";
 
 const OperatorPage = () => {
   const [page, setPage] = useState(1);
   const { operatorId } = useParams();
+  const [analyzeAudios] = useAnalyzeAudioMutation();
 
   const navigate = useNavigate();
   const { data: audios, isLoading } = useGetOperatorAudiosQuery({
@@ -24,7 +28,7 @@ const OperatorPage = () => {
       dataIndex: "audio_id",
     },
     {
-      title: "Link",
+      title: "Name",
       dataIndex: "name",
       render: (value) => {
         return (
@@ -36,18 +40,64 @@ const OperatorPage = () => {
       },
     },
     {
+      title: "Link",
+      dataIndex: "operator",
+      render: (value) => {
+        return (
+          <div className="w-[350px] flex items-center gap-2">
+            <Avatar src={value.photo} />
+            <div>
+              <h3 className="font-medium">
+                {value.name} {value.last_name}
+              </h3>
+              <p className="text-[#ADBDB5]">{value.email}</p>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "analysed",
+      render: (analyzed) => {
+        return (
+          <Badge
+            count={analyzed ? "Analyzed" : "Not analyzed yet"}
+            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${
+              analyzed
+                ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
+                : "text-zinc-400"
+            }`}
+          />
+        );
+      },
+    },
+    {
       title: "Actions",
       key: "actions",
       dataIndex: "data",
       render: (_, audio) => {
         return (
-          <Link to={audio.download_link}>
+          <Space>
+            <Link to={`/call-center/audio/${audio.id}`}>
+              <Eye color={audio.analysed ? "#5B9BEC" : "#4A554F"} />
+            </Link>
             <Button
+              icon={<Cpu />}
               type="text"
-              icon={<Download />}
-              className={`hover:text-white hover:bg-zinc-800 !text-[#5B9BEC]`}
-            />
-          </Link>
+              className={audio.analysed ? "text-[#4A554F]" : "text-[#5B9BEC]"}
+              onClick={() => {
+                analyzeAudios(audio.id.toString());
+              }}
+            ></Button>
+            <Link to={audio.download_link}>
+              <Button
+                type="text"
+                icon={<Download />}
+                className={`hover:text-white hover:bg-zinc-800 !text-[#5B9BEC]`}
+              />
+            </Link>
+          </Space>
         );
       },
     },
