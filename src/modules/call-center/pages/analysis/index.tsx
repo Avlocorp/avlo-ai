@@ -9,9 +9,12 @@ import {
 import { useEffect, useState } from "react";
 import { Operator } from "services/api/operators/operators.types";
 import { Link } from "react-router-dom";
+import { useDebounce } from "hooks";
 
 const CallCenter: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedValue = useDebounce(searchValue, 600);
 
   const { data: syncData, isLoading } = useSyncOperatorsQuery();
   const [fetchOperators, { data: operators, isLoading: isFetching }] =
@@ -19,9 +22,15 @@ const CallCenter: React.FC = () => {
 
   useEffect(() => {
     if (syncData?.success) {
-      fetchOperators(page);
+      fetchOperators({ page, search: "" });
     }
   }, [syncData, page]);
+
+  useEffect(() => {
+    if (syncData?.success) {
+      fetchOperators({ page: 1, search: debouncedValue });
+    }
+  }, [debouncedValue]);
 
   const columns: ColumnsType<Operator> = [
     {
@@ -94,6 +103,8 @@ const CallCenter: React.FC = () => {
               <SearchOutlined className="[&_svg]:w-6 [&_svg]:h-6 text-zinc-400" />
             }
             className="w-[400px] h-11 bg-zinc-900 border-zinc-800 text-white placeholder-zinc-400"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
           {/* <DatePicker.RangePicker
             placeholder={["From when", "Till Now"]}

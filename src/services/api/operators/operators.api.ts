@@ -31,11 +31,15 @@ export const operatorsApi = createApi({
         url: `api/company/operators/reload/`,
       }),
     }),
-    getOperators: builder.query<OperatorsList, number>({
-      query: (page) => ({
+    getOperators: builder.query<
+      OperatorsList,
+      { page: number; search: string }
+    >({
+      query: ({ page, search }) => ({
         url: `api/company/operators/`,
         params: {
           page,
+          search,
         },
       }),
     }),
