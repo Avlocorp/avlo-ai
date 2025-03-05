@@ -5,7 +5,6 @@ import { NavLink } from "react-router-dom";
 import HomeIcon from "assets/icons/HomeIcon";
 import HistoryIcon from "assets/icons/HistoryIcon";
 import SettingIcon from "assets/icons/SettingIcon";
-import AvatarLoader from "assets/icons/AvatarLoader";
 import LogoIcon from "assets/icons/LogoIcon";
 import LogoText from "assets/icons/LogoText";
 import HistoryIconinSidebar from "assets/icons/HistoryIconinSidebar";
@@ -129,32 +128,7 @@ const Sidebar: React.FC = () => {
                 </>
               )}
             </NavLink>
-            <div className="h-[1px] w-full bg-[#343436] mb-4"></div>
-            <NavLink
-              to="/avatar"
-              className="w-full mt-6 text-[#fff] text-[16px] flex gap-3 items-center px-3 py-2 rounded-lg  "
-              style={({ isActive }) => ({
-                background: isActive
-                  ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                  : "#3A3A41",
-              })}
-            >
-              {({ isActive }) => (
-                <>
-                  <span className="bg-[#2A2A2D] p-1 rounded-[200px] !w-10 !h-10 flex items-center justify-center">
-                    <AvatarLoader isActive={isActive} />
-                  </span>
-                  <div className="flex flex-col">
-                    <span className="text-[14px] font-semibold">
-                      82 credits left today
-                    </span>
-                    <span className="text-[14px] font-normal">
-                      Invite person take more 50
-                    </span>
-                  </div>
-                </>
-              )}
-            </NavLink>
+
           </div>
         )}
       </div>

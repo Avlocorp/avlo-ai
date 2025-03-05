@@ -19,14 +19,59 @@ import CardChart from 'modules/AnalysisPage/components/cardCharts';
 import CardContent from 'modules/AnalysisPage/components/cardContent';
 import HeadLine from 'modules/AnalysisPage/components/headline';
 import { AIResponse } from './type';
-
+import { DownloadIcon } from 'lucide-react';
+import AudioFile from "assets/icons/mp3-icon.png";
+import config, { ACCESS_TOKEN_KEY } from 'config';
+import { useState } from 'react';
+import { storage } from 'services';
 
 interface ChatMainProps {
     data: AIResponse;
+    id: number;
 }
 
-export default function ChatMain({ data }: ChatMainProps) {
+export default function ChatMain({ data, id }: ChatMainProps) {
+    const [isDownloading, setIsDownloading] = useState(false);
+    const baseUrl = config.API_ROOT;
+    const access = storage.get(ACCESS_TOKEN_KEY);
+    const handleDownload = () => {
+        setIsDownloading(true);
 
+        fetch(`${baseUrl}api/company/audios/pdf/${id}/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${access}`,
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a URL for the blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Create a temporary link element
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `audio-${id}.pdf`);
+
+                // Append to the document, click it, and clean up
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Release the blob URL
+                window.URL.revokeObjectURL(url);
+                setIsDownloading(false);
+            })
+            .catch(error => {
+                console.error('Download failed:', error);
+                setIsDownloading(false);
+            });
+    };
 
     const pieData1 = [
         { name: 'Score', value: data.overall_performance_score },
@@ -48,8 +93,6 @@ export default function ChatMain({ data }: ChatMainProps) {
         { name: 'Score', value: data.problem_handling_score },
         { name: 'Remaining', value: 100 - data.problem_handling_score },
     ];
-
-
     const dataRadar = [
         { metric: "Overall Score", series1: data?.overall_performance_score },
         { metric: "Communication", series1: data?.communication_skills_score },
@@ -60,7 +103,26 @@ export default function ChatMain({ data }: ChatMainProps) {
 
     return (
         <div className="bg-[#1A1A1D] w-full h-full flex flex-col overflow-y-auto  ">
-            <div className='grid grid-cols-2 gap-4 mx-8 mt-8'>
+            <div className="mb-6 px-12 mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <img src={AudioFile || "/placeholder.svg"} alt="Audio file icon" width={40} height={40} />
+                    <h4 className="text-white text-3xl font-semibold">
+                        {data?.conversation_title}
+                    </h4>
+                </div>
+
+                <div className="flex items-center text-center">
+                    <button
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        className="bg-[#5b9bec] shadow-none border-0 text-sm h-10 flex items-center justify-center p-2 px-3 rounded-md gap-2"
+                    >
+                        <DownloadIcon width={24} height={24} className="[&_svg]:w-[32px] [&_svg]:h-[32px]" />
+                        {isDownloading ? 'Downloading...' : 'Download'}
+                    </button>
+                </div>
+            </div>
+            <div className='grid grid-cols-2 gap-6 mx-12 mt-4'>
                 <CardChart
                     data={pieData1}
                     colorEmpty="#87888C"
@@ -98,14 +160,14 @@ export default function ChatMain({ data }: ChatMainProps) {
                     Icon={ReportIcon}
                 />
             </div>
-            <div className="m-8">
+            <div className="my-8 mx-12">
                 <RadarChartComponent title={"Performance Metrics"} dataRadar={dataRadar} />
             </div>
-            <div className="mx-8 mt-4  flex gap-4">
+            <div className="mx-12 mt-4  flex gap-6">
                 <HeadLine title='Resolved-Agent' />
             </div>
 
-            <div className="mx-8 my-4  flex gap-4">
+            <div className="mx-12 my-6  flex gap-6">
                 <CardContent
                     title="Agentni Rivojlantirish Imkoniyatlari"
                     content={data?.agent_development_opportunities}
@@ -118,11 +180,11 @@ export default function ChatMain({ data }: ChatMainProps) {
                 />
             </div>
 
-            <div className="mx-8 mt-4  flex gap-4">
+            <div className="mx-12 mt-4  flex gap-6">
                 <HeadLine title="Caller emotion:" data={data.caller_emotion} />
                 <HeadLine title="Resolution Status:" data={data.resolution_status} />
             </div>
-            <div className='grid grid-cols-2 gap-4 mx-8 mt-4'>
+            <div className='grid grid-cols-2 gap-6 mx-12 mt-6'>
                 <CardContent title="Trening uchun misollar" content={data.examples_for_training} Icon={TrainingIcon} />
                 <CardContent title="Resolution quality" content={[data.resolution_quality]} Icon={ResolutionQualityIcon} />
                 <CardContent
@@ -142,18 +204,16 @@ export default function ChatMain({ data }: ChatMainProps) {
                     Icon={SuccessfulInteractionStrategiesIcon}
                 />
             </div>
-            <div className="mx-8 mt-8  flex gap-4">
+            <div className="mx-12 mt-8  flex gap-6">
                 <HeadLine title='Summary of the text' />
             </div>
 
-            <div className='grid grid-cols-2 gap-4 mx-8 mt-4 mb-8 '>
+            <div className='grid grid-cols-2 gap-6 mx-12 mt-6 mb-8 '>
                 <CardContent title="Suhbat mavzusi" content={[data?.conversation_title]} Icon={VoiseIcon} />
                 <CardContent title="Asosiy g'oyalar" content={[data?.main_contents]} Icon={LightIcon} />
                 <CardContent title="Muhim nuqtalar" content={data?.essential_points} Icon={PinIcon} />
                 <CardContent title="Xulosa" content={[data?.conclusion]} Icon={Xulosaicon} />
             </div>
-
-        </div >
+        </div>
     );
 }
-
