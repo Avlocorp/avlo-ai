@@ -19,11 +19,14 @@ import CardChart from 'modules/AnalysisPage/components/cardCharts';
 import CardContent from 'modules/AnalysisPage/components/cardContent';
 import HeadLine from 'modules/AnalysisPage/components/headline';
 import { AIResponse } from './type';
-import { DownloadIcon } from 'lucide-react';
+import { ChevronRight, DownloadIcon } from 'lucide-react';
 import AudioFile from "assets/icons/mp3-icon.png";
 import config, { ACCESS_TOKEN_KEY } from 'config';
 import { useState } from 'react';
 import { storage } from 'services';
+import HomeIcon from 'assets/icons/HomeIcon';
+import { use } from 'i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatMainProps {
     data: AIResponse;
@@ -100,9 +103,31 @@ export default function ChatMain({ data, id }: ChatMainProps) {
         { metric: "Problem Handling", series1: data?.problem_handling_score },
         { metric: "Protocol Adherence", series1: data?.protocol_adherence_score },
     ];
-
+    const navigate = useNavigate();
     return (
         <div className="bg-[#1A1A1D] w-full h-full flex flex-col overflow-y-auto  ">
+            <div className="mb-6 flex mt-4 px-12 items-center gap-2">
+                <div className="cursor-pointer" onClick={() => navigate("/")}>
+                    <HomeIcon isActive />
+                </div>
+                <ChevronRight />
+                <span
+                    className="font-medium cursor-pointer"
+                    onClick={() => navigate(-1)}
+                >
+                    Call centre
+                </span>
+                <ChevronRight />
+                <span
+                    className="font-medium cursor-pointer"
+                    onClick={() => navigate(-1)}
+                >
+                    Audios
+                </span>
+            </div>
+            {/* <div className="mb-6 flex items-center gap-4"> */}
+            {/* <h4 className="text-white text-3xl font-semibold">{data?.operator}</h4> */}
+            {/* </div> */}
             <div className="mb-6 px-12 mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <img src={AudioFile || "/placeholder.svg"} alt="Audio file icon" width={40} height={40} />
