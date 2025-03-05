@@ -136,7 +136,8 @@ const CallCenter: React.FC = () => {
           <Space>
             <span className="font-semibold text-white">All members</span>
             <Badge
-              count="12 members"
+              // count="12 members"
+              count={`${operators?.all_data} members`}
               style={{ backgroundColor: "#27272a" }}
               className="text-white"
             />

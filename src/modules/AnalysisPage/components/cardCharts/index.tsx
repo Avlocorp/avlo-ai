@@ -11,7 +11,7 @@ interface CardChartProps {
 
 export default function CardChart({ data, colorEmpty = "#FFFFFF", colorFilled = "#000000", title, Icon }: CardChartProps) {
     return (
-        <div className="p-4 w-full bg-[#2A2A2D] rounded-xl flex flex-col items-center gap-10">
+        <div className="p-4 w-full bg-[#2A2A2D] rounded-xl flex flex-col items-center gap-8">
             <div className="flex items-start justify-between w-full">
                 <span className="text-white text-[22px]">{title}</span>
                 {Icon && <Icon />}

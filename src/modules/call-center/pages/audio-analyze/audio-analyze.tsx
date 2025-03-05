@@ -7,7 +7,7 @@ const AudioAnalyze = () => {
   const { data } = useGetSingleAudioQuery(audioId as string);
 
   return (
-    <div>{data && <ChatMain data={data?.data?.[0]?.analysed_data} />}</div>
+    <div>{data && <ChatMain data={data?.data?.[0]?.analysed_data} id={data?.data?.[0]?.id} />}</div>
   );
 };
 

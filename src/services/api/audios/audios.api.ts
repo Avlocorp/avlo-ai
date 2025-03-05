@@ -49,6 +49,11 @@ export const audiosApi = createApi({
         },
       }),
     }),
+    downloadAudio: builder.query<string, string>({
+      query: (id) => ({
+        url: `/api/company/audios/pdf/${id}/`,
+      }),
+    }),
   }),
 });
 
@@ -56,4 +61,5 @@ export const {
   useGetOperatorAudiosQuery,
   useAnalyzeAudioMutation,
   useGetSingleAudioQuery,
+  useDownloadAudioQuery,
 } = audiosApi;

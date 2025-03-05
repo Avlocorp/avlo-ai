@@ -11,6 +11,7 @@ interface RadarChartProps {
     title?: string;
     dataRadar?: any[];
 }
+
 export const RadarChartComponent = ({ title, dataRadar }: RadarChartProps) => {
     return (
         <div className="w-full h-[400px] bg-[#2A2A2D] p-4 rounded-lg text-gray-100">
@@ -40,31 +41,14 @@ export const RadarChartComponent = ({ title, dataRadar }: RadarChartProps) => {
                         }
                     />
                     <Radar
-                        name="Series"
-                        dataKey="series"
+                        name="Performance Score"
+                        dataKey="series1"
                         stroke="hsl(217, 91%, 60%)"
                         fill="hsl(217, 91%, 60%)"
-                        fillOpacity={0.4}
-                    />
-                    <Radar
-                        name="Series 2"
-                        dataKey="series2"
-                        stroke="hsl(322, 100%, 66%)"
-                        fill="hsl(322, 100%, 66%)"
-                        fillOpacity={0.4}
-                    />
-                    <Radar
-                        name="Series 3"
-                        dataKey="series3"
-                        stroke="hsl(267, 84%, 81%)"
-                        fill="hsl(267, 84%, 81%)"
                         fillOpacity={0.4}
                     />
                 </RadarChart>
             </ResponsiveContainer>
         </div>
     );
-};
-
-
-
+}
