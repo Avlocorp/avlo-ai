@@ -6,8 +6,9 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import type { AIResponse } from "./home.type";
-import { ACCESS_TOKEN_KEY } from "config";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
 import storage from "services/storage";
+import { setUserState } from "../auth";
 
 // Custom baseQuery with 401 handling
 const baseQuery = fetchBaseQuery({
@@ -31,9 +32,11 @@ const baseQueryWithAuth: BaseQueryFn<
     const errorData = result.error.data as { message?: string };
     if (errorData?.message === "Your token is expired") {
       // Clear the token
-      localStorage.removeItem("token");
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
       // Dispatch a Redux action to trigger logout
-      api.dispatch({ type: "auth/logout" });
+      // api.dispatch({ type: "authApi/logout" });
+      api.dispatch(setUserState({ isAuthenticated: false }));
     }
   }
 

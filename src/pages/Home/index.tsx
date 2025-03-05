@@ -38,10 +38,10 @@ export default function Home() {
       }).unwrap();
       setData(response);
     } catch (error) {
-      const errorResponse = error as ErrorResponse;
-      if (errorResponse.status === 401) {
-        navigate("/login");
-      }
+      // const errorResponse = error as ErrorResponse;
+      // if (errorResponse.status === 401) {
+      //   navigate("/login");
+      // }
 
       setErrorMessage(
         "An error occurred while analyzing the call. Please try again."
