@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import storage from "services/storage";
 import config, { ACCESS_TOKEN_KEY } from "config";
 import {
+  GetMeResponse,
   LoginResponse,
   LoginResponseSuccess,
   RegistrResponse,
@@ -53,6 +54,9 @@ export const authApi = createApi({
         };
       },
     }),
+    getMe: builder.query<GetMeResponse, void>({
+      query: () => "/api/get-me/",
+    }),
   }),
 });
 
@@ -60,4 +64,5 @@ export const {
   useLoginMutation,
   useRegistrMutation,
   useVerifyBitrixAccountQuery,
+  useGetMeQuery,
 } = authApi;

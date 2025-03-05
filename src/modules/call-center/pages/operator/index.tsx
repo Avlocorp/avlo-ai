@@ -79,7 +79,7 @@ const OperatorPage = () => {
       render: (_, audio) => {
         return (
           <Space>
-            <Link to={`/call-center/audio/${audio.id}`}>
+            <Link to={`/admin/call-center/audio/${audio.id}`}>
               <Eye color={audio.analysed ? "#5B9BEC" : "#4A554F"} />
             </Link>
             <Button

@@ -52,7 +52,7 @@ const Sidebar: React.FC = () => {
 
             {hasToken && (
               <NavLink
-                to="/statistics"
+                to="/admin/statistics"
                 className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
                 style={({ isActive }) => ({
                   background: isActive
@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
 
             {hasToken && (
               <NavLink
-                to="/call-center"
+                to="/admin/call-center"
                 className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
                 style={({ isActive }) => ({
                   background: isActive
@@ -92,7 +92,7 @@ const Sidebar: React.FC = () => {
 
             {hasToken && (
               <NavLink
-                to="/history"
+                to="/admin/history"
                 className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
                 style={({ isActive }) => ({
                   background: isActive
@@ -114,7 +114,7 @@ const Sidebar: React.FC = () => {
         {hasToken && (
           <div className="px-6 mt-auto mb-6">
             <NavLink
-              to="/settings"
+              to="/admin/settings"
               className="w-full text-[#fff] mb-6 text-[16px] flex gap-3 items-center px-3 py-2 rounded-lg "
               style={({ isActive }) => ({
                 background: isActive
@@ -131,7 +131,7 @@ const Sidebar: React.FC = () => {
             </NavLink>
             <div className="h-[1px] w-full bg-[#343436] mb-4"></div>
             <NavLink
-              to="/avatar"
+              to="/admin/avatar"
               className="w-full mt-6 text-[#fff] text-[16px] flex gap-3 items-center px-3 py-2 rounded-lg  "
               style={({ isActive }) => ({
                 background: isActive

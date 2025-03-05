@@ -73,7 +73,7 @@ const CallCenter: React.FC = () => {
       key: "actions",
       dataIndex: "id",
       render: (id: number) => (
-        <Link to={`/call-center/operator/${id}`}>
+        <Link to={`operator/${id}`}>
           <Button
             type="text"
             icon={<EyeOutlined className="[&_svg]:w-[28px] [&_svg]:h-[28px]" />}

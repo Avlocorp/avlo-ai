@@ -1,20 +1,22 @@
-// import { navigation } from "./navigation-list";
-// // import {
-// //   Breadcrumb,
-// //   BreadcrumbItem,
-// //   BreadcrumbLink,
-// //   BreadcrumbList,
-// // } from "components/ui/breadcrumb";
-// // import { useDispatch } from "react-redux";
-// // import { logOut } from "store/auth";
+import { Layout } from "antd";
+import Sidebar from "components/layout/Sidebar";
+import HeaderMain from "./Header";
+import { Outlet } from "react-router-dom";
 
-// function Layout() {
- 
-//   // const dispatch = useDispatch();
+const { Content } = Layout;
 
-//   return (
- 
-//   );
-// }
+const LayoutComponent = () => {
+  return (
+    <Layout className="h-screen flex overflow-hidden">
+      <Sidebar />
+      <Layout className="flex-1">
+        <HeaderMain />
+        <Content className="overflow-auto min-h-[calc(100vh-78px)] bg-[#1A1A1D]">
+          <Outlet />
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
 
-// export default Layout;
+export default LayoutComponent;
