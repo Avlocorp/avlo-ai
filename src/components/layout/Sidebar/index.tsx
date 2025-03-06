@@ -51,7 +51,7 @@ const Sidebar: React.FC = () => {
 
             {hasToken && (
               <NavLink
-                to="/admin/statistics"
+                to="/pm/statistics"
                 className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
                 style={({ isActive }) => ({
                   background: isActive
@@ -70,7 +70,7 @@ const Sidebar: React.FC = () => {
 
             {hasToken && (
               <NavLink
-                to="/admin/call-center"
+                to="/pm/call-center"
                 className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
                 style={({ isActive }) => ({
                   background: isActive
@@ -91,7 +91,7 @@ const Sidebar: React.FC = () => {
 
             {hasToken && (
               <NavLink
-                to="/admin/history"
+                to="/pm/history"
                 className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
                 style={({ isActive }) => ({
                   background: isActive
@@ -113,7 +113,7 @@ const Sidebar: React.FC = () => {
         {hasToken && (
           <div className="px-6 mt-auto mb-6">
             <NavLink
-              to="/admin/settings"
+              to="/pm/settings"
               className="w-full text-[#fff] mb-6 text-[16px] flex gap-3 items-center px-3 py-2 rounded-lg "
               style={({ isActive }) => ({
                 background: isActive

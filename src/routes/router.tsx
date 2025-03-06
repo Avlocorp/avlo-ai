@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         element: <RedirectPage />,
       },
       {
-        path: "admin",
+        path: "pm",
         element: (
           <PrivateRoute>
             <LayoutComponent />

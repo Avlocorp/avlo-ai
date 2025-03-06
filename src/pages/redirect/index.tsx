@@ -18,7 +18,7 @@ const RedirectPage = () => {
           isAuthenticated: true,
         })
       );
-      navigate("/admin");
+      navigate("/pm");
     } else if (isError) {
       dispatch(
         setUserState({
