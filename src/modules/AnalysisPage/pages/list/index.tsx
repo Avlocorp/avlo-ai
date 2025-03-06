@@ -29,7 +29,7 @@ import { useNavigate } from "react-router-dom";
 
 interface ChatMainProps {
   data: AIResponse;
-  id: number;
+  id?: number;
 }
 
 export default function ChatMain({ data, id }: ChatMainProps) {
@@ -37,6 +37,8 @@ export default function ChatMain({ data, id }: ChatMainProps) {
   const baseUrl = config.API_ROOT;
   const access = storage.get(ACCESS_TOKEN_KEY);
   const handleDownload = () => {
+    if (!id) return;
+
     setIsDownloading(true);
 
     fetch(`${baseUrl}api/company/audios/pdf/${id}/`, {
@@ -140,20 +142,22 @@ export default function ChatMain({ data, id }: ChatMainProps) {
           </h4>
         </div>
 
-        <div className="flex items-center text-center">
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading}
-            className="bg-[#5b9bec] shadow-none border-0 text-sm h-10 flex items-center justify-center p-2 px-3 rounded-md gap-2"
-          >
-            <DownloadIcon
-              width={24}
-              height={24}
-              className="[&_svg]:w-[32px] [&_svg]:h-[32px]"
-            />
-            {isDownloading ? "Downloading..." : "Download"}
-          </button>
-        </div>
+        {id && (
+          <div className="flex items-center text-center">
+            <button
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="bg-[#5b9bec] shadow-none border-0 text-sm h-10 flex items-center justify-center p-2 px-3 rounded-md gap-2"
+            >
+              <DownloadIcon
+                width={24}
+                height={24}
+                className="[&_svg]:w-[32px] [&_svg]:h-[32px]"
+              />
+              {isDownloading ? "Downloading..." : "Download"}
+            </button>
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-6 mx-12 mt-4">
         <CardChart
