@@ -1,4 +1,4 @@
-import { Badge, Button, Space, Table } from "antd";
+import { Avatar, Badge, Button, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import HomeIcon from "assets/icons/HomeIcon";
 import { ChevronRight, Cpu, Download, Eye, RefreshCcw } from "lucide-react";
@@ -12,14 +12,62 @@ import { OperatorAudio } from "services/api/audios/audios.types";
 import AudioFile from "assets/icons/mp3-icon.png";
 import { formatDate, formatPhoneNumber } from "components/lib/utils";
 import { toast } from "react-toastify";
+import { useGetSingleOperatorQuery } from "services/api/operators/operators.api";
+import Analyze from "./analyze";
 
 const OperatorPage = () => {
   const [page, setPage] = useState(1);
   const { operatorId } = useParams();
   const [analyzeAudios] = useAnalyzeAudioMutation();
+  const { data: operator } = useGetSingleOperatorQuery({
+    operatorId: parseInt(operatorId as string),
+  });
+
+  // const handleDownload = () => {
+  //   setIsDownloading(true);
+
+  //   // fetch(`${baseUrl}api/company/audios/pdf/${id}/`, {
+  //   //   method: "GET",
+  //   //   headers: {
+  //   //     Authorization: `Bearer ${storage.get(ACCESS_TOKEN_KEY)}`,
+  //   //   },
+  //   // })
+  //   //   .then((response) => {
+  //   //     if (!response.ok) {
+  //   //       throw new Error("Network response was not ok");
+  //   //     }
+  //   //     return response.blob();
+  //   //   })
+  //   //   .then((blob) => {
+  //   //     // Create a URL for the blob
+  //   //     const url = window.URL.createObjectURL(blob);
+
+  //   //     // Create a temporary link element
+  //   //     const link = document.createElement("a");
+  //   //     link.href = url;
+  //   //     link.setAttribute("download", `audio-${id}.pdf`);
+
+  //   //     // Append to the document, click it, and clean up
+  //   //     document.body.appendChild(link);
+  //   //     link.click();
+  //   //     document.body.removeChild(link);
+
+  //   //     // Release the blob URL
+  //   //     window.URL.revokeObjectURL(url);
+  //   //     setIsDownloading(false);
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.error("Download failed:", error);
+  //   //     setIsDownloading(false);
+  //   //   });
+  // };
 
   const navigate = useNavigate();
-  const { data: audios, isLoading, refetch } = useGetOperatorAudiosQuery({
+  const {
+    data: audios,
+    isLoading,
+    refetch,
+  } = useGetOperatorAudiosQuery({
     operatorId: parseInt(operatorId as string),
     page,
   });
@@ -41,32 +89,11 @@ const OperatorPage = () => {
         );
       },
     },
-    // {
-    //   title: "Link",
-    //   dataIndex: "operator",
-    //   render: (value) => {
-    //     return (
-    //       <div className="w-[350px] flex items-center gap-2">
-    //         <Avatar src={value.photo} />
-    //         <div>
-    //           <h3 className="font-medium">
-    //             {value.name} {value.last_name}
-    //           </h3>
-    //           <p className="text-[#ADBDB5]">{value.email}</p>
-    //         </div>
-    //       </div>
-    //     );
-    //   },
-    // },
     {
       title: "File upload date",
       dataIndex: "file_upload_date",
       render: (file_upload_date) => {
-        return (
-          <div>
-            {formatDate(file_upload_date)}
-          </div>
-        );
+        return <div>{formatDate(file_upload_date)}</div>;
       },
     },
     {
@@ -75,25 +102,16 @@ const OperatorPage = () => {
       render: (size) => {
         const toMB = (bytes: number) => (bytes / 1048576).toFixed(2) + " MB";
 
-        return (
-          <div>
-            {toMB(size)}
-          </div>
-        );
+        return <div>{toMB(size)}</div>;
       },
     },
     {
       title: "Customer phone",
       dataIndex: "phone",
       render: (phone) => {
-        return (
-          <div>
-            {formatPhoneNumber(phone)}
-          </div>
-        );
+        return <div>{formatPhoneNumber(phone)}</div>;
       },
     },
-
 
     {
       title: "Status",
@@ -102,10 +120,11 @@ const OperatorPage = () => {
         return (
           <Badge
             count={analyzed ? "Analyzed" : "Not analyzed yet"}
-            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${analyzed
-              ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
-              : "text-zinc-400"
-              }`}
+            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${
+              analyzed
+                ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
+                : "text-zinc-400"
+            }`}
           />
         );
       },
@@ -155,15 +174,37 @@ const OperatorPage = () => {
           Call centre
         </span>
         <ChevronRight />
-        {/* <span className="font-medium">{data?.operator}</span> */}
-      </div>
-      <div className="mb-6 flex items-center gap-4">
-        {/* <h4 className="text-white text-3xl font-semibold">{data?.operator}</h4> */}
+        <span className="font-medium">{operator?.data?.[0]?.name}</span>
       </div>
 
-      <div className="mb-6">
-        <h4 className="text-center">Not analyzed yet</h4>
+      <div className="mb-6 mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Avatar src={operator?.data?.[0]?.photo} size={64} />
+          <div>
+            <h4 className="text-white text-3xl font-semibold">
+              {operator?.data?.[0]?.name} {operator?.data?.[0]?.last_name}
+            </h4>
+            <p className="text-base">{operator?.data?.[0]?.email}</p>
+          </div>
+        </div>
+
+        {/* <div className="flex items-center text-center">
+          <button
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className="bg-[#5b9bec] shadow-none border-0 text-sm h-10 flex items-center justify-center p-2 px-3 rounded-md gap-2"
+          >
+            <DownloadIcon
+              width={24}
+              height={24}
+              className="[&_svg]:w-[32px] [&_svg]:h-[32px]"
+            />
+            {isDownloading ? "Downloading..." : "Download"}
+          </button>
+        </div> */}
       </div>
+
+      <Analyze data={operator?.data?.[0]?.avarege_score} />
 
       <div className="rounded-lg border border-zinc-800 bg-[#343436]">
         <div className="flex items-center justify-between p-4 border-b border-zinc-800">

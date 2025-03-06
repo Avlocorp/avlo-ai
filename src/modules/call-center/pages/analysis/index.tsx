@@ -38,10 +38,7 @@ const CallCenter: React.FC = () => {
       dataIndex: "id",
       render: (_, __, index) => index + 1,
     },
-    {
-      title: "ID",
-      dataIndex: "operator_id",
-    },
+
     {
       title: "Name",
       dataIndex: "name",
@@ -56,6 +53,20 @@ const CallCenter: React.FC = () => {
           </div>
         </div>
       ),
+    },
+    {
+      title: "Overall",
+      dataIndex: "avarege_score",
+      render: (score) => (
+        <Badge
+          count={`${score.overall_performance_score}%`}
+          className="[&_.ant-badge-count]:bg-transparent [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:border [&_.ant-badge-count]:border-[#139a51]"
+        />
+      ),
+    },
+    {
+      title: "All calls amount",
+      dataIndex: "all_calls",
     },
     {
       title: "Position",

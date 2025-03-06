@@ -43,7 +43,19 @@ export const operatorsApi = createApi({
         },
       }),
     }),
+    getSingleOperator: builder.query<OperatorsList, { operatorId: number }>({
+      query: ({ operatorId }) => ({
+        url: `api/company/operators/`,
+        params: {
+          "filter[id]": operatorId,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useSyncOperatorsQuery, useLazyGetOperatorsQuery } = operatorsApi;
+export const {
+  useSyncOperatorsQuery,
+  useLazyGetOperatorsQuery,
+  useGetSingleOperatorQuery,
+} = operatorsApi;
