@@ -1,4 +1,3 @@
-import Hourglass from "assets/images/Hourglass.png";
 import phoneImg from "assets/images/phoneImg.png";
 import TalkBetweenMan from "assets/images/TalkBetweenMan.png";
 import ParameterCard from "../../components/ParameterCards";
@@ -6,31 +5,36 @@ import CardChart from "modules/AnalysisPage/components/cardCharts";
 import SuccessfulCallsPieChart from "../../components/Charts/ChartSuccessfulCalls";
 import RadarChartForDashboard from "modules/Statistics/components/Charts/RadarChartForDashboard";
 import PieChartEmoji from "modules/Statistics/components/Charts/PieChartEmoji";
-import AudiosTable from "modules/Statistics/components/audios-table";
+import { useGetStatisticsQuery } from "services/api/home";
 export default function StatisticsPages() {
+  const { data } = useGetStatisticsQuery();
+
   const pieData1 = [
-    { name: "Score", value: 77 },
-    { name: "Remaining", value: 100 - 77 },
+    { name: "Score", value: data?.communication_skills_score },
+    {
+      name: "Remaining",
+      value: 100 - Number(data?.communication_skills_score),
+    },
   ];
 
   return (
     <div className="mx-8 pb-6">
       <div className="flex gap-6 mb-6 justify-between w-full">
-        <ParameterCard
+        {/* <ParameterCard
           anmount="24"
           Img={Hourglass}
           title="Total hours"
-          percentage="15%"
-        />
+          percentage={data?.}
+        /> */}
         <ParameterCard
           Img={phoneImg}
-          anmount="1000"
+          anmount={data?.total_calls.toString()}
           title="Total calls"
           percentage="15%"
         />
         <ParameterCard
           Img={TalkBetweenMan}
-          anmount="29"
+          anmount={data?.members.toString()}
           title="Total team members"
           percentage="-14%"
         />
@@ -46,11 +50,18 @@ export default function StatisticsPages() {
         />
       </div>
       <div className="mb-6 flex justify-between gap-6 text-white">
-        <SuccessfulCallsPieChart />
-        <RadarChartForDashboard />
+        <SuccessfulCallsPieChart
+          failed={data?.unsuccessfully_calls || 0}
+          successfull={data?.successfully_calls || 0}
+        />
+        <RadarChartForDashboard
+          communication_skills_score={data?.communication_skills_score || 0}
+          customer_management_score={data?.customer_management_score || 0}
+          overall_performance_score={data?.overall_performance_score || 0}
+          problem_handling_score={data?.problem_handling_score || 0}
+          protocol_adherence_score={data?.protocol_adherence_score || 0}
+        />
       </div>
-
-      <AudiosTable />
     </div>
   );
 }

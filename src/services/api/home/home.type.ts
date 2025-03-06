@@ -18,3 +18,15 @@ export interface AIResponse {
   examples_for_training: string[];
   conclusion: string;
 }
+
+export type DashboardStatistics = {
+  overall_performance_score: number;
+  communication_skills_score: number;
+  problem_handling_score: number;
+  customer_management_score: number;
+  protocol_adherence_score: number;
+  successfully_calls: number;
+  unsuccessfully_calls: number;
+  total_calls: number;
+  members: number;
+};

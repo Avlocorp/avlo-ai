@@ -5,7 +5,7 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import type { AIResponse } from "./home.type";
+import type { AIResponse, DashboardStatistics } from "./home.type";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
 import storage from "services/storage";
 import { setUserState } from "../auth";
@@ -63,7 +63,10 @@ export const homeApi = createApi({
         };
       },
     }),
+    getStatistics: builder.query<DashboardStatistics, void>({
+      query: () => "api/company/dashboard/",
+    }),
   }),
 });
 
-export const { useGetAIResponseMutation } = homeApi;
+export const { useGetAIResponseMutation, useGetStatisticsQuery } = homeApi;
