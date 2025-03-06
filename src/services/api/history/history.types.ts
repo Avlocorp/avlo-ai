@@ -6,6 +6,7 @@ export interface HistoryList {
   updated_at: string;
   operator_name: string;
   operator_last_name: string;
+  all_data: number;
 }
 
 export interface Data {

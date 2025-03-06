@@ -16,12 +16,19 @@ export const historyApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getHistoryList: builder.query<HistoryList, { page: number }>({
-      query: ({ page }) => ({
+    getHistoryList: builder.query<
+      HistoryList,
+      { page: number; until: string; from: string; search: string }
+    >({
+      query: ({ page, until, from, search }) => ({
         url: `api/company/history/`,
         params: {
           page,
+          field: "created_at",
           sort: "-created_at",
+          until,
+          from,
+          search,
         },
       }),
     }),

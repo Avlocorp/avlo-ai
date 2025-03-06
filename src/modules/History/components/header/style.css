@@ -1,5 +1,0 @@
-/* Faqat RangePicker inputlaridagi placeholder rangini oq qilish */
-.ant-picker-range .ant-picker-input input::placeholder {
-  color: white !important; /* Placeholder rangini oq qilish */
-  opacity: 1 !important; /* Placeholder opasitesi 1 qilish */
-}

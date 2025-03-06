@@ -1,0 +1,26 @@
+/* Faqat RangePicker inputlaridagi placeholder rangini oq qilish */
+/* .ant-picker-range .ant-picker-input input::placeholder {
+  color: white !important; /* Placeholder rangini oq qilish */
+/* opacity: 1 !important; Placeholder opasitesi 1 qilish */
+/* } */
+/* RangePicker oraliq fon rangini to‘q kulrangga o‘zgartirish */
+/* Tanlangan oraliq fon rangini qora qilish */
+.ant-picker-cell-in-range::before {
+  background-color: #5b9bec !important; /* To‘q kulrang */
+}
+
+/* Tanlangan sanalar (start va end) fon rangini o‘zgartirish */
+/* .ant-picker-cell-range-start::before,
+.ant-picker-cell-range-end::before {
+  background-color: #5b9bec !important; 
+  border-radius: 5px !important; 
+} */
+
+/* Matn rangini o‘zgartirish */
+.ant-picker-cell-in-range .ant-picker-cell-inner {
+  color: white !important; /* Oq rang */
+}
+/* Faqat bizning maxsus komponent uchun */
+/* .custom-range-picker .ant-picker-cell-in-range .ant-picker-cell-inner {
+  color: black !important;
+} */
