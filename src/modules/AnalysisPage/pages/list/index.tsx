@@ -98,11 +98,11 @@ export default function ChatMain({ data, id }: ChatMainProps) {
     { name: "Remaining", value: 100 - data.problem_handling_score },
   ];
   const dataRadar = [
-    { metric: "Overall Score", series1: data?.overall_performance_score },
-    { metric: "Communication", series1: data?.communication_skills_score },
-    { metric: "Customer Management", series1: data?.customer_management_score },
-    { metric: "Problem Handling", series1: data?.problem_handling_score },
-    { metric: "Protocol Adherence", series1: data?.protocol_adherence_score },
+    { metric: "Overall Score", series: data?.overall_performance_score },
+    { metric: "Communication", series: data?.communication_skills_score },
+    { metric: "Customer Management", series: data?.customer_management_score },
+    { metric: "Problem Handling", series: data?.problem_handling_score },
+    { metric: "Protocol Adherence", series: data?.protocol_adherence_score },
   ];
   const navigate = useNavigate();
   return (
