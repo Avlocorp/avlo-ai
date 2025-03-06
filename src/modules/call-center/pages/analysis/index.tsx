@@ -1,6 +1,6 @@
 import type React from "react";
-import { Table, Input, Button, Tabs, Avatar, Badge, Space } from "antd";
-import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
+import { Table, Input, Button, Avatar, Badge, Space } from "antd";
+import { SearchOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import {
   useLazyGetOperatorsQuery,
@@ -44,7 +44,7 @@ const CallCenter: React.FC = () => {
       dataIndex: "name",
       render: (_, record) => (
         <div className="flex items-center gap-3">
-          <Avatar src={record.photo} size={40} />
+          <Avatar src={record.photo} size={40} icon={<UserOutlined />} />
           <div>
             <div className="font-medium text-white">
               {record.name ? record.name : "-"} {record.last_name}
@@ -117,29 +117,7 @@ const CallCenter: React.FC = () => {
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />
-          {/* <DatePicker.RangePicker
-            placeholder={["From when", "Till Now"]}
-            allowEmpty={[false, true]}
-            onChange={(date, dateString) => {
-              console.log(date, dateString);
-            }}
-            rootClassName="[&_.ant-picker-cell-in-range_.ant-picker-cell-inner]:bg-[red]"
-          /> */}
         </div>
-        <Tabs
-          defaultActiveKey="members"
-          items={[
-            {
-              key: "members",
-              label: "Members",
-            },
-            {
-              key: "audios",
-              label: <span>Audios</span>,
-            },
-          ]}
-          className="[&_.ant-tabs-nav::before]:border-zinc-800 [&_.ant-tabs-tab]:text-zinc-400 [&_.ant-tabs-tab-active]:text-white"
-        />
       </div>
 
       <div className="rounded-lg border border-zinc-800 bg-[#343436]">
