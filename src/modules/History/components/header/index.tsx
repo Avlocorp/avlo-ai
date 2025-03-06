@@ -17,7 +17,8 @@ export function HeaderHistory() {
                 <div className="flex items-center gap-3 ">
                     <RangePicker
                         prefix={<CalendarIcon />}
-                        bordered={false}
+                        // bordered={false}
+                        variant="borderless"
                         suffixIcon={null}
                         allowClear={false}
                         separator={"-"} // Remove separator

@@ -25,7 +25,6 @@ import config, { ACCESS_TOKEN_KEY } from 'config';
 import { useState } from 'react';
 import { storage } from 'services';
 import HomeIcon from 'assets/icons/HomeIcon';
-import { use } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatMainProps {
