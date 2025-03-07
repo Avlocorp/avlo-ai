@@ -6,6 +6,7 @@ import { translationApi } from "services/api/localization";
 import { settingsApi } from "services/api/settings";
 import { operatorsApi } from "services/api/operators/operators.api";
 import { audiosApi } from "services/api/audios/audios.api";
+import { apiErrorMiddleware } from "services/middlewares/apiMiddleware/middleware";
 
 export const store = configureStore({
   reducer: {
@@ -24,7 +25,8 @@ export const store = configureStore({
       .concat(authApi.middleware)
       .concat(operatorsApi.middleware)
       .concat(audiosApi.middleware)
-      .concat(settingsApi.middleware),
+      .concat(settingsApi.middleware)
+      .concat(apiErrorMiddleware), // Custom middleware
 });
 
 export type RootState = ReturnType<typeof store.getState>;

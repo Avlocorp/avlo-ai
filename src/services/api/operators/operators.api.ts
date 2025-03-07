@@ -29,6 +29,7 @@ export const operatorsApi = createApi({
     syncOperators: builder.query<{ success: boolean }, void>({
       query: () => ({
         url: `api/company/operators/reload/`,
+        timeout: 60000,
       }),
     }),
     getOperators: builder.query<
@@ -41,6 +42,7 @@ export const operatorsApi = createApi({
           page,
           search,
         },
+        timeout: 60000,
       }),
     }),
     getSingleOperator: builder.query<OperatorsList, { operatorId: number }>({
@@ -49,6 +51,7 @@ export const operatorsApi = createApi({
         params: {
           "filter[id]": operatorId,
         },
+        timeout: 60000,
       }),
     }),
   }),
@@ -56,6 +59,7 @@ export const operatorsApi = createApi({
 
 export const {
   useSyncOperatorsQuery,
+  useGetOperatorsQuery,
   useLazyGetOperatorsQuery,
   useGetSingleOperatorQuery,
 } = operatorsApi;

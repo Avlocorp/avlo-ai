@@ -6,6 +6,7 @@ import SuccessfulCallsPieChart from "../../components/Charts/ChartSuccessfulCall
 import RadarChartForDashboard from "modules/Statistics/components/Charts/RadarChartForDashboard";
 import PieChartEmoji from "modules/Statistics/components/Charts/PieChartEmoji";
 import { useGetStatisticsQuery } from "services/api/home";
+import AudiosAndOperators from "modules/Statistics/components/audios-and-operators";
 export default function StatisticsPages() {
   const { data } = useGetStatisticsQuery();
 
@@ -20,12 +21,6 @@ export default function StatisticsPages() {
   return (
     <div className="mx-8 pb-6">
       <div className="flex gap-6 mb-6 justify-between w-full">
-        {/* <ParameterCard
-          anmount="24"
-          Img={Hourglass}
-          title="Total hours"
-          percentage={data?.}
-        /> */}
         <ParameterCard
           Img={phoneImg}
           anmount={data?.total_calls.toString()}
@@ -61,6 +56,10 @@ export default function StatisticsPages() {
           problem_handling_score={data?.problem_handling_score || 0}
           protocol_adherence_score={data?.protocol_adherence_score || 0}
         />
+      </div>
+
+      <div>
+        <AudiosAndOperators />
       </div>
     </div>
   );
