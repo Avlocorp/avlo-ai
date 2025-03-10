@@ -54,10 +54,33 @@ export const operatorsApi = createApi({
         timeout: 60000,
       }),
     }),
+    getOperatorsStatistics: builder.query<
+      OperatorsList,
+      {
+        page: number;
+        search: string;
+        reversed: boolean;
+        from?: string;
+        until?: string;
+      }
+    >({
+      query: ({ page, search, reversed, from, until }) => ({
+        url: `api/company/operators/statistics/`,
+        params: {
+          page,
+          search,
+          reversed,
+          from,
+          until,
+        },
+        timeout: 60000,
+      }),
+    }),
   }),
 });
 
 export const {
+  useGetOperatorsStatisticsQuery,
   useSyncOperatorsQuery,
   useGetOperatorsQuery,
   useLazyGetOperatorsQuery,

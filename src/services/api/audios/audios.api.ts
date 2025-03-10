@@ -54,10 +54,17 @@ export const audiosApi = createApi({
         url: `/api/company/audios/pdf/${id}/`,
       }),
     }),
+    refreshAudios: builder.mutation<void, void>({
+      query: () => ({
+        url: "/api/company/audios/",
+        method: "POST",
+      }),
+    }),
   }),
 });
 
 export const {
+  useRefreshAudiosMutation,
   useGetOperatorAudiosQuery,
   useAnalyzeAudioMutation,
   useGetSingleAudioQuery,

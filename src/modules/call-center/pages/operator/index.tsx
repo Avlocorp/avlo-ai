@@ -2,65 +2,29 @@ import { Avatar, Badge, Button, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import HomeIcon from "assets/icons/HomeIcon";
 import { ChevronRight, Cpu, Download, Eye, RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useAnalyzeAudioMutation,
   useGetOperatorAudiosQuery,
+  useRefreshAudiosMutation,
 } from "services/api/audios/audios.api";
 import { OperatorAudio } from "services/api/audios/audios.types";
 import AudioFile from "assets/icons/mp3-icon.png";
 import { formatDate, formatPhoneNumber } from "components/lib/utils";
-import { toast } from "react-toastify";
+import { toast, Id } from "react-toastify";
 import { useGetSingleOperatorQuery } from "services/api/operators/operators.api";
 import Analyze from "./analyze";
 
 const OperatorPage = () => {
+  const toastId = useRef<Id | null>(null);
+
   const [page, setPage] = useState(1);
   const { operatorId } = useParams();
   const [analyzeAudios] = useAnalyzeAudioMutation();
   const { data: operator } = useGetSingleOperatorQuery({
     operatorId: parseInt(operatorId as string),
   });
-
-  // const handleDownload = () => {
-  //   setIsDownloading(true);
-
-  //   // fetch(`${baseUrl}api/company/audios/pdf/${id}/`, {
-  //   //   method: "GET",
-  //   //   headers: {
-  //   //     Authorization: `Bearer ${storage.get(ACCESS_TOKEN_KEY)}`,
-  //   //   },
-  //   // })
-  //   //   .then((response) => {
-  //   //     if (!response.ok) {
-  //   //       throw new Error("Network response was not ok");
-  //   //     }
-  //   //     return response.blob();
-  //   //   })
-  //   //   .then((blob) => {
-  //   //     // Create a URL for the blob
-  //   //     const url = window.URL.createObjectURL(blob);
-
-  //   //     // Create a temporary link element
-  //   //     const link = document.createElement("a");
-  //   //     link.href = url;
-  //   //     link.setAttribute("download", `audio-${id}.pdf`);
-
-  //   //     // Append to the document, click it, and clean up
-  //   //     document.body.appendChild(link);
-  //   //     link.click();
-  //   //     document.body.removeChild(link);
-
-  //   //     // Release the blob URL
-  //   //     window.URL.revokeObjectURL(url);
-  //   //     setIsDownloading(false);
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.error("Download failed:", error);
-  //   //     setIsDownloading(false);
-  //   //   });
-  // };
 
   const navigate = useNavigate();
   const {
@@ -71,6 +35,7 @@ const OperatorPage = () => {
     operatorId: parseInt(operatorId as string),
     page,
   });
+  const [fetchAudios] = useRefreshAudiosMutation();
 
   const columns: ColumnsType<OperatorAudio> = [
     {
@@ -187,21 +152,6 @@ const OperatorPage = () => {
             <p className="text-base">{operator?.data?.[0]?.email}</p>
           </div>
         </div>
-
-        {/* <div className="flex items-center text-center">
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading}
-            className="bg-[#5b9bec] shadow-none border-0 text-sm h-10 flex items-center justify-center p-2 px-3 rounded-md gap-2"
-          >
-            <DownloadIcon
-              width={24}
-              height={24}
-              className="[&_svg]:w-[32px] [&_svg]:h-[32px]"
-            />
-            {isDownloading ? "Downloading..." : "Download"}
-          </button>
-        </div> */}
       </div>
 
       <Analyze data={operator?.data?.[0]?.avarege_score} />
@@ -215,8 +165,19 @@ const OperatorPage = () => {
           <button
             className="flex items-center gap-2 text-[#5B9BEC] text-base mr-3"
             onClick={() => {
-              refetch();
-              toast.success("Data refreshed successfully");
+              toastId.current = toast("Refreshing data...", {
+                autoClose: false,
+                type: "info",
+              });
+              fetchAudios().then(() => {
+                refetch();
+                // toast.success("Data refreshed successfully");
+                toast.update(toastId.current as Id, {
+                  render: "Data refreshed successfully",
+                  type: "success",
+                  autoClose: 2000,
+                });
+              });
             }}
           >
             <RefreshCcw stroke="#5B9BEC" />

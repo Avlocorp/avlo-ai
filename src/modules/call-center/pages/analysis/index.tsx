@@ -124,11 +124,13 @@ const CallCenter: React.FC = () => {
         <div className="flex items-center justify-between p-4 border-b border-zinc-800">
           <Space>
             <span className="font-semibold text-white">All members</span>
-            <Badge
-              count={`${operators?.all_data} members`}
-              style={{ backgroundColor: "#27272a" }}
-              className="text-white"
-            />
+            {operators?.all_data && (
+              <Badge
+                count={`${operators?.all_data} members`}
+                style={{ backgroundColor: "#27272a" }}
+                className="text-white"
+              />
+            )}
           </Space>
         </div>
 
