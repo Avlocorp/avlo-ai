@@ -9,7 +9,7 @@ import LogoIcon from "assets/icons/LogoIcon";
 import LogoText from "assets/icons/LogoText";
 import HistoryIconinSidebar from "assets/icons/HistoryIconinSidebar";
 import { ACCESS_TOKEN_KEY } from "config";
-import { MessageCircleHeart } from "lucide-react";
+import { MessageCircleHeart, PhoneCall } from "lucide-react";
 
 const { Sider } = Layout;
 
@@ -90,7 +90,7 @@ const Sidebar: React.FC = () => {
             )}
 
             <NavLink
-              to="/pm/call-center"
+              to="/pm/calls"
               className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
               style={({ isActive }) => ({
                 background: isActive
@@ -100,10 +100,10 @@ const Sidebar: React.FC = () => {
             >
               {({ isActive }) => (
                 <>
-                  <MessageCircleHeart
+                  <PhoneCall
                     className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
                   />
-                  <span>Call centre</span>
+                  <span>Calls</span>
                 </>
               )}
             </NavLink>

@@ -1,8 +1,25 @@
 import { ResponseDataWithPagination } from "constants/api.types";
-import { Operator } from "../operators/operators.types";
+import { AverageScore, Operator } from "../operators/operators.types";
 import { AIResponse } from "../home/home.type";
 
 export type OperatorAudiosList = ResponseDataWithPagination<OperatorAudio>;
+
+export interface PhoneNumbers {
+  all_data: number;
+  page: number;
+  per_page: number;
+  last_page: number;
+  next_page_url: string;
+  prev_page_url: string;
+  from: number;
+  to: number;
+  data: {
+    [key: string]: {
+      all_calls: number;
+      analysed_calls: AverageScore;
+    };
+  };
+}
 
 export interface OperatorAudio {
   id: number;
