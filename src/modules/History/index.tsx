@@ -5,8 +5,8 @@ import { formatDate } from "components/lib/utils";
 import { useGetHistoryListQuery } from "services/api/history/history.api";
 import CalendarIcon from "assets/icons/calendar";
 import SearchIconPrimary from "assets/icons/search-lg";
-import "./style.css";
 import { Link } from "react-router-dom";
+
 export default function History() {
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -84,7 +84,7 @@ export default function History() {
         <div className="bg-[#1A1A1D] w-full flex flex-col overflow-y-auto max-h-full px-8">
           <div className="grid grid-cols-2 gap-4">
             {data?.data?.map((item) => (
-              <Link to={`/admin/call-center/audio/${item.audio_id}`}>
+              <Link to={`/pm/call-center/audio/${item.audio_id}`}>
                 <div
                   key={item.id}
                   className="rounded-[15px] flex flex-col gap-4 max-h-[120px] justify-between cursor-pointer w-full p-4 bg-[#343436]"

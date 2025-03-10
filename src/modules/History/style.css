@@ -1,7 +1,0 @@
-.ant-picker-cell-in-range::before {
-  background-color: #5b9bec !important; /* To‘q kulrang */
-}
-
-.ant-picker-cell-in-range .ant-picker-cell-inner {
-  color: white !important; /* Oq rang */
-}

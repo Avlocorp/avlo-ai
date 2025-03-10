@@ -89,6 +89,25 @@ const Sidebar: React.FC = () => {
               </NavLink>
             )}
 
+            <NavLink
+              to="/pm/call-center"
+              className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
+              style={({ isActive }) => ({
+                background: isActive
+                  ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
+                  : "#3A3A41",
+              })}
+            >
+              {({ isActive }) => (
+                <>
+                  <MessageCircleHeart
+                    className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
+                  />
+                  <span>Call centre</span>
+                </>
+              )}
+            </NavLink>
+
             {hasToken && (
               <NavLink
                 to="/pm/history"

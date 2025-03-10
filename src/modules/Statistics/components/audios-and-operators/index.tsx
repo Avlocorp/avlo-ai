@@ -115,7 +115,7 @@ const AudiosAndOperators = () => {
       key: "actions",
       dataIndex: "id",
       render: (id: number) => (
-        <Link to={`operator/${id}`}>
+        <Link to={`/pm/call-center/operator/${id}`}>
           <Button
             type="text"
             icon={<EyeOutlined className="[&_svg]:w-[28px] [&_svg]:h-[28px]" />}
