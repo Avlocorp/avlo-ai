@@ -85,11 +85,10 @@ const OperatorPage = () => {
         return (
           <Badge
             count={analyzed ? "Analyzed" : "Not analyzed yet"}
-            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${
-              analyzed
-                ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
-                : "text-zinc-400"
-            }`}
+            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${analyzed
+              ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
+              : "text-zinc-400"
+              }`}
           />
         );
       },
@@ -101,7 +100,7 @@ const OperatorPage = () => {
       render: (_, audio) => {
         return (
           <Space>
-            <Link to={`/pm/call-center/audio/${audio.id}`}>
+            <Link to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}>
               <Eye color={audio.analysed ? "#5B9BEC" : "#4A554F"} />
             </Link>
             <Button
