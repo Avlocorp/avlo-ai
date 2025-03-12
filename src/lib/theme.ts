@@ -24,5 +24,10 @@ export const theme: ThemeConfig = {
       horizontalMargin: "0px",
       inkBarColor: "#5c9bec",
     },
+    Timeline: {
+      dotBg: "transparent",
+      itemPaddingBottom: 80,
+      tailColor: "#a099ff",
+    },
   },
 };
