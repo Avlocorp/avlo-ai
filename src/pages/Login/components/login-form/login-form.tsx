@@ -49,6 +49,7 @@ export default function LoginForm() {
         </p>
       </div>
       <InputField name="username" label="Username" required />
+
       <InputField name="password" label="Password" type="password" required />
       <Form.Item>
         <Button type="primary" htmlType="submit" className="w-full">

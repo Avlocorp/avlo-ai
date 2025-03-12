@@ -36,3 +36,31 @@ export interface OperatorAudio {
   updated_at: string;
   operator: Operator;
 }
+export interface CustomerInfo {
+  all_data: number;
+  page: number;
+  per_page: number;
+  last_page: number;
+  next_page_url: string;
+  prev_page_url: string;
+  from: number;
+  to: number;
+  data: CustomerData[];
+}
+
+export interface CustomerData {
+  all_calls: number;
+  analysed_calls: AnalysedCalls;
+  phone: string;
+}
+
+export interface AnalysedCalls {
+  overall_performance_score: number;
+  communication_skills_score: number;
+  problem_handling_score: number;
+  customer_management_score: number;
+  protocol_adherence_score: number;
+  successfully_calls: number;
+  unsuccessfully_calls: number;
+  total_calls: number;
+}

@@ -8,13 +8,30 @@ import {
 } from "services/api/operators/operators.api";
 import { useEffect, useState } from "react";
 import { Operator } from "services/api/operators/operators.types";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useDebounce } from "hooks";
 
 const CallCenter: React.FC = () => {
-  const [page, setPage] = useState(1);
+  const perPage = 10;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialPage = Number(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 600);
+
+  useEffect(() => {
+    if (syncData?.success) {
+      fetchOperators({ page: currentPage, search: debouncedValue });
+    }
+  }, [debouncedValue, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSearchParams({ page: String(page) }); // URLga yangi sahifani saqlash
+    fetchOperators({ page, search: debouncedValue });
+  };
+
 
   const { data: syncData, isLoading } = useSyncOperatorsQuery();
   const [fetchOperators, { data: operators, isLoading: isFetching }] =
@@ -22,9 +39,10 @@ const CallCenter: React.FC = () => {
 
   useEffect(() => {
     if (syncData?.success) {
-      fetchOperators({ page, search: "" });
+      fetchOperators({ page: currentPage, search: "" });
     }
-  }, [syncData, page]);
+  }, [syncData, perPage]);
+
 
   useEffect(() => {
     if (syncData?.success) {
@@ -36,9 +54,8 @@ const CallCenter: React.FC = () => {
     {
       title: "No",
       dataIndex: "id",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => (currentPage - 1) * perPage + index + 1,
     },
-
     {
       title: "Name",
       dataIndex: "name",
@@ -139,11 +156,16 @@ const CallCenter: React.FC = () => {
           dataSource={operators?.data}
           pagination={{
             total: operators?.all_data,
+            pageSize: perPage,
+            current: currentPage, // Hozirgi sahifa
             showSizeChanger: false,
-            showTotal: (total, range) => `Page ${range[0]} of ${total}`,
             onChange: (page) => {
-              setPage(page);
+              setCurrentPage(page);
+              handlePageChange(page);
+              fetchOperators({ page, search: debouncedValue });
             },
+            showTotal: (total, range) => `Page ${Math.ceil(range[0] / perPage)} of ${Math.ceil(total / perPage)}`,
+
           }}
           loading={isLoading || isFetching}
         />

@@ -42,7 +42,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
             </div>
             <InputField name="first_name" label="First Name" required />
             <InputField name="last_name" label="Last Name" />
-            <InputField name="phone_number" label="Phone" required />
+            <InputField name="phone_number" label="Phone" required type="number" />
             <InputField name="email" label="Email" type="email" required />
             <InputField name="username" label="Username" required />
             <InputField name="password" label="Password" type="password" required />

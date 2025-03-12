@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "antd";
+import { Button, Layout, Modal } from "antd";
 import { NavLink } from "react-router-dom";
 
 import HomeIcon from "assets/icons/HomeIcon";
@@ -8,14 +8,33 @@ import SettingIcon from "assets/icons/SettingIcon";
 import LogoIcon from "assets/icons/LogoIcon";
 import LogoText from "assets/icons/LogoText";
 import HistoryIconinSidebar from "assets/icons/HistoryIconinSidebar";
-import { ACCESS_TOKEN_KEY } from "config";
-import { MessageCircleHeart, PhoneCall } from "lucide-react";
-
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
+import { LogOut, MessageCircleHeart, PhoneCall } from "lucide-react";
+import { storage } from "services";
+import { setUserState } from "services/api/auth";
+import { authApi } from "services/api/auth/Auth.api";
+import { useDispatch } from "react-redux";
 const { Sider } = Layout;
 
 const Sidebar: React.FC = () => {
-  const hasToken = !!localStorage.getItem(ACCESS_TOKEN_KEY);
 
+  const dispatch = useDispatch();
+  const hasToken = !!localStorage.getItem(ACCESS_TOKEN_KEY);
+  const handleLogout = () => {
+    Modal.confirm({
+      title: <div className="text-xl font-semibold">Are you sure?</div>,
+      okText: "Yes",
+      cancelText: "No",
+      okType: "danger",
+      centered: true,
+      onOk: () => {
+        storage.remove(ACCESS_TOKEN_KEY);
+        storage.remove(REFRESH_TOKEN_KEY);
+        dispatch(setUserState({ isAuthenticated: false }));
+        dispatch(authApi.util.resetApiState());
+      },
+    });
+  };
   return (
     <Sider
       className="h-screen bg-[#2A2A2D] top-0 left-0 z-20 flex flex-col"
@@ -33,7 +52,8 @@ const Sidebar: React.FC = () => {
           </div>
           <div className="space-y-2">
             <NavLink
-              to="/"
+              to="/pm"
+              end
               className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
               style={({ isActive }) => ({
                 background: isActive
@@ -130,7 +150,7 @@ const Sidebar: React.FC = () => {
         </div>
 
         {hasToken && (
-          <div className="px-6 mt-auto mb-6">
+          <div className="px-6 mt-auto ">
             <NavLink
               to="/pm/settings"
               className="w-full text-[#fff] mb-6 text-[16px] flex gap-3 items-center px-3 py-2 rounded-lg "
@@ -147,6 +167,23 @@ const Sidebar: React.FC = () => {
                 </>
               )}
             </NavLink>
+          </div>
+        )}
+        {hasToken && (
+          <div className="px-6 mt-auto mb-6">
+            <div className="h-[1px] w-full bg-[#343436] mb-4"></div>
+            <Button
+              className="w-full h-[60px] mt-6 text-[#fff] text-[16px] flex gap-3 items-center justify-start px-3 py-2 rounded-lg"
+
+              onClick={handleLogout}
+            >
+              <span className="bg-[#2A2A2D] p-1 rounded-[200px] !w-10 !h-10 flex items-center justify-center">
+                <LogOut />
+              </span>
+              <div className="flex flex-col">
+                <span className="text-[14px] font-semibold">Logout</span>
+              </div>
+            </Button>
           </div>
         )}
       </div>

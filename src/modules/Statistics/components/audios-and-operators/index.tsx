@@ -17,7 +17,9 @@ import CalendarIcon from "assets/icons/calendar";
 import dayjs from "dayjs";
 
 const AudiosAndOperators = () => {
-  const [page, setPage] = useState(1);
+  const perPage = 10;
+
+  const [currentPage, setCurrentPage] = useState(1);
   const [reversed, setReversed] = useState(true);
   const [tab, setTab] = useState("1");
   const [from, setFrom] = useState<string | null>(null);
@@ -27,7 +29,7 @@ const AudiosAndOperators = () => {
     isLoading,
     isFetching,
   } = useGetOperatorsStatisticsQuery({
-    page: page,
+    page: currentPage,
     search: "",
     reversed: reversed,
     from: from || undefined,
@@ -48,6 +50,9 @@ const AudiosAndOperators = () => {
     }
   };
 
+
+
+
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -63,7 +68,7 @@ const AudiosAndOperators = () => {
     {
       title: "No",
       dataIndex: "id",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => (currentPage - 1) * perPage + index + 1,
     },
 
     {
@@ -157,9 +162,11 @@ const AudiosAndOperators = () => {
           pagination={{
             total: operators?.all_data,
             showSizeChanger: false,
-            showTotal: (total, range) => `Page ${range[0]} of ${total}`,
-            onChange: (page) => {
-              setPage(page);
+            onChange: (page) => setCurrentPage(page),
+            showTotal: (total, range) => {
+              const currentPage = Math.ceil(range[0] / perPage);
+              const totalPages = Math.ceil(total / perPage);
+              return `Page ${currentPage} of ${totalPages}`;
             },
           }}
           loading={isLoading || isFetching}
