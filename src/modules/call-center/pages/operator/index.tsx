@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Space, Table } from "antd";
+import { Avatar, Badge, Button, Space, Table, Tabs } from "antd";
 import { ColumnsType } from "antd/es/table";
 import HomeIcon from "assets/icons/HomeIcon";
 import { ChevronRight, Cpu, Download, Eye, RefreshCcw } from "lucide-react";
@@ -6,10 +6,11 @@ import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useAnalyzeAudioMutation,
+  useGetClientsInfoQuery,
   useGetOperatorAudiosQuery,
   useRefreshAudiosMutation,
 } from "services/api/audios/audios.api";
-import { OperatorAudio } from "services/api/audios/audios.types";
+import { CustomerData, OperatorAudio } from "services/api/audios/audios.types";
 import AudioFile from "assets/icons/mp3-icon.png";
 import { formatDate, formatPhoneNumber } from "components/lib/utils";
 import { toast, Id } from "react-toastify";
@@ -35,9 +36,17 @@ const OperatorPage = () => {
     operatorId: parseInt(operatorId as string),
     page,
   });
+
+
+  const { data: customer, } = useGetClientsInfoQuery({
+    id: parseInt(operatorId as string),
+    page,
+  });
   const [fetchAudios] = useRefreshAudiosMutation();
 
-  const columns: ColumnsType<OperatorAudio> = [
+  const [activeTab, setActiveTab] = useState("all_audios");
+
+  const columnsAudios: ColumnsType<OperatorAudio> = [
     {
       title: "ID",
       dataIndex: "audio_id",
@@ -124,6 +133,75 @@ const OperatorPage = () => {
     },
   ];
 
+  const columnsCustomer: ColumnsType<CustomerData> = [
+    {
+      title: "№",
+      dataIndex: "index",
+      render: (_, __, index) => {
+        return <div>{index + 1}</div>;
+      },
+    },
+    {
+      title: "Customer phone",
+      dataIndex: "phone",
+      render: (phone) => {
+        return <div>{formatPhoneNumber(phone)}</div>;
+      },
+    },
+    {
+      title: <div className="text-center">
+        Overall performance score
+      </div>,
+      dataIndex: "analysed_calls",
+      render: (analysed_calls) => {
+        return <div className="text-center">{analysed_calls.overall_performance_score}</div>;
+      }
+    },
+
+    {
+      title: <div className="text-center">Successfully calls </div>,
+      dataIndex: "analysed_calls",
+      render: (analysed_calls) => {
+        return <div className="text-center">{analysed_calls.successfully_calls}</div>;
+      }
+
+    },
+    {
+      title: <div className="text-center"> Unsuccessfully calls </div>,
+      dataIndex: "analysed_calls",
+      render: (analysed_calls) => {
+        return <div className="text-center">{analysed_calls.unsuccessfully_calls}</div>;
+      }
+
+    },
+    {
+      title: <div className="text-center">  All calls </div>,
+      dataIndex: "all_calls",
+      render: (all_calls) => {
+        return <div className="text-center">{all_calls}</div>;
+      }
+
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      dataIndex: "data",
+      render: (_,) => {
+        return (
+          <Space>
+            <Link
+              to={""}
+            // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
+            >
+              <Eye color={"#5B9BEC"} />
+            </Link>
+
+          </Space>
+        );
+      },
+    },
+  ];
+
   return (
     <section className="p-6">
       <div className="mb-5 flex items-center gap-2">
@@ -158,7 +236,22 @@ const OperatorPage = () => {
       <div className="rounded-lg border border-zinc-800 bg-[#343436]">
         <div className="flex items-center justify-between p-4 border-b border-zinc-800">
           <Space>
-            <span className="font-semibold text-white">All audios</span>
+            <Tabs
+              defaultActiveKey="all_audios"
+              activeKey={activeTab}
+              onChange={setActiveTab}
+              items={[
+                {
+                  key: "all_audios",
+                  label: "All audios",
+
+                },
+                {
+                  key: "customer",
+                  label: "Customer",
+                },
+              ]}
+            />
           </Space>
 
           <button
@@ -184,19 +277,34 @@ const OperatorPage = () => {
           </button>
         </div>
 
-        <Table
-          columns={columns}
-          dataSource={audios?.data || []}
-          pagination={{
-            total: audios?.all_data,
-            showSizeChanger: false,
-            showTotal: (total, range) => `Page ${range[0]} of ${total}`,
-            onChange: (page) => {
-              setPage(page);
-            },
-          }}
-          loading={isLoading}
-        />
+
+        {activeTab === "all_audios" && (
+          <Table
+            columns={columnsAudios}
+            dataSource={audios?.data || []}
+            pagination={{
+              total: audios?.all_data || 0,
+              showSizeChanger: false,
+              showTotal: (total, range) => `Page ${range[0]} of ${total}`,
+              onChange: (page) => setPage(page),
+            }}
+            loading={isLoading}
+          />
+        )}
+
+        {activeTab === "customer" && (
+          <Table
+            columns={columnsCustomer}
+            dataSource={customer?.data || []}
+            pagination={{
+              total: customer?.all_data || 0,
+              showSizeChanger: false,
+              showTotal: (total, range) => `Page ${range[0]} of ${total}`,
+              onChange: (page) => setPage(page),
+            }}
+            loading={isLoading}
+          />
+        )}
       </div>
     </section>
   );
