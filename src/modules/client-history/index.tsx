@@ -2,16 +2,18 @@ import { Button, Timeline } from "antd";
 import AudioFile from "assets/icons/mp3-icon.png";
 import { Cpu, Download, Eye } from "lucide-react";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   useAnalyzeAudioMutation,
   useGetClientsByPhoneNumberQuery,
 } from "services/api/audios/audios.api";
 
 const ClientsHistory = () => {
+  const params = useParams();
+
   const [analyzeAudios] = useAnalyzeAudioMutation();
   const { data } = useGetClientsByPhoneNumberQuery({
-    phone: "998331300529",
+    phone: params.phone as string,
   });
 
   const history = useMemo(() => {
