@@ -190,7 +190,8 @@ const OperatorPage = () => {
         return (
           <Space>
             <Link
-              to={`/pm/calls-history/${PhoneNumber}`}
+              to={""}
+            // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
             >
               <Eye color={"#5B9BEC"} />
             </Link>
