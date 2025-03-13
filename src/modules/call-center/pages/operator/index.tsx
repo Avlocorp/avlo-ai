@@ -134,7 +134,6 @@ const OperatorPage = () => {
       },
     },
   ];
-  const PhoneNumber = customer?.data[0]?.phone?.replace("+", "");
   const columnsCustomer: ColumnsType<CustomerData> = [
     {
       title: "№",
