@@ -86,7 +86,7 @@ const router = createBrowserRouter([
             element: <CallsList />,
           },
           {
-            path: "calls-history",
+            path: "calls-history/:phone",
             element: <ClientsHistory />,
           },
         ],

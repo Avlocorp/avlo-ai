@@ -1,7 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import config, { ACCESS_TOKEN_KEY } from "config";
 import storage from "services/storage";
-import { CustomerInfo, OperatorAudiosList, PhoneNumbers } from "./audios.types";
+import {
+  ClientsHistory,
+  CustomerInfo,
+  OperatorAudiosList,
+} from "./audios.types";
 // import { TranslationResponse } from "./translation.types";
 
 export const audiosApi = createApi({
@@ -32,11 +36,12 @@ export const audiosApi = createApi({
       }),
     }),
 
-    getClientsByPhoneNumber: builder.query<PhoneNumbers, { page: number }>({
-      query: ({ page }) => ({
-        url: "/api/company/audios/phone/",
+    getClientsByPhoneNumber: builder.query<ClientsHistory, { phone: string }>({
+      query: ({ phone }) => ({
+        url: "/api/company/audios/phonelist/",
         params: {
-          page,
+          phone,
+          include: "operator",
         },
       }),
     }),

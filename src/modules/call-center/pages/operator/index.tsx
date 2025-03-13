@@ -37,8 +37,7 @@ const OperatorPage = () => {
     page,
   });
 
-
-  const { data: customer, } = useGetClientsInfoQuery({
+  const { data: customer } = useGetClientsInfoQuery({
     id: parseInt(operatorId as string),
     page,
   });
@@ -94,10 +93,11 @@ const OperatorPage = () => {
         return (
           <Badge
             count={analyzed ? "Analyzed" : "Not analyzed yet"}
-            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${analyzed
-              ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
-              : "text-zinc-400"
-              }`}
+            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${
+              analyzed
+                ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
+                : "text-zinc-400"
+            }`}
           />
         );
       },
@@ -109,7 +109,9 @@ const OperatorPage = () => {
       render: (_, audio) => {
         return (
           <Space>
-            <Link to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}>
+            <Link
+              to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
+            >
               <Eye color={audio.analysed ? "#5B9BEC" : "#4A554F"} />
             </Link>
             <Button
@@ -149,53 +151,57 @@ const OperatorPage = () => {
       },
     },
     {
-      title: <div className="text-center">
-        Overall performance score
-      </div>,
+      title: <div className="text-center">Overall performance score</div>,
       dataIndex: "analysed_calls",
       render: (analysed_calls) => {
-        return <div className="text-center">{analysed_calls.overall_performance_score}</div>;
-      }
+        return (
+          <div className="text-center">
+            {analysed_calls.overall_performance_score}
+          </div>
+        );
+      },
     },
 
     {
       title: <div className="text-center">Successfully calls </div>,
       dataIndex: "analysed_calls",
       render: (analysed_calls) => {
-        return <div className="text-center">{analysed_calls.successfully_calls}</div>;
-      }
-
+        return (
+          <div className="text-center">{analysed_calls.successfully_calls}</div>
+        );
+      },
     },
     {
       title: <div className="text-center"> Unsuccessfully calls </div>,
       dataIndex: "analysed_calls",
       render: (analysed_calls) => {
-        return <div className="text-center">{analysed_calls.unsuccessfully_calls}</div>;
-      }
-
+        return (
+          <div className="text-center">
+            {analysed_calls.unsuccessfully_calls}
+          </div>
+        );
+      },
     },
     {
-      title: <div className="text-center">  All calls </div>,
+      title: <div className="text-center"> All calls </div>,
       dataIndex: "all_calls",
       render: (all_calls) => {
         return <div className="text-center">{all_calls}</div>;
-      }
-
+      },
     },
     {
       title: "Actions",
       key: "actions",
       dataIndex: "data",
-      render: (_,) => {
+      render: (_, item) => {
         return (
           <Space>
             <Link
-              to={""}
-            // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
+              to={`/pm/calls-history/${item.phone.replaceAll("+", "")}`}
+              // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
             >
               <Eye color={"#5B9BEC"} />
             </Link>
-
           </Space>
         );
       },
@@ -244,7 +250,6 @@ const OperatorPage = () => {
                 {
                   key: "all_audios",
                   label: "All audios",
-
                 },
                 {
                   key: "customer",
@@ -276,7 +281,6 @@ const OperatorPage = () => {
             Refresh
           </button>
         </div>
-
 
         {activeTab === "all_audios" && (
           <Table
