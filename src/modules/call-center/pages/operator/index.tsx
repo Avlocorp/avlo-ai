@@ -132,7 +132,7 @@ const OperatorPage = () => {
       },
     },
   ];
-
+  const PhoneNumber = customer?.data[0]?.phone?.replace("+", "");
   const columnsCustomer: ColumnsType<CustomerData> = [
     {
       title: "№",
@@ -190,8 +190,7 @@ const OperatorPage = () => {
         return (
           <Space>
             <Link
-              to={""}
-            // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
+              to={`/pm/calls-history/${PhoneNumber}`}
             >
               <Eye color={"#5B9BEC"} />
             </Link>
@@ -248,7 +247,7 @@ const OperatorPage = () => {
                 },
                 {
                   key: "customer",
-                  label: "Customer",
+                  label: "Customers",
                 },
               ]}
             />
