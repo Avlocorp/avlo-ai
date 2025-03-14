@@ -23,13 +23,13 @@ export default function StatisticsPages() {
       <div className="flex gap-6 mb-6 justify-between w-full">
         <ParameterCard
           Img={phoneImg}
-          anmount={data?.total_calls.toString()}
+          anmount={data?.total_calls ? data.total_calls.toString() : "0"}
           title="Total calls"
           percentage="15%"
         />
         <ParameterCard
           Img={TalkBetweenMan}
-          anmount={data?.members.toString()}
+          anmount={data?.members ? data?.members.toString() : "0"}
           title="Total team members"
           percentage="-14%"
         />
