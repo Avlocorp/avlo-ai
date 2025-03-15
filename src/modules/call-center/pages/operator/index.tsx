@@ -134,7 +134,6 @@ const OperatorPage = () => {
       },
     },
   ];
-
   const columnsCustomer: ColumnsType<CustomerData> = [
     {
       title: "№",
@@ -253,7 +252,7 @@ const OperatorPage = () => {
                 },
                 {
                   key: "customer",
-                  label: "Customer",
+                  label: "Customers",
                 },
               ]}
             />
