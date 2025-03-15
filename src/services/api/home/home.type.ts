@@ -17,7 +17,13 @@ export interface AIResponse {
   successful_interaction_strategies: string[];
   examples_for_training: string[];
   conclusion: string;
+  transcription: Transcription;
 }
+
+export type Transcription = {
+  speaker: "customer" | "operator";
+  text: string;
+}[];
 
 export type DashboardStatistics = {
   overall_performance_score: number;

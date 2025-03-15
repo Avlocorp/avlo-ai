@@ -18,7 +18,6 @@ import { RadarChartComponent } from "modules/AnalysisPage/components/Chart/Radar
 import CardChart from "modules/AnalysisPage/components/cardCharts";
 import CardContent from "modules/AnalysisPage/components/cardContent";
 import HeadLine from "modules/AnalysisPage/components/headline";
-import { AIResponse } from "./type";
 import { ChevronRight, DownloadIcon } from "lucide-react";
 import AudioFile from "assets/icons/mp3-icon.png";
 import config, { ACCESS_TOKEN_KEY } from "config";
@@ -26,6 +25,8 @@ import { useState } from "react";
 import { storage } from "services";
 import HomeIcon from "assets/icons/HomeIcon";
 import { useNavigate } from "react-router-dom";
+import { TranscriptionView } from "./transcription";
+import { AIResponse } from "services/api/home/home.type";
 
 interface ChatMainProps {
   data: AIResponse;
@@ -281,6 +282,8 @@ export default function ChatMain({ data, id }: ChatMainProps) {
           Icon={Xulosaicon}
         />
       </div>
+
+      <TranscriptionView transcription={data.transcription} />
     </div>
   );
 }
