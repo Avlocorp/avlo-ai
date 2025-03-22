@@ -17,7 +17,6 @@ import { useDispatch } from "react-redux";
 const { Sider } = Layout;
 
 const Sidebar: React.FC = () => {
-
   const dispatch = useDispatch();
   const hasToken = !!localStorage.getItem(ACCESS_TOKEN_KEY);
   const handleLogout = () => {
@@ -110,7 +109,7 @@ const Sidebar: React.FC = () => {
             )}
 
             <NavLink
-              to="/pm/calls"
+              to="/pm/leads"
               className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
               style={({ isActive }) => ({
                 background: isActive
@@ -123,7 +122,7 @@ const Sidebar: React.FC = () => {
                   <PhoneCall
                     className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
                   />
-                  <span>Calls</span>
+                  <span>Leads</span>
                 </>
               )}
             </NavLink>
@@ -174,7 +173,6 @@ const Sidebar: React.FC = () => {
             <div className="h-[1px] w-full bg-[#343436] mb-4"></div>
             <Button
               className="w-full h-[60px] mt-6 text-[#fff] text-[16px] flex gap-3 items-center justify-start px-3 py-2 rounded-lg"
-
               onClick={handleLogout}
             >
               <span className="bg-[#2A2A2D] p-1 rounded-[200px] !w-10 !h-10 flex items-center justify-center">

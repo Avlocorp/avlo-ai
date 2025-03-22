@@ -22,8 +22,8 @@ const OperatorPage = lazy(() => import("modules/call-center/pages/operator"));
 const AudioAnalyze = lazy(
   () => import("modules/call-center/pages/audio-analyze/audio-analyze")
 );
-const CallsList = lazy(() => import("modules/calls/list"));
 const ClientsHistory = lazy(() => import("modules/client-history"));
+const LeadsList = lazy(() => import("modules/leads"));
 
 const router = createBrowserRouter([
   {
@@ -82,12 +82,12 @@ const router = createBrowserRouter([
             element: <RedirectFromBitrix />,
           },
           {
-            path: "calls",
-            element: <CallsList />,
-          },
-          {
             path: "calls-history/:phone",
             element: <ClientsHistory />,
+          },
+          {
+            path: "leads",
+            element: <LeadsList />,
           },
         ],
       },

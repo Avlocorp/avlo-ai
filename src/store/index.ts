@@ -8,6 +8,7 @@ import { operatorsApi } from "services/api/operators/operators.api";
 import { audiosApi } from "services/api/audios/audios.api";
 import { apiErrorMiddleware } from "services/middlewares/apiMiddleware/middleware";
 import { historyApi } from "services/api/history/history.api";
+import { leadsApi } from "services/api/leads/leads.api";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [audiosApi.reducerPath]: audiosApi.reducer,
     [translationApi.reducerPath]: translationApi.reducer,
     [historyApi.reducerPath]: historyApi.reducer,
+    [leadsApi.reducerPath]: leadsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -29,6 +31,7 @@ export const store = configureStore({
       .concat(audiosApi.middleware)
       .concat(settingsApi.middleware)
       .concat(historyApi.middleware)
+      .concat(leadsApi.middleware)
       .concat(apiErrorMiddleware), // Custom middleware
 });
 
