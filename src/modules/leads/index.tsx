@@ -52,6 +52,16 @@ const LeadsList: React.FC = () => {
       },
     },
     {
+      title: "Scoring",
+      dataIndex: "lead_score",
+      key: "lead_score",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
