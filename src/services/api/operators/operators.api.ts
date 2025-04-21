@@ -28,7 +28,7 @@ export const operatorsApi = createApi({
   endpoints: (builder) => ({
     syncOperators: builder.query<{ success: boolean }, void>({
       query: () => ({
-        url: `api/company/operators/reload/`,
+        url: `api/operators/reload/`,
         timeout: 60000,
       }),
     }),
@@ -37,7 +37,7 @@ export const operatorsApi = createApi({
       { page: number; search: string }
     >({
       query: ({ page, search }) => ({
-        url: `api/company/operators/`,
+        url: `api/operators/`,
         params: {
           page,
           search,
@@ -47,7 +47,7 @@ export const operatorsApi = createApi({
     }),
     getSingleOperator: builder.query<OperatorsList, { operatorId: number }>({
       query: ({ operatorId }) => ({
-        url: `api/company/operators/`,
+        url: `api/operators/`,
         params: {
           "filter[id]": operatorId,
         },
@@ -65,7 +65,7 @@ export const operatorsApi = createApi({
       }
     >({
       query: ({ page, search, reversed, from, until }) => ({
-        url: `api/company/operators/statistics/`,
+        url: `api/operators/statistics/`,
         params: {
           page,
           search,

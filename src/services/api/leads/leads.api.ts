@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import config, { ACCESS_TOKEN_KEY } from "config";
 import storage from "services/storage";
-import { LeadList } from "./leads.types";
+import { Lead } from "./leads.types";
 // import { TranslationResponse } from "./translation.types";
 
 export const leadsApi = createApi({
@@ -17,9 +17,9 @@ export const leadsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getLeadsList: builder.query<LeadList, { page: number; search: string }>({
+    getLeadsList: builder.query<Lead[], { page: number; search: string }>({
       query: ({ page, search }) => ({
-        url: "/api/company/leads/",
+        url: "/api/leads/",
         params: {
           page,
           search: search || undefined,

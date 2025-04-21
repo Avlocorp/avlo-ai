@@ -16,7 +16,7 @@ import { storage } from "services";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
 
 export default function LoginForm() {
-  const [loginPost] = useLoginMutation();
+  const [loginPost, { isLoading: isFormSubmitting }] = useLoginMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
@@ -52,7 +52,13 @@ export default function LoginForm() {
 
       <InputField name="password" label="Password" type="password" required />
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="w-full">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="w-full"
+          disabled={isFormSubmitting}
+          loading={isFormSubmitting}
+        >
           {t("Enter")}
         </Button>
       </Form.Item>

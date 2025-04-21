@@ -21,7 +21,7 @@ export const historyApi = createApi({
       { page: number; until: string; from: string; search: string }
     >({
       query: ({ page, until, from, search }) => ({
-        url: `api/company/history/`,
+        url: `api/history/`,
         params: {
           page,
           field: "created_at",

@@ -64,7 +64,7 @@ export const homeApi = createApi({
       },
     }),
     getStatistics: builder.query<DashboardStatistics, void>({
-      query: () => "api/company/dashboard/",
+      query: () => "api/dashboard/",
     }),
   }),
 });

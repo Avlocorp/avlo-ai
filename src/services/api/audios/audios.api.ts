@@ -26,7 +26,7 @@ export const audiosApi = createApi({
       { operatorId: number; page: number }
     >({
       query: ({ operatorId, page }) => ({
-        url: "/api/company/audios/",
+        url: "/api/audios/",
         params: {
           //   sort: "-file_upload_date",
           "filter[operator_id]": operatorId,
@@ -38,7 +38,7 @@ export const audiosApi = createApi({
 
     getClientsByPhoneNumber: builder.query<ClientsHistory, { phone: string }>({
       query: ({ phone }) => ({
-        url: "/api/company/audios/phonelist/",
+        url: "/api/audios/phonelist/",
         params: {
           phone,
           include: "operator",
@@ -48,7 +48,7 @@ export const audiosApi = createApi({
 
     getClientsInfo: builder.query<CustomerInfo, { id: number; page: number }>({
       query: ({ id, page }) => ({
-        url: `/api/company/audios/phone/${id}/`,
+        url: `/api/audios/phone/${id}/`,
         params: {
           page,
         },
@@ -57,7 +57,7 @@ export const audiosApi = createApi({
 
     analyzeAudio: builder.mutation<void, string>({
       query: (ids) => ({
-        url: `/api/company/analyse/`,
+        url: `/api/analyse/`,
         method: "POST",
         body: {
           audios: ids,
@@ -66,7 +66,7 @@ export const audiosApi = createApi({
     }),
     getSingleAudio: builder.query<OperatorAudiosList, string>({
       query: (id) => ({
-        url: `/api/company/audios/`,
+        url: `/api/audios/`,
         params: {
           "filter[id]": id,
           include: "operator",
@@ -75,12 +75,12 @@ export const audiosApi = createApi({
     }),
     downloadAudio: builder.query<string, string>({
       query: (id) => ({
-        url: `/api/company/audios/pdf/${id}/`,
+        url: `/api/audios/pdf/${id}/`,
       }),
     }),
     refreshAudios: builder.mutation<void, void>({
       query: () => ({
-        url: "/api/company/audios/",
+        url: "/api/audios/",
         method: "POST",
       }),
     }),

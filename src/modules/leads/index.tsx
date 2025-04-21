@@ -1,5 +1,5 @@
 import type React from "react";
-import { Table, Input, Badge, Space } from "antd";
+import { Table, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { useState } from "react";
@@ -42,6 +42,20 @@ const LeadsList: React.FC = () => {
       title: "Created at",
       dataIndex: "DATE_CREATE",
       key: "DATE_CREATE",
+      render: (value) => {
+        const date = new Date(value);
+        const humanReadable = date.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          timeZoneName: "short",
+        });
+
+        return humanReadable;
+      },
     },
     {
       title: "Assigned to",
@@ -89,7 +103,7 @@ const LeadsList: React.FC = () => {
       </div>
 
       <div className="rounded-lg border border-zinc-800 bg-[#343436]">
-        <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+        {/* <div className="flex items-center justify-between p-4 border-b border-zinc-800">
           <Space>
             <span className="font-semibold text-white">All members</span>
             {data?.total && (
@@ -100,13 +114,13 @@ const LeadsList: React.FC = () => {
               />
             )}
           </Space>
-        </div>
+        </div> */}
 
         <Table
           columns={columns}
-          dataSource={data?.result}
+          dataSource={data}
           pagination={{
-            total: data?.total,
+            // total: data?.total,
             pageSize: perPage,
             current: currentPage,
             showSizeChanger: false,

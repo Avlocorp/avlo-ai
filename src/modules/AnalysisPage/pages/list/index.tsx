@@ -42,7 +42,7 @@ export default function ChatMain({ data, id }: ChatMainProps) {
 
     setIsDownloading(true);
 
-    fetch(`${baseUrl}api/company/audios/pdf/${id}/`, {
+    fetch(`${baseUrl}api/audios/pdf/${id}/`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${access}`,
