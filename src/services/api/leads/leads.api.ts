@@ -26,7 +26,16 @@ export const leadsApi = createApi({
         },
       }),
     }),
+    getDealsList: builder.query<Lead[], { page: number; search: string }>({
+      query: ({ page, search }) => ({
+        url: "/api/deals/",
+        params: {
+          page,
+          search: search || undefined,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetLeadsListQuery } = leadsApi;
+export const { useGetLeadsListQuery, useGetDealsListQuery } = leadsApi;

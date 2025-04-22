@@ -1,15 +1,19 @@
 import type React from "react";
-import { Table, Input } from "antd";
+import { Input, Tabs } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import type { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useGetLeadsListQuery } from "services/api/leads/leads.api";
-import { Lead } from "services/api/leads/leads.types";
+import {
+  useGetDealsListQuery,
+  useGetLeadsListQuery,
+} from "services/api/leads/leads.api";
 import { useDebounce } from "hooks";
+import LeadsTable from "./leads-table";
+import DealsTable from "./deals-table";
 
 const LeadsList: React.FC = () => {
   const perPage = 50;
+  const [activeTab, setActiveTab] = useState("leads");
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialPage = Number(searchParams.get("page")) || 1;
@@ -26,61 +30,14 @@ const LeadsList: React.FC = () => {
     page: currentPage,
     search: debouncedValue,
   });
-
-  const columns: ColumnsType<Lead> = [
-    {
-      title: "No",
-      dataIndex: "id",
-      render: (_, __, index) => (currentPage - 1) * perPage + index + 1,
-    },
-    {
-      title: "Title",
-      dataIndex: "TITLE",
-      key: "TITLE",
-    },
-    {
-      title: "Created at",
-      dataIndex: "DATE_CREATE",
-      key: "DATE_CREATE",
-      render: (value) => {
-        const date = new Date(value);
-        const humanReadable = date.toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          timeZoneName: "short",
-        });
-
-        return humanReadable;
-      },
-    },
-    {
-      title: "Assigned to",
-      dataIndex: "assigned_by",
-      key: "assigned_by",
-      render: (value) => {
-        return value && `${value.name} ${value.last_name}`;
-      },
-    },
-    {
-      title: "Scoring",
-      dataIndex: "lead_score",
-      key: "lead_score",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-    },
-  ];
+  const {
+    data: deals,
+    isLoading: dealsLoading,
+    isFetching: dealsFetching,
+  } = useGetDealsListQuery({
+    page: currentPage,
+    search: debouncedValue,
+  });
 
   return (
     <div className="min-h-screen p-6">
@@ -103,38 +60,46 @@ const LeadsList: React.FC = () => {
       </div>
 
       <div className="rounded-lg border border-zinc-800 bg-[#343436]">
-        {/* <div className="flex items-center justify-between p-4 border-b border-zinc-800">
-          <Space>
-            <span className="font-semibold text-white">All members</span>
-            {data?.total && (
-              <Badge
-                count={`${data?.total} members`}
-                style={{ backgroundColor: "#27272a" }}
-                className="text-white"
-              />
-            )}
-          </Space>
-        </div> */}
+        <div className="p-4 border-b border-zinc-800">
+          <Tabs
+            defaultActiveKey="leads"
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            items={[
+              {
+                key: "leads",
+                label: "Leads",
+              },
+              {
+                key: "deals",
+                label: "Deals",
+              },
+            ]}
+          />
+        </div>
 
-        <Table
-          columns={columns}
-          dataSource={data}
-          pagination={{
-            // total: data?.total,
-            pageSize: perPage,
-            current: currentPage,
-            showSizeChanger: false,
-            onChange: (page) => {
-              setCurrentPage(page);
-              handlePageChange(page);
-            },
-            showTotal: (total, range) =>
-              `Page ${Math.ceil(range[0] / perPage)} of ${Math.ceil(
-                total / perPage
-              )}`,
-          }}
-          loading={isLoading || isFetching}
-        />
+        {activeTab === "leads" && (
+          <LeadsTable
+            currentPage={currentPage}
+            data={data || []}
+            handlePageChange={handlePageChange}
+            isFetching={isFetching}
+            isLoading={isLoading}
+            perPage={perPage}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
+        {activeTab === "deals" && (
+          <DealsTable
+            currentPage={currentPage}
+            data={deals || []}
+            handlePageChange={handlePageChange}
+            isFetching={dealsFetching}
+            isLoading={dealsLoading}
+            perPage={perPage}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );
