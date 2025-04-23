@@ -13,7 +13,7 @@ const Localization = () => {
   const [inputValue, setInputValue] = useState<{
     value: string;
     data: Text | null;
-    changedLangCode: "uz" | "en" | "ru" | "tj" | null;
+    changedLangCode: "uz" | "ky" | "ru" | "tj" | null;
   }>({
     data: null,
     value: "",
@@ -35,7 +35,7 @@ const Localization = () => {
   function handleTranslationInput(
     e: ChangeEvent<HTMLInputElement>,
     data: Text,
-    langCode: "uz" | "en" | "ru" | "tj" | null
+    langCode: "uz" | "ky" | "ru" | "tj" | null
   ) {
     setInputValue({
       value: e.target.value,
@@ -136,17 +136,17 @@ const Localization = () => {
               },
             },
             {
-              title: "English",
-              dataIndex: "en",
-              key: "en",
+              title: "Kyrgyz",
+              dataIndex: "ky",
+              key: "ky",
               render: (value, data) => {
                 return (
                   <div>
                     <Input
-                      key={data.id + "en"}
+                      key={data.id + "ky"}
                       defaultValue={value}
                       onChange={(e) => {
-                        handleTranslationInput(e, data, "en");
+                        handleTranslationInput(e, data, "ky");
                       }}
                     />
                   </div>

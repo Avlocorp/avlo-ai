@@ -10,8 +10,10 @@ import { useEffect, useState } from "react";
 import { Operator } from "services/api/operators/operators.types";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDebounce } from "hooks";
+import { useTranslation } from "react-i18next";
 
 const CallCenter: React.FC = () => {
+  const { t } = useTranslation();
   const perPage = 10;
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -32,7 +34,6 @@ const CallCenter: React.FC = () => {
     fetchOperators({ page, search: debouncedValue });
   };
 
-
   const { data: syncData, isLoading } = useSyncOperatorsQuery();
   const [fetchOperators, { data: operators, isLoading: isFetching }] =
     useLazyGetOperatorsQuery();
@@ -42,7 +43,6 @@ const CallCenter: React.FC = () => {
       fetchOperators({ page: currentPage, search: "" });
     }
   }, [syncData, perPage]);
-
 
   useEffect(() => {
     if (syncData?.success) {
@@ -57,7 +57,7 @@ const CallCenter: React.FC = () => {
       render: (_, __, index) => (currentPage - 1) * perPage + index + 1,
     },
     {
-      title: "Name",
+      title: t("Name"),
       dataIndex: "name",
       render: (_, record) => (
         <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ const CallCenter: React.FC = () => {
       ),
     },
     {
-      title: "Overall",
+      title: t("Overall"),
       dataIndex: "avarege_score",
       render: (score) => (
         <Badge
@@ -82,22 +82,22 @@ const CallCenter: React.FC = () => {
       ),
     },
     {
-      title: "All calls amount",
+      title: t("All calls amount"),
       dataIndex: "all_calls",
     },
     {
-      title: "Position",
+      title: t("Position"),
       dataIndex: "work_position",
       render: (position: string) => (
         <span className="text-white">{position ? position : "-"}</span>
       ),
     },
     {
-      title: "Phone number",
+      title: t("Phone number"),
       dataIndex: "mobile_phone",
     },
     {
-      title: "Actions",
+      title: t("Actions"),
       key: "actions",
       dataIndex: "id",
       render: (id: number) => (
@@ -116,17 +116,17 @@ const CallCenter: React.FC = () => {
     <div className="min-h-screen p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-semibold text-white">
-          Call centre members
+          {t("Call centre members")}
         </h1>
         <p className="mt-1 text-white">
-          This section features staff listings and audio recordings.
+          {t("This section features staff listings and audio recordings.")}
         </p>
       </div>
 
       <div className="mb-6 px-4 py-3 bg-[#343436] rounded-xl">
         <div className="flex justify-between">
           <Input
-            placeholder="Search for members"
+            placeholder={t("Search for members")}
             prefix={
               <SearchOutlined className="[&_svg]:w-6 [&_svg]:h-6 text-zinc-400" />
             }
@@ -140,7 +140,7 @@ const CallCenter: React.FC = () => {
       <div className="rounded-lg border border-zinc-800 bg-[#343436]">
         <div className="flex items-center justify-between p-4 border-b border-zinc-800">
           <Space>
-            <span className="font-semibold text-white">All members</span>
+            <span className="font-semibold text-white">{t("All members")}</span>
             {operators?.all_data && (
               <Badge
                 count={`${operators?.all_data} members`}
@@ -164,8 +164,10 @@ const CallCenter: React.FC = () => {
               handlePageChange(page);
               fetchOperators({ page, search: debouncedValue });
             },
-            showTotal: (total, range) => `Page ${Math.ceil(range[0] / perPage)} of ${Math.ceil(total / perPage)}`,
-
+            showTotal: (total, range) =>
+              `Page ${Math.ceil(range[0] / perPage)} of ${Math.ceil(
+                total / perPage
+              )}`,
           }}
           loading={isLoading || isFetching}
         />

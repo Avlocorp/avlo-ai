@@ -16,8 +16,10 @@ import { formatDate, formatPhoneNumber } from "components/lib/utils";
 import { toast, Id } from "react-toastify";
 import { useGetSingleOperatorQuery } from "services/api/operators/operators.api";
 import Analyze from "./analyze";
+import { useTranslation } from "react-i18next";
 
 const OperatorPage = () => {
+  const { t } = useTranslation();
   const toastId = useRef<Id | null>(null);
 
   const [page, setPage] = useState(1);
@@ -51,7 +53,7 @@ const OperatorPage = () => {
       dataIndex: "audio_id",
     },
     {
-      title: "Name",
+      title: t("Name"),
       dataIndex: "name",
       render: (value) => {
         return (
@@ -63,14 +65,14 @@ const OperatorPage = () => {
       },
     },
     {
-      title: "File upload date",
+      title: t("File upload date"),
       dataIndex: "file_upload_date",
       render: (file_upload_date) => {
         return <div>{formatDate(file_upload_date)}</div>;
       },
     },
     {
-      title: "File size",
+      title: t("File size"),
       dataIndex: "size",
       render: (size) => {
         const toMB = (bytes: number) => (bytes / 1048576).toFixed(2) + " MB";
@@ -79,7 +81,7 @@ const OperatorPage = () => {
       },
     },
     {
-      title: "Customer phone",
+      title: t("Customer phone"),
       dataIndex: "phone",
       render: (phone) => {
         return <div>{formatPhoneNumber(phone)}</div>;
@@ -87,7 +89,7 @@ const OperatorPage = () => {
     },
 
     {
-      title: "Status",
+      title: t("Status"),
       dataIndex: "analysed",
       render: (analyzed) => {
         return (
@@ -103,7 +105,7 @@ const OperatorPage = () => {
       },
     },
     {
-      title: "Actions",
+      title: t("Actions"),
       key: "actions",
       dataIndex: "data",
       render: (_, audio) => {
@@ -143,14 +145,16 @@ const OperatorPage = () => {
       },
     },
     {
-      title: "Customer phone",
+      title: t("Customer phone"),
       dataIndex: "phone",
       render: (phone) => {
         return <div>{formatPhoneNumber(phone)}</div>;
       },
     },
     {
-      title: <div className="text-center">Overall performance score</div>,
+      title: (
+        <div className="text-center">{t("Overall performance score")}</div>
+      ),
       dataIndex: "analysed_calls",
       render: (analysed_calls) => {
         return (
@@ -162,7 +166,7 @@ const OperatorPage = () => {
     },
 
     {
-      title: <div className="text-center">Successfully calls </div>,
+      title: <div className="text-center">{t("Successfully calls")}</div>,
       dataIndex: "analysed_calls",
       render: (analysed_calls) => {
         return (
@@ -171,7 +175,7 @@ const OperatorPage = () => {
       },
     },
     {
-      title: <div className="text-center"> Unsuccessfully calls </div>,
+      title: <div className="text-center">{t("Unsuccessfully calls")}</div>,
       dataIndex: "analysed_calls",
       render: (analysed_calls) => {
         return (
@@ -182,7 +186,7 @@ const OperatorPage = () => {
       },
     },
     {
-      title: <div className="text-center"> All calls </div>,
+      title: <div className="text-center">{t("All calls")}</div>,
       dataIndex: "all_calls",
       render: (all_calls) => {
         return <div className="text-center">{all_calls}</div>;
@@ -218,7 +222,7 @@ const OperatorPage = () => {
           className="font-medium cursor-pointer"
           onClick={() => navigate(-1)}
         >
-          Call centre
+          {t("Call centre")}
         </span>
         <ChevronRight />
         <span className="font-medium">{operator?.data?.[0]?.name}</span>
@@ -248,11 +252,11 @@ const OperatorPage = () => {
               items={[
                 {
                   key: "all_audios",
-                  label: "All audios",
+                  label: t("All audios"),
                 },
                 {
                   key: "customer",
-                  label: "Customers",
+                  label: t("Customers"),
                 },
               ]}
             />
@@ -261,7 +265,7 @@ const OperatorPage = () => {
           <button
             className="flex items-center gap-2 text-[#5B9BEC] text-base mr-3"
             onClick={() => {
-              toastId.current = toast("Refreshing data...", {
+              toastId.current = toast(t("Refreshing data..."), {
                 autoClose: false,
                 type: "info",
               });
@@ -269,7 +273,7 @@ const OperatorPage = () => {
                 refetch();
                 // toast.success("Data refreshed successfully");
                 toast.update(toastId.current as Id, {
-                  render: "Data refreshed successfully",
+                  render: t("Data refreshed successfully"),
                   type: "success",
                   autoClose: 2000,
                 });
@@ -277,7 +281,7 @@ const OperatorPage = () => {
             }}
           >
             <RefreshCcw stroke="#5B9BEC" />
-            Refresh
+            {t("Refresh")}
           </button>
         </div>
 

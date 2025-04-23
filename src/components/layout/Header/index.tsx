@@ -33,7 +33,7 @@ const HeaderMain = () => {
             i18next.changeLanguage(e.target.value);
           }}
         >
-          <option value="en">English</option>
+          <option value="ky">Kyrgyz</option>
           <option value="uz">O‘zbek</option>
           <option value="ru">Russian</option>
           <option value="tj">Тоҷикӣ</option>

@@ -7,13 +7,16 @@ import RadarChartForDashboard from "modules/Statistics/components/Charts/RadarCh
 import PieChartEmoji from "modules/Statistics/components/Charts/PieChartEmoji";
 import { useGetStatisticsQuery } from "services/api/home";
 import AudiosAndOperators from "modules/Statistics/components/audios-and-operators";
+import { useTranslation } from "react-i18next";
+
 export default function StatisticsPages() {
+  const { t } = useTranslation();
   const { data } = useGetStatisticsQuery();
 
   const pieData1 = [
-    { name: "Score", value: data?.communication_skills_score },
+    { name: t("Score"), value: data?.communication_skills_score },
     {
-      name: "Remaining",
+      name: t("Remaining"),
       value: 100 - Number(data?.communication_skills_score),
     },
   ];
@@ -24,13 +27,13 @@ export default function StatisticsPages() {
         <ParameterCard
           Img={phoneImg}
           anmount={data?.total_calls ? data.total_calls.toString() : "0"}
-          title="Total calls"
+          title={t("Total calls")}
           percentage="15%"
         />
         <ParameterCard
           Img={TalkBetweenMan}
           anmount={data?.members ? data?.members.toString() : "0"}
-          title="Total team members"
+          title={t("Total team members")}
           percentage="-14%"
         />
       </div>
@@ -38,7 +41,7 @@ export default function StatisticsPages() {
         <PieChartEmoji />
 
         <CardChart
-          title="Overall communication score"
+          title={t("Overall communication score")}
           data={pieData1}
           colorEmpty="#87888C"
           colorFilled="#0B72FC"

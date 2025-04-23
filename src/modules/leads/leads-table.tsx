@@ -1,5 +1,6 @@
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useTranslation } from "react-i18next";
 import { Lead } from "services/api/leads/leads.types";
 
 interface IProps {
@@ -22,6 +23,8 @@ const LeadsTable = (props: IProps) => {
     isFetching,
     handlePageChange,
   } = props;
+  const { t } = useTranslation();
+
   const columns: ColumnsType<Lead> = [
     {
       title: "No",
@@ -29,12 +32,12 @@ const LeadsTable = (props: IProps) => {
       render: (_, __, index) => (currentPage - 1) * perPage + index + 1,
     },
     {
-      title: "Title",
+      title: t("Title"),
       dataIndex: "TITLE",
       key: "TITLE",
     },
     {
-      title: "Created at",
+      title: t("Created at"),
       dataIndex: "DATE_CREATE",
       key: "DATE_CREATE",
       render: (value) => {
@@ -53,7 +56,7 @@ const LeadsTable = (props: IProps) => {
       },
     },
     {
-      title: "Assigned to",
+      title: t("Assigned to"),
       dataIndex: "assigned_by",
       key: "assigned_by",
       render: (value) => {
@@ -61,17 +64,17 @@ const LeadsTable = (props: IProps) => {
       },
     },
     {
-      title: "Scoring",
+      title: t("Scoring"),
       dataIndex: "lead_score",
       key: "lead_score",
     },
     {
-      title: "Description",
+      title: t("Description"),
       dataIndex: "description",
       key: "description",
     },
     {
-      title: "Status",
+      title: t("Status"),
       dataIndex: "status",
       key: "status",
     },

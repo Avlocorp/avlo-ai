@@ -3,19 +3,20 @@ import type { TabsProps } from "antd";
 import AccountSettings from "modules/settings/components/account-settings";
 import IntegrationsSettings from "modules/settings/components/integrations-settings";
 import { useState } from "react";
-
-const items: TabsProps["items"] = [
-  {
-    key: "1",
-    label: "Account",
-  },
-  {
-    key: "2",
-    label: "Integrations",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const AccountSettingsPage = () => {
+  const { t } = useTranslation();
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: t("Account"),
+    },
+    {
+      key: "2",
+      label: t("Integrations"),
+    },
+  ];
   const [activeTab, setActiveTab] = useState("1");
 
   return (

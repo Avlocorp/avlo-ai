@@ -116,7 +116,7 @@ export default function SearchInputMain({
                 className="flex items-center gap-3 px-4 py-2 text-white border border-[#343436] rounded-md cursor-pointer hover:bg-[#343436] transition-colors duration-200"
               >
                 <span className="text-[14px]">
-                  {audioFile ? "Change audio" : "Select the source"}
+                  {audioFile ? t("Change audio") : t("Select the source")}
                 </span>
                 <ChatLoaderIcon />
               </label>
@@ -127,7 +127,7 @@ export default function SearchInputMain({
                   className="flex items-center gap-3 px-4 py-2 text-white border border-[#343436] rounded-md cursor-pointer hover:bg-[#343436] transition-colors duration-200"
                 >
                   <span className="text-[14px]">
-                    {audioFile ? "Change audio" : "Select the source"}
+                    {audioFile ? t("Change audio") : t("Select the source")}
                   </span>
                   <ChatLoaderIcon />
                 </label>

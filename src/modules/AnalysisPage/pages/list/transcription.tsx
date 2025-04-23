@@ -1,4 +1,5 @@
 import { Card } from "antd";
+import { useTranslation } from "react-i18next";
 import { Transcription } from "services/api/home/home.type";
 
 export function TranscriptionView({
@@ -6,10 +7,12 @@ export function TranscriptionView({
 }: {
   transcription: Transcription;
 }) {
+  const { t } = useTranslation();
+
   if (!transcription) {
     return (
       <Card className="mx-12 mb-6 text-center bg-[#2a2a2d] text-gray-500">
-        Transcription not found
+        {t("Transcription not found")}
       </Card>
     );
   }
@@ -22,7 +25,7 @@ export function TranscriptionView({
             <div className="flex-1">
               <div className="mt-1 text-sm">
                 <strong className="text-base">
-                  {entry.speaker === "customer" ? "Mijoz" : "Operator"}:
+                  {entry.speaker === "customer" ? t("Mijoz") : t("Operator")}:
                 </strong>{" "}
                 {entry.text}
               </div>

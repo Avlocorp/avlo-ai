@@ -5,13 +5,14 @@ import { useState } from "react";
 import BitrixIntegrationModal from "./bitrix-integration-modal";
 import BitrixAddAccountModal from "./add-accaount";
 import { useGetSettingResponseMutation } from "services/api/settings";
+import { useTranslation } from "react-i18next";
 
 const IntegrationsSettings = () => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalAddAcc, setIsModalAddAccOpen] = useState(false);
   const [getSettingResponse] = useGetSettingResponseMutation();
   const handleAddAccount = async (values: { url: string }) => {
-
     try {
       const response = await getSettingResponse({ url: values.url }).unwrap();
       if (response?.sso_url) {
@@ -53,7 +54,7 @@ const IntegrationsSettings = () => {
               />
             </div>
             <p className="text-[#F0F4F2]">
-              Streamline software projects, sprints, and bug tracking.
+              {t("Streamline software projects, sprints, and bug tracking.")}
             </p>
           </div>
           <div className="py-4 flex justify-between">
@@ -62,7 +63,7 @@ const IntegrationsSettings = () => {
               className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
               onClick={() => setIsModalAddAccOpen(true)}
             >
-              Add account
+              {t("Add account")}
             </Button>
             <BitrixAddAccountModal
               isOpen={isModalAddAcc}
@@ -74,7 +75,7 @@ const IntegrationsSettings = () => {
               className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
               onClick={() => setIsModalOpen(true)}
             >
-              View integration
+              {t("View integration")}
             </Button>
 
             <BitrixIntegrationModal
@@ -104,7 +105,7 @@ const IntegrationsSettings = () => {
               />
             </div>
             <p className="text-[#F0F4F2]">
-              Link pull requests and automate workflows.
+              {t("Link pull requests and automate workflows.")}
             </p>
           </div>
           <div className="py-4 flex justify-end">
@@ -112,7 +113,7 @@ const IntegrationsSettings = () => {
               type="text"
               className="text-[#5b9bec] font-semibold text-sm hover:!text-white hover:!bg-transparent"
             >
-              View integration
+              {t("View integration")}
             </Button>
           </div>
         </div>

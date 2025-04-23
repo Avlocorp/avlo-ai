@@ -10,8 +10,10 @@ import {
 import { useDebounce } from "hooks";
 import LeadsTable from "./leads-table";
 import DealsTable from "./deals-table";
+import { useTranslation } from "react-i18next";
 
 const LeadsList: React.FC = () => {
+  const { t } = useTranslation();
   const perPage = 50;
   const [activeTab, setActiveTab] = useState("leads");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,13 +44,15 @@ const LeadsList: React.FC = () => {
   return (
     <div className="min-h-screen p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-white">Call centre leads</h1>
+        <h1 className="text-3xl font-semibold text-white">
+          {t("Call centre leads")}
+        </h1>
       </div>
 
       <div className="mb-6 px-4 py-3 bg-[#343436] rounded-xl">
         <div className="flex justify-between">
           <Input
-            placeholder="Search for members"
+            placeholder={t("Search for leads/deals")}
             prefix={
               <SearchOutlined className="[&_svg]:w-6 [&_svg]:h-6 text-zinc-400" />
             }
@@ -68,11 +72,11 @@ const LeadsList: React.FC = () => {
             items={[
               {
                 key: "leads",
-                label: "Leads",
+                label: t("Leads"),
               },
               {
                 key: "deals",
-                label: "Deals",
+                label: t("Deals"),
               },
             ]}
           />

@@ -5,8 +5,10 @@ import Smile1 from "assets/icons/smile-1.1.svg";
 import Smile2 from "assets/icons/smile-2.1.svg";
 import Smile3 from "assets/icons/smile-3.1.svg";
 import Smile4 from "assets/icons/smile-4.1.svg";
+import { useTranslation } from "react-i18next";
 
 export default function PieChartEmoji() {
+  const { t } = useTranslation();
   const data = [
     { name: "Very Happy", value: 400, color: "#0DB319", emoji: Smile4 },
     { name: "Happy", value: 300, color: "#F9EA0B", emoji: Smile3 },
@@ -17,7 +19,7 @@ export default function PieChartEmoji() {
   return (
     <div className="p-4 w-full bg-[#2A2A2D] rounded-xl text-white flex flex-col gap-8">
       <div className="flex justify-between">
-        <p className="text-2xl">Client’s emotions</p>
+        <p className="text-2xl">{t("Client’s emotions")}</p>
         <span className="text-[#F3A004] text-2xl">50%</span>
       </div>
       <div className="flex justify-center items-center relative">

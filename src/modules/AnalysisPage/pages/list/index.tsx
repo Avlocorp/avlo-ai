@@ -27,6 +27,7 @@ import HomeIcon from "assets/icons/HomeIcon";
 import { useNavigate } from "react-router-dom";
 import { TranscriptionView } from "./transcription";
 import { AIResponse } from "services/api/home/home.type";
+import { useTranslation } from "react-i18next";
 
 interface ChatMainProps {
   data: AIResponse;
@@ -34,6 +35,7 @@ interface ChatMainProps {
 }
 
 export default function ChatMain({ data, id }: ChatMainProps) {
+  const { t } = useTranslation();
   const [isDownloading, setIsDownloading] = useState(false);
   const baseUrl = config.API_ROOT;
   const access = storage.get(ACCESS_TOKEN_KEY);
@@ -79,31 +81,34 @@ export default function ChatMain({ data, id }: ChatMainProps) {
   };
 
   const pieData1 = [
-    { name: "Score", value: data.overall_performance_score },
-    { name: "Remaining", value: 100 - data.overall_performance_score },
+    { name: t("Score"), value: data.overall_performance_score },
+    { name: t("Remaining"), value: 100 - data.overall_performance_score },
   ];
   const pieData2 = [
-    { name: "Score", value: data.problem_handling_score },
-    { name: "Remaining", value: 100 - data.problem_handling_score },
+    { name: t("Score"), value: data.problem_handling_score },
+    { name: t("Remaining"), value: 100 - data.problem_handling_score },
   ];
   const pieData3 = [
-    { name: "Score", value: data.communication_skills_score },
-    { name: "Remaining", value: 100 - data.communication_skills_score },
+    { name: t("Score"), value: data.communication_skills_score },
+    { name: t("Remaining"), value: 100 - data.communication_skills_score },
   ];
   const pieData4 = [
-    { name: "Score", value: data.customer_management_score },
-    { name: "Remaining", value: 100 - data.customer_management_score },
+    { name: t("Score"), value: data.customer_management_score },
+    { name: t("Remaining"), value: 100 - data.customer_management_score },
   ];
   const pieData5 = [
-    { name: "Score", value: data.problem_handling_score },
-    { name: "Remaining", value: 100 - data.problem_handling_score },
+    { name: t("Score"), value: data.problem_handling_score },
+    { name: t("Remaining"), value: 100 - data.problem_handling_score },
   ];
   const dataRadar = [
-    { metric: "Overall Score", series: data?.overall_performance_score },
-    { metric: "Communication", series: data?.communication_skills_score },
-    { metric: "Customer Management", series: data?.customer_management_score },
-    { metric: "Problem Handling", series: data?.problem_handling_score },
-    { metric: "Protocol Adherence", series: data?.protocol_adherence_score },
+    { metric: t("Overall Score"), series: data?.overall_performance_score },
+    { metric: t("Communication"), series: data?.communication_skills_score },
+    {
+      metric: t("Customer Management"),
+      series: data?.customer_management_score,
+    },
+    { metric: t("Problem Handling"), series: data?.problem_handling_score },
+    { metric: t("Protocol Adherence"), series: data?.protocol_adherence_score },
   ];
   const navigate = useNavigate();
   return (
@@ -117,14 +122,14 @@ export default function ChatMain({ data, id }: ChatMainProps) {
           className="font-medium cursor-pointer"
           onClick={() => navigate(-1)}
         >
-          Call centre
+          {t("Call centre")}
         </span>
         <ChevronRight />
         <span
           className="font-medium cursor-pointer"
           onClick={() => navigate(-1)}
         >
-          Audios
+          {t("Audios")}
         </span>
       </div>
       {/* <div className="mb-6 flex items-center gap-4"> */}
@@ -155,7 +160,7 @@ export default function ChatMain({ data, id }: ChatMainProps) {
                 height={24}
                 className="[&_svg]:w-[32px] [&_svg]:h-[32px]"
               />
-              {isDownloading ? "Downloading..." : "Download"}
+              {isDownloading ? t("Downloading...") : t("Download")}
             </button>
           </div>
         )}
@@ -165,119 +170,122 @@ export default function ChatMain({ data, id }: ChatMainProps) {
           data={pieData1}
           colorEmpty="#87888C"
           colorFilled="#0B72FC"
-          title="Overall Score"
+          title={t("Overall Score")}
           Icon={Pieicon}
         />
         <CardChart
           data={pieData2}
           colorEmpty="#87888C"
           colorFilled="#E04BC5"
-          title="Problem Handling"
+          title={t("Problem Handling")}
           Icon={ProblemHandlingIcon}
         />
         <CardChart
           data={pieData3}
           colorEmpty="#87888C"
           colorFilled="#4B54D1"
-          title="Communication"
+          title={t("Communication")}
           Icon={CommunicationIcon}
         />
         <CardChart
           data={pieData4}
           colorEmpty="#87888C"
           colorFilled="#8B7DDF"
-          title="Customer Management"
+          title={t("Customer Management")}
           Icon={CustomerManagementIcon}
         />
         <CardChart
           data={pieData5}
           colorEmpty="#87888C"
           colorFilled="#0BA5EC"
-          title="Protocol Adherence"
+          title={t("Protocol Adherence")}
           Icon={ReportIcon}
         />
       </div>
       <div className="my-8 mx-12">
         <RadarChartComponent
-          title={"Performance Metrics"}
+          title={t("Performance Metrics")}
           dataRadar={dataRadar}
         />
       </div>
       <div className="mx-12 mt-4  flex gap-6">
-        <HeadLine title="Resolved-Agent" />
+        <HeadLine title={t("Resolved-Agent")} />
       </div>
 
       <div className="mx-12 my-6  flex gap-6">
         <CardContent
-          title="Agentni Rivojlantirish Imkoniyatlari"
+          title={t("Agentni Rivojlantirish Imkoniyatlari")}
           content={data?.agent_development_opportunities}
           Icon={AgentRivojIcon}
         />
         <CardContent
-          title="Trening uchun misollar"
+          title={t("Trening uchun misollar")}
           content={data?.examples_for_training}
           Icon={TrainingIcon}
         />
       </div>
 
       <div className="mx-12 mt-4  flex gap-6">
-        <HeadLine title="Caller emotion:" data={data.caller_emotion} />
-        <HeadLine title="Resolution Status:" data={data.resolution_status} />
+        <HeadLine title={t("Caller emotion:")} data={data.caller_emotion} />
+        <HeadLine
+          title={t("Resolution Status:")}
+          data={data.resolution_status}
+        />
       </div>
       <div className="grid grid-cols-2 gap-6 mx-12 mt-6">
         <CardContent
-          title="Trening uchun misollar"
+          title={t("Trening uchun misollar")}
           content={data.examples_for_training}
           Icon={TrainingIcon}
         />
         <CardContent
-          title="Resolution quality"
+          title={t("Resolution quality")}
           content={[data.resolution_quality]}
           Icon={ResolutionQualityIcon}
         />
         <CardContent
-          title="Process improvement suggestions"
+          title={t("Process improvement suggestions")}
           content={data.process_improvement_suggestions}
           Icon={ProcessImprovementIcon}
         />
         <CardContent
-          title="Resource or tool recommendations"
+          title={t("Resource or tool recommendations")}
           content={data.resource_or_tool_recommendations}
           Icon={ResourceRecommendationIcon}
         />
         <CardContent
-          title="Notable techniques"
+          title={t("Notable techniques")}
           content={data.notable_techniques}
           Icon={NotableTechniquesIcon}
         />
         <CardContent
-          title="Successful interaction strategies"
+          title={t("Successful interaction strategies")}
           content={data.successful_interaction_strategies}
           Icon={SuccessfulInteractionStrategiesIcon}
         />
       </div>
       <div className="mx-12 mt-8  flex gap-6">
-        <HeadLine title="Summary of the text" />
+        <HeadLine title={t("Summary of the text")} />
       </div>
 
       <div className="grid grid-cols-2 gap-6 mx-12 mt-6 mb-8 ">
         <CardContent
-          title="Suhbat mavzusi"
+          title={t("Suhbat mavzusi")}
           content={[data?.conversation_title]}
           Icon={VoiseIcon}
         />
         <CardContent
-          title="Asosiy g'oyalar"
+          title={t("Asosiy g'oyalar")}
           content={[data?.main_contents]}
           Icon={LightIcon}
         />
         <CardContent
-          title="Muhim nuqtalar"
+          title={t("Muhim nuqtalar")}
           content={data?.essential_points}
           Icon={PinIcon}
         />
         <CardContent
-          title="Xulosa"
+          title={t("Xulosa")}
           content={[data?.conclusion]}
           Icon={Xulosaicon}
         />

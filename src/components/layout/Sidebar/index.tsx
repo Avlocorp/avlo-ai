@@ -14,9 +14,11 @@ import { storage } from "services";
 import { setUserState } from "services/api/auth";
 import { authApi } from "services/api/auth/Auth.api";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 const { Sider } = Layout;
 
 const Sidebar: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const hasToken = !!localStorage.getItem(ACCESS_TOKEN_KEY);
   const handleLogout = () => {
@@ -63,7 +65,7 @@ const Sidebar: React.FC = () => {
               {({ isActive }) => (
                 <>
                   <HomeIcon isActive={isActive} />
-                  <span>Home</span>
+                  <span>{t("Home")}</span>
                 </>
               )}
             </NavLink>
@@ -81,7 +83,7 @@ const Sidebar: React.FC = () => {
                 {({ isActive }) => (
                   <>
                     <HistoryIcon isActive={isActive} />
-                    <span>Dashboard</span>
+                    <span>{t("Dashboard")}</span>
                   </>
                 )}
               </NavLink>
@@ -102,7 +104,7 @@ const Sidebar: React.FC = () => {
                     <MessageCircleHeart
                       className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
                     />
-                    <span>Call centre</span>
+                    <span>{t("Call centre")}</span>
                   </>
                 )}
               </NavLink>
@@ -122,7 +124,7 @@ const Sidebar: React.FC = () => {
                   <PhoneCall
                     className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
                   />
-                  <span>Leads</span>
+                  <span>{t("Leads")}</span>
                 </>
               )}
             </NavLink>
@@ -140,7 +142,7 @@ const Sidebar: React.FC = () => {
                 {({ isActive }) => (
                   <>
                     <HistoryIconinSidebar isActive={isActive} />
-                    <span>History</span>
+                    <span>{t("History")}</span>
                   </>
                 )}
               </NavLink>
@@ -162,7 +164,7 @@ const Sidebar: React.FC = () => {
               {({ isActive }) => (
                 <>
                   <SettingIcon isActive={isActive} />
-                  <span className="ml-2">Settings</span>
+                  <span className="ml-2">{t("Settings")}</span>
                 </>
               )}
             </NavLink>
@@ -179,7 +181,7 @@ const Sidebar: React.FC = () => {
                 <LogOut />
               </span>
               <div className="flex flex-col">
-                <span className="text-[14px] font-semibold">Logout</span>
+                <span className="text-[14px] font-semibold">{t("Logout")}</span>
               </div>
             </Button>
           </div>

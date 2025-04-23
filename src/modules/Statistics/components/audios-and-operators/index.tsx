@@ -15,8 +15,10 @@ import { useGetOperatorsStatisticsQuery } from "services/api/operators/operators
 import { useState } from "react";
 import CalendarIcon from "assets/icons/calendar";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 const AudiosAndOperators = () => {
+  const { t } = useTranslation();
   const perPage = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,17 +52,14 @@ const AudiosAndOperators = () => {
     }
   };
 
-
-
-
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "Operators",
+      label: t("Operators"),
     },
     {
       key: "2",
-      label: "Calls",
+      label: t("Calls"),
     },
   ];
 
@@ -72,7 +71,7 @@ const AudiosAndOperators = () => {
     },
 
     {
-      title: "Name",
+      title: t("Name"),
       dataIndex: "name",
       render: (_, record) => (
         <div className="flex items-center gap-3">
@@ -87,7 +86,7 @@ const AudiosAndOperators = () => {
       ),
     },
     {
-      title: "Overall",
+      title: t("Overall"),
       dataIndex: "avarege_score",
       showSorterTooltip: { target: "full-header" },
       sorter: true,
@@ -101,22 +100,22 @@ const AudiosAndOperators = () => {
       ),
     },
     {
-      title: "All calls amount",
+      title: t("All calls amount"),
       dataIndex: "all_calls",
     },
     {
-      title: "Position",
+      title: t("Position"),
       dataIndex: "work_position",
       render: (position: string) => (
         <span className="text-white">{position ? position : "-"}</span>
       ),
     },
     {
-      title: "Phone number",
+      title: t("Phone number"),
       dataIndex: "mobile_phone",
     },
     {
-      title: "Actions",
+      title: t("Actions"),
       key: "actions",
       dataIndex: "id",
       render: (id: number) => (

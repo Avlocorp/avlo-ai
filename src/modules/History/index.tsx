@@ -6,8 +6,10 @@ import { useGetHistoryListQuery } from "services/api/history/history.api";
 import CalendarIcon from "assets/icons/calendar";
 import SearchIconPrimary from "assets/icons/search-lg";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function History() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -40,7 +42,9 @@ export default function History() {
   };
 
   if (!Array.isArray(data?.data)) {
-    return <div className="text-white text-center p-4">No data available</div>;
+    return (
+      <div className="text-white text-center p-4">{t("No data available")}</div>
+    );
   }
 
   return (
@@ -48,9 +52,9 @@ export default function History() {
       <div>
         <div className="mx-8">
           <div>
-            <p className="text-[30px] text-white">History</p>
+            <p className="text-[30px] text-white">{t("History")}</p>
             <p className="text-base text-white">
-              View your team's trades and transactions.
+              {t("View your team's trades and transactions.")}
             </p>
           </div>
           <div className="my-6 flex items-center justify-between bg-[#343436] px-4 py-3 rounded-xl">
@@ -59,7 +63,7 @@ export default function History() {
               <input
                 type="text"
                 className="bg-[#1A1A1D] w-full text-white outline-none"
-                placeholder="Search for audios"
+                placeholder={t("Search for audios")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)} // ✅ Yangi qiymatni set qilish
               />
