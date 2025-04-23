@@ -94,7 +94,7 @@ const OperatorPage = () => {
       render: (analyzed) => {
         return (
           <Badge
-            count={analyzed ? "Analyzed" : "Not analyzed yet"}
+            count={analyzed ? t("Analyzed") : t("Not analyzed yet")}
             className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${
               analyzed
                 ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
@@ -193,7 +193,7 @@ const OperatorPage = () => {
       },
     },
     {
-      title: "Actions",
+      title: t("Actions"),
       key: "actions",
       dataIndex: "data",
       render: (_, item) => {

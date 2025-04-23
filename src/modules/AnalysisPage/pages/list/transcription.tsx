@@ -18,7 +18,7 @@ export function TranscriptionView({
   }
 
   return (
-    <Card className="mx-12 mb-6 bg-[#2a2a2d]" title="Transcription">
+    <Card className="mx-12 mb-6 bg-[#2a2a2d]" title={t("Transcription")}>
       <div className="space-y-4">
         {transcription.map((entry, index) => (
           <div key={index} className="!mb-4 px-3 py-1 rounded-lg flex gap-3">

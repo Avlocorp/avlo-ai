@@ -7,36 +7,42 @@ import { RadarChartComponent } from "modules/AnalysisPage/components/Chart/Radar
 
 import CardChart from "modules/AnalysisPage/components/cardCharts";
 import { AverageScore } from "services/api/operators/operators.types";
+import { useTranslation } from "react-i18next";
 
 const Analyze = ({ data }: { data: AverageScore | undefined }) => {
+  const { t } = useTranslation();
+
   if (!data) return <h2>No data</h2>;
 
   const pieData1 = [
-    { name: "Score", value: data.overall_performance_score },
-    { name: "Remaining", value: 100 - data.overall_performance_score },
+    { name: t("Score"), value: data.overall_performance_score },
+    { name: t("Remaining"), value: 100 - data.overall_performance_score },
   ];
   const pieData2 = [
-    { name: "Score", value: data.problem_handling_score },
-    { name: "Remaining", value: 100 - data.problem_handling_score },
+    { name: t("Score"), value: data.problem_handling_score },
+    { name: t("Remaining"), value: 100 - data.problem_handling_score },
   ];
   const pieData3 = [
-    { name: "Score", value: data.communication_skills_score },
-    { name: "Remaining", value: 100 - data.communication_skills_score },
+    { name: t("Score"), value: data.communication_skills_score },
+    { name: t("Remaining"), value: 100 - data.communication_skills_score },
   ];
   const pieData4 = [
-    { name: "Score", value: data.customer_management_score },
-    { name: "Remaining", value: 100 - data.customer_management_score },
+    { name: t("Score"), value: data.customer_management_score },
+    { name: t("Remaining"), value: 100 - data.customer_management_score },
   ];
   const pieData5 = [
-    { name: "Score", value: data.problem_handling_score },
-    { name: "Remaining", value: 100 - data.problem_handling_score },
+    { name: t("Score"), value: data.problem_handling_score },
+    { name: t("Remaining"), value: 100 - data.problem_handling_score },
   ];
   const dataRadar = [
-    { metric: "Overall Score", series: data?.overall_performance_score },
-    { metric: "Communication", series: data?.communication_skills_score },
-    { metric: "Customer Management", series: data?.customer_management_score },
-    { metric: "Problem Handling", series: data?.problem_handling_score },
-    { metric: "Protocol Adherence", series: data?.protocol_adherence_score },
+    { metric: t("Overall Score"), series: data?.overall_performance_score },
+    { metric: t("Communication"), series: data?.communication_skills_score },
+    {
+      metric: t("Customer Management"),
+      series: data?.customer_management_score,
+    },
+    { metric: t("Problem Handling"), series: data?.problem_handling_score },
+    { metric: t("Protocol Adherence"), series: data?.protocol_adherence_score },
   ];
 
   return (
@@ -46,28 +52,28 @@ const Analyze = ({ data }: { data: AverageScore | undefined }) => {
           data={pieData1}
           colorEmpty="#87888C"
           colorFilled="#0B72FC"
-          title="Overall Score"
+          title={t("Overall Score")}
           Icon={Pieicon}
         />
         <CardChart
           data={pieData2}
           colorEmpty="#87888C"
           colorFilled="#E04BC5"
-          title="Problem Handling"
+          title={t("Problem Handling")}
           Icon={ProblemHandlingIcon}
         />
         <CardChart
           data={pieData3}
           colorEmpty="#87888C"
           colorFilled="#4B54D1"
-          title="Communication"
+          title={t("Communication")}
           Icon={CommunicationIcon}
         />
         <CardChart
           data={pieData4}
           colorEmpty="#87888C"
           colorFilled="#8B7DDF"
-          title="Customer Management"
+          title={t("Customer Management")}
           Icon={CustomerManagementIcon}
         />
       </div>
@@ -76,13 +82,13 @@ const Analyze = ({ data }: { data: AverageScore | undefined }) => {
           data={pieData5}
           colorEmpty="#87888C"
           colorFilled="#0BA5EC"
-          title="Protocol Adherence"
+          title={t("Protocol Adherence")}
           Icon={ReportIcon}
         />
       </div>
       <div className="my-8">
         <RadarChartComponent
-          title={"Performance Metrics"}
+          title={t("Performance Metrics")}
           dataRadar={dataRadar}
         />
       </div>
