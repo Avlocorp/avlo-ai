@@ -1,28 +1,33 @@
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
+import { useGetDealsListQuery } from "services/api/leads/leads.api";
 import { Lead } from "services/api/leads/leads.types";
 
 interface IProps {
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  perPage: number;
-  data: Lead[];
-  isLoading: boolean;
-  isFetching: boolean;
-  handlePageChange: (page: number) => void;
+  searchValue: string;
 }
 
 const DealsTable = (props: IProps) => {
-  const {
-    currentPage,
-    setCurrentPage,
-    perPage,
-    data,
-    isLoading,
-    isFetching,
-    handlePageChange,
-  } = props;
+  const { searchValue } = props;
+
+  const perPage = 50;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialPage = Number(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSearchParams({ page: String(page) }); // URLga yangi sahifani saqlash
+  };
+
+  const { data, isLoading, isFetching } = useGetDealsListQuery({
+    page: currentPage,
+    search: searchValue,
+  });
   const { t } = useTranslation();
 
   const columns: ColumnsType<Lead> = [
@@ -49,7 +54,6 @@ const DealsTable = (props: IProps) => {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-          timeZoneName: "short",
         });
 
         return humanReadable;
@@ -62,16 +66,6 @@ const DealsTable = (props: IProps) => {
       render: (value) => {
         return value && `${value.name} ${value.last_name}`;
       },
-    },
-    {
-      title: t("Scoring"),
-      dataIndex: "lead_score",
-      key: "lead_score",
-    },
-    {
-      title: t("Description"),
-      dataIndex: "description",
-      key: "description",
     },
     {
       title: t("Status"),

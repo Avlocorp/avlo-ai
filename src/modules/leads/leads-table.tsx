@@ -1,29 +1,31 @@
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
+import { useGetLeadsListQuery } from "services/api/leads/leads.api";
 import { Lead } from "services/api/leads/leads.types";
 
 interface IProps {
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  perPage: number;
-  data: Lead[];
-  isLoading: boolean;
-  isFetching: boolean;
-  handlePageChange: (page: number) => void;
+  searchValue: string;
 }
 
 const LeadsTable = (props: IProps) => {
-  const {
-    currentPage,
-    setCurrentPage,
-    perPage,
-    data,
-    isLoading,
-    isFetching,
-    handlePageChange,
-  } = props;
+  const perPage = 50;
+  const { searchValue } = props;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = Number(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const { data, isLoading, isFetching } = useGetLeadsListQuery({
+    page: currentPage,
+    search: searchValue,
+  });
   const { t } = useTranslation();
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSearchParams({ page: String(page) }); // URLga yangi sahifani saqlash
+  };
 
   const columns: ColumnsType<Lead> = [
     {
@@ -49,7 +51,6 @@ const LeadsTable = (props: IProps) => {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-          timeZoneName: "short",
         });
 
         return humanReadable;
