@@ -8,7 +8,6 @@ import type {
   PaymentMethod as PaymentMethodType,
   PaymentRecord,
 } from "../../types/billing";
-import { theme } from "../../theme";
 
 const { Title, Text } = Typography;
 
@@ -51,7 +50,7 @@ const BillingPage: React.FC = () => {
   };
 
   return (
-    <ConfigProvider theme={theme}>
+    <ConfigProvider >
       <div className="px-6 pb-9">
         <div style={{ marginBottom: 24 }}>
           <Title level={2} style={{ margin: 0, color: "#fff" }}>

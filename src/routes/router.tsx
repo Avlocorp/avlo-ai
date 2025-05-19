@@ -4,18 +4,28 @@ import RedirectPage from "pages/redirect";
 import LayoutComponent from "components/layout";
 import PrivateRoute from "components/private-route";
 import { lazy } from "react";
+import QaPage from "modules/qa";
 
-// Lazy-loaded components
-const Home = lazy(() => import("pages/Home"));
 const History = lazy(() => import("modules/History"));
 const Settings = lazy(() => import("modules/settings/pages/account"));
+const ClientDetailsPage = lazy(
+  () => import("modules/lead-new/ClientDetailsPage")
+);
+const LeaderboardPage = lazy(
+  () => import("modules/leaderboard/index")
+);
 const Billings = lazy(
   () => import("modules/billing/pages/billing-and-payments")
 );
-const CallCenter = lazy(() => import("modules/call-center/pages/analysis"));
-const StatisticsPages = lazy(
-  () => import("modules/Statistics/pages/List/list")
+const DashboardStatistics = lazy(
+  () => import("modules/Statistics/index")
 );
+const BusinessDashboard = lazy(
+  () => import("pages/Home/home")
+);
+
+const CallCenter = lazy(() => import("modules/call-center/pages/analysis"));
+
 const Localization = lazy(() => import("modules/localization"));
 const RedirectFromBitrix = lazy(() => import("pages/redirect-from-bitrix"));
 const OperatorPage = lazy(() => import("modules/call-center/pages/operator"));
@@ -23,7 +33,7 @@ const AudioAnalyze = lazy(
   () => import("modules/call-center/pages/audio-analyze/audio-analyze")
 );
 const ClientsHistory = lazy(() => import("modules/client-history"));
-const LeadsList = lazy(() => import("modules/leads"));
+const LeadsList = lazy(() => import("modules/lead-new/LeadsPage"));
 
 const router = createBrowserRouter([
   {
@@ -43,7 +53,8 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Home />,
+            // element: <Home />,
+            element: <BusinessDashboard />,
           },
           {
             path: "history",
@@ -51,7 +62,7 @@ const router = createBrowserRouter([
           },
           {
             path: "statistics",
-            element: <StatisticsPages />,
+            element: <DashboardStatistics />,
           },
           {
             path: "settings",
@@ -85,10 +96,28 @@ const router = createBrowserRouter([
             path: "calls-history/:phone",
             element: <ClientsHistory />,
           },
+          // {
+          //   path: "leads",
+          //   element: <LeadsList />,
+          // },
           {
             path: "leads",
             element: <LeadsList />,
           },
+          {
+            path: "client/:leadId",
+            element: <ClientDetailsPage />,
+
+          },
+          {
+            path: "leaderboard",
+            element: <LeaderboardPage />,
+          },
+          {
+            path: "qa",
+            element: <QaPage />,
+          }
+
         ],
       },
     ],

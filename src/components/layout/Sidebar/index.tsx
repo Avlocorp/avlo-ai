@@ -1,193 +1,164 @@
-import React from "react";
-import { Button, Layout, Modal } from "antd";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  BarChart3,
+  Users,
+  Trophy,
+  ClipboardCheck,
+  Settings as SettingsIcon,
+  UserSquare2,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
+import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import LogoIcon from 'assets/icons/LogoIcon';
+import LogoText from 'assets/icons/LogoText';
 
-import HomeIcon from "assets/icons/HomeIcon";
-import HistoryIcon from "assets/icons/HistoryIcon";
-import SettingIcon from "assets/icons/SettingIcon";
-import LogoIcon from "assets/icons/LogoIcon";
-import LogoText from "assets/icons/LogoText";
-import HistoryIconinSidebar from "assets/icons/HistoryIconinSidebar";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
-import { LogOut, MessageCircleHeart, PhoneCall } from "lucide-react";
-import { storage } from "services";
-import { setUserState } from "services/api/auth";
-import { authApi } from "services/api/auth/Auth.api";
-import { useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
-const { Sider } = Layout;
+interface SidebarProps {
+  isMobile: boolean;
+  isMobileOpen: boolean;
+  onMobileToggle: () => void;
+}
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggle }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const hasToken = !!localStorage.getItem(ACCESS_TOKEN_KEY);
-  const handleLogout = () => {
-    Modal.confirm({
-      title: <div className="text-xl font-semibold">Are you sure?</div>,
-      okText: "Yes",
-      cancelText: "No",
-      okType: "danger",
-      centered: true,
-      onOk: () => {
-        storage.remove(ACCESS_TOKEN_KEY);
-        storage.remove(REFRESH_TOKEN_KEY);
-        dispatch(setUserState({ isAuthenticated: false }));
-        dispatch(authApi.util.resetApiState());
-      },
-    });
-  };
+
+  // Check window size to determine collapse state
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768 && !isCollapsed) {
+        setIsCollapsed(true);
+      }
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isCollapsed]);
+
+  // Don't render if mobile and not open
+  if (isMobile && !isMobileOpen) {
+    return null;
+  }
+
+  // Menu items with Settings moved to the bottom
+  const menuItems = [
+    { path: '/', icon: BarChart3, label: t('Overall Dashboard') },
+    { path: '/pm/statistics', icon: UserSquare2, label: t('SDR Dashboard') },
+    { path: '/pm/leads', icon: Users, label: t('Leads') },
+    { path: '/pm/leaderboard', icon: Trophy, label: t('Leaderboard') },
+    { path: '/pm/qa', icon: ClipboardCheck, label: t('Quality Assurance') },
+  ];
+
+  // Settings item - separate to add visual separation
+  const settingsItem = { path: '/settings', icon: SettingsIcon, label: t('Settings') };
+
   return (
-    <Sider
-      className="h-screen bg-[#2A2A2D] top-0 left-0 z-20 flex flex-col"
-      width={300}
+    <div
+      className={clsx(
+        'bg-[#2c3e50] text-white min-h-screen fixed left-0 top-0 h-full z-50 transition-all duration-300 ease-in-out flex flex-col',
+        isCollapsed ? 'w-[70px]' : 'w-[250px]',
+        isMobile && 'shadow-xl'
+      )}
     >
-      <div className="flex flex-col h-full">
-        <div className="px-6 flex-grow">
-          <div className="pt-8 mb-6 text-white text-xl font-bold flex items-center space-x-2">
-            <span className="w-[30px] h-[30px]">
-              <LogoIcon h={30} w={30} />
-            </span>
-            <span className="text-[28.15px]">
-              <LogoText />
-            </span>
-          </div>
-          <div className="space-y-2">
-            <NavLink
-              to="/pm"
-              end
-              className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
-              style={({ isActive }) => ({
-                background: isActive
-                  ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                  : "#3A3A41",
-              })}
-            >
-              {({ isActive }) => (
-                <>
-                  <HomeIcon isActive={isActive} />
-                  <span>{t("Home")}</span>
-                </>
-              )}
-            </NavLink>
+      <div className="flex items-center justify-between h-16 px-4 border-b border-[#34495e]">
+        <div className={clsx('font-bold transition-opacity duration-300 flex gap-2 items-center', isCollapsed && 'opacity-0 overflow-hidden')}>
 
-            {hasToken && (
-              <NavLink
-                to="/pm/statistics"
-                className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
-                style={({ isActive }) => ({
-                  background: isActive
-                    ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                    : "#3A3A41",
-                })}
-              >
-                {({ isActive }) => (
-                  <>
-                    <HistoryIcon isActive={isActive} />
-                    <span>{t("Dashboard")}</span>
-                  </>
-                )}
-              </NavLink>
-            )}
-
-            {hasToken && (
-              <NavLink
-                to="/pm/call-center"
-                className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
-                style={({ isActive }) => ({
-                  background: isActive
-                    ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                    : "#3A3A41",
-                })}
-              >
-                {({ isActive }) => (
-                  <>
-                    <MessageCircleHeart
-                      className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
-                    />
-                    <span>{t("Call centre")}</span>
-                  </>
-                )}
-              </NavLink>
-            )}
-
-            <NavLink
-              to="/pm/leads"
-              className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
-              style={({ isActive }) => ({
-                background: isActive
-                  ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                  : "#3A3A41",
-              })}
-            >
-              {({ isActive }) => (
-                <>
-                  <PhoneCall
-                    className={isActive ? "text-[#FFFFFF]" : "text-[#A099FF]"}
-                  />
-                  <span>{t("Leads")}</span>
-                </>
-              )}
-            </NavLink>
-
-            {hasToken && (
-              <NavLink
-                to="/pm/history"
-                className="w-full text-[#fff] text-[16px] flex items-center gap-3 px-3 py-2 rounded-lg"
-                style={({ isActive }) => ({
-                  background: isActive
-                    ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                    : "#3A3A41",
-                })}
-              >
-                {({ isActive }) => (
-                  <>
-                    <HistoryIconinSidebar isActive={isActive} />
-                    <span>{t("History")}</span>
-                  </>
-                )}
-              </NavLink>
-            )}
-          </div>
+          <span className="w-[30px] h-[30px]">
+            <LogoIcon h={30} w={30} />
+          </span>
+          <span className="text-[28.15px]">
+            <LogoText />
+          </span>
         </div>
 
-        {hasToken && (
-          <div className="px-6 mt-auto ">
-            <NavLink
-              to="/pm/settings"
-              className="w-full text-[#fff] mb-6 text-[16px] flex gap-3 items-center px-3 py-2 rounded-lg "
-              style={({ isActive }) => ({
-                background: isActive
-                  ? "radial-gradient(336.58% 92.18% at 88.69% 70%, #52E0FF 0%, #5B9BEC 44.57%, #757AFF 100%), #A099FF"
-                  : "#3A3A41",
-              })}
-            >
-              {({ isActive }) => (
-                <>
-                  <SettingIcon isActive={isActive} />
-                  <span className="ml-2">{t("Settings")}</span>
-                </>
-              )}
-            </NavLink>
-          </div>
+        {!isMobile && (
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-2 rounded-full hover:bg-[#34495e] transition-colors !cursor-pointer"
+            aria-label={isCollapsed ? t('Expand sidebar') : t('Collapse sidebar')}
+          >
+            {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          </button>
         )}
-        {hasToken && (
-          <div className="px-6 mt-auto mb-6">
-            <div className="h-[1px] w-full bg-[#343436] mb-4"></div>
-            <Button
-              className="w-full h-[60px] mt-6 text-[#fff] text-[16px] flex gap-3 items-center justify-start px-3 py-2 rounded-lg"
-              onClick={handleLogout}
-            >
-              <span className="bg-[#2A2A2D] p-1 rounded-[200px] !w-10 !h-10 flex items-center justify-center">
-                <LogOut />
-              </span>
-              <div className="flex flex-col">
-                <span className="text-[14px] font-semibold">{t("Logout")}</span>
-              </div>
-            </Button>
-          </div>
+
+        {isMobile && (
+          <button
+            onClick={onMobileToggle}
+            className="p-2 rounded-full hover:bg-[#34495e] transition-colors"
+            aria-label={t('Close sidebar')}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
         )}
       </div>
-    </Sider>
+
+      <nav className="mt-4 flex-1 flex flex-col">
+        <div className="flex-1">
+          {/* Regular menu items */}
+          {menuItems.map(({ path, icon: Icon, label }) => (
+            <Link
+              key={path}
+              to={path}
+              className={clsx(
+                'flex items-center px-4 py-3 transition-colors !cursor-pointer relative group',
+                location.pathname === path
+                  ? 'bg-[#34495e] text-white'
+                  : 'text-gray-300 hover:bg-[#34495e] hover:text-white'
+              )}
+              aria-label={label}
+            >
+              <Icon className={clsx('w-5 h-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
+              <span className={clsx(
+                'transition-all duration-300',
+                isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'
+              )}>
+                {label}
+              </span>
+
+              {/* Tooltip for collapsed state */}
+              {isCollapsed && (
+                <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity whitespace-nowrap z-50">
+                  {label}
+                </div>
+              )}
+            </Link>
+          ))}
+        </div>
+
+        {/* Settings with visual separation */}
+        <div className="mt-auto border-t border-[#34495e]">
+          <Link
+            to={settingsItem.path}
+            className={clsx(
+              'flex items-center px-4 py-3 transition-colors relative group',
+              location.pathname === settingsItem.path
+                ? 'bg-[#34495e] text-white'
+                : 'text-gray-300 hover:bg-[#34495e] hover:text-white'
+            )}
+            aria-label={settingsItem.label}
+          >
+            <settingsItem.icon className={clsx('w-5 h-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
+            <span className={clsx(
+              'transition-all duration-300',
+              isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'
+            )}>
+              {settingsItem.label}
+            </span>
+
+            {/* Tooltip for collapsed state */}
+            {isCollapsed && (
+              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity whitespace-nowrap z-50">
+                {settingsItem.label}
+              </div>
+            )}
+          </Link>
+        </div>
+      </nav>
+    </div>
   );
 };
 
