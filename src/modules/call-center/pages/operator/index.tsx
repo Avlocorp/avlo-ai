@@ -95,11 +95,10 @@ const OperatorPage = () => {
         return (
           <Badge
             count={analyzed ? t("Analyzed") : t("Not analyzed yet")}
-            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${
-              analyzed
-                ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
-                : "text-zinc-400"
-            }`}
+            className={`px-2 py-1 text-xs font-medium rounded-full [&_.ant-badge-count]:shadow-none [&_.ant-badge-count]:bg-[#9FB2C61A] ${analyzed
+              ? "[&_.ant-badge-count]:bg-[#34c75937] text-green-500"
+              : "text-zinc-400"
+              }`}
           />
         );
       },
@@ -148,8 +147,9 @@ const OperatorPage = () => {
       title: t("Customer phone"),
       dataIndex: "phone",
       render: (phone) => {
-        return <div>{formatPhoneNumber(phone)}</div>;
-      },
+        return <div>{phone ? formatPhoneNumber(phone) : "-"}</div>;
+      }
+
     },
     {
       title: (
@@ -201,7 +201,7 @@ const OperatorPage = () => {
           <Space>
             <Link
               to={`/pm/calls-history/${item.phone.replaceAll("+", "")}`}
-              // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
+            // to={audio.analysed ? `/pm/call-center/audio/${audio.id}` : ""}
             >
               <Eye color={"#5B9BEC"} />
             </Link>
@@ -287,6 +287,7 @@ const OperatorPage = () => {
 
         {activeTab === "all_audios" && (
           <Table
+            rowKey="audio_id"
             columns={columnsAudios}
             dataSource={audios?.data || []}
             pagination={{
@@ -301,6 +302,7 @@ const OperatorPage = () => {
 
         {activeTab === "customer" && (
           <Table
+            rowKey="phone"
             columns={columnsCustomer}
             dataSource={customer?.data || []}
             pagination={{

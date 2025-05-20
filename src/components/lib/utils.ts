@@ -38,9 +38,10 @@ export function formatDate(isoDate: string): string {
   return `${day}.${month}.${year}`;
 }
 
-export function formatPhoneNumber(phone: string): string {
-  const cleaned = phone.replace(/\D/g, ""); // Faqat raqamlarni olish
-  if (cleaned.length !== 12) return phone; // Agar noto'g'ri uzunlik bo'lsa, o'zgarishsiz qaytarish
+export function formatPhoneNumber(phone?: string | null): string {
+  if (!phone) return "-"; // yoki "Noma'lum", yoki bo'sh string ""
+  const cleaned = phone.replace(/\D/g, "");
+  if (cleaned.length !== 12) return phone;
 
   return `+${cleaned.slice(0, 3)} ${cleaned.slice(3, 5)} ${cleaned.slice(
     5,
