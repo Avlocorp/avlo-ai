@@ -1,3 +1,5 @@
+
+import { motion } from "framer-motion"
 import { Button, Card, ConfigProvider, DatePicker } from "antd"
 import {
     ArrowUpOutlined,
@@ -98,6 +100,8 @@ export default function BusinessDashboard() {
     )
 }
 
+
+
 interface StatCardProps {
     title: string
     value: string
@@ -106,9 +110,14 @@ interface StatCardProps {
     changeText: string
 }
 
-function StatCard({ title, value, change, isPositive, changeText }: StatCardProps) {
+export function StatCard({ title, value, change, isPositive, changeText }: StatCardProps) {
     return (
-        <div className="flex rounded-xl shadow-sm overflow-hidden max-h-[140px]">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="flex rounded-xl shadow-sm overflow-hidden max-h-[140px]"
+        >
             <div className={`w-1 ${isPositive ? "bg-green-500" : "bg-red-500"}`} />
             <div className="w-full bg-white">
                 <Card className="shadow-sm hover:shadow-md transition-shadow rounded-lg border border-gray-100">
@@ -120,7 +129,7 @@ function StatCard({ title, value, change, isPositive, changeText }: StatCardProp
                     </div>
                 </Card>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

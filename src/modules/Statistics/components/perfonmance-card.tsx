@@ -1,5 +1,6 @@
 import { InfoCircleOutlined } from "@ant-design/icons"
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface PerformanceCardProps {
     title: string
@@ -15,7 +16,12 @@ export default function PerformanceCard({ title, value, change, isPositive, colo
     const Icon = isPositive ? ArrowUpIcon : ArrowDownIcon
 
     return (
-        <div className={`bg-white rounded-lg shadow-sm p-4 border-l-4 ${borderColor} flex flex-col`}>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className={`bg-white rounded-lg shadow-sm p-4 border-l-4 ${borderColor} flex flex-col`}
+        >
             <div className="flex justify-between items-center mb-2">
                 <h4 className="text-sm font-medium text-gray-600">{title}</h4>
                 <InfoCircleOutlined className="text-gray-400" />
@@ -29,6 +35,6 @@ export default function PerformanceCard({ title, value, change, isPositive, colo
                     {change.toFixed(1)}% {isPositive ? "better" : "worse"} than median
                 </span>
             </div>
-        </div>
+        </motion.div>
     )
 }

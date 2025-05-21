@@ -3,7 +3,6 @@ import { Search, SortAsc, Clock, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import SimpleAIChat from 'components/simpleAIchat';
 
 interface Client {
   id: string;
@@ -108,9 +107,9 @@ const LeadsPage: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         <SimpleAIChat context="leads" />
-      </div>
+      </div> */}
     </div>
   );
 };

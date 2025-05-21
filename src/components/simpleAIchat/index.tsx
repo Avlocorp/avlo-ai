@@ -68,12 +68,12 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
                     height: isExpanded && messages.length > 0 ? 'auto' : 'auto'
                 }}
                 className={`
-          bg-white shadow-lg border  rounded-lg
+          bg-white shadow-lg border  rounded-xl
           ${!isExpanded ? 'bg-primary-50  border-primary-200 dark:border-primary-800' : ''}
         `}
             >
                 <div
-                    className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={toggleExpanded}
                 >
                     <div className="flex items-center space-x-2">
@@ -134,9 +134,10 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
                         <input
                             type="text"
                             value={input}
+
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Ask anything about the data..."
-                            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500  "
+                            className="flex-1 px-1  outline-none  "
                             disabled={isLoading || isRecording}
                         />
                         <button

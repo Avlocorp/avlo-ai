@@ -66,14 +66,18 @@ export default function Dashboard() {
 
                             <Button
                                 type="primary"
-                                icon={<TrophyOutlined />}
-                                className="bg-indigo-600 hover:bg-indigo-700"
+
+                                className="bg-indigo-600 hover:bg-indigo-700 h-10 flex items-center"
                                 onClick={() => setIsLeaderboardOpen(true)}
                             >
-                                Leaderboard
+                                <TrophyOutlined style={{ fontSize: "20px" }} />
+                                <p>
+
+
+                                    Leaderboard
+                                </p>
                             </Button>
 
-                            <Button icon={<SettingOutlined />} className="border-gray-200" />
                         </div>
                     </div>
                 </div>
