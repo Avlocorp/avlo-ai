@@ -1,14 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "pages/Login";
-import RedirectPage from "pages/redirect";
 import LayoutComponent from "components/layout";
 import PrivateRoute from "components/private-route";
 import { lazy } from "react";
-import QaPage from "modules/qa";
-import NotFound from "modules/NotFount";
+
 
 const History = lazy(() => import("modules/History"));
-const Settings = lazy(() => import("modules/settings/pages/account"));
+const Settings = lazy(() => import("modules/settings/index"));
 const ClientDetailsPage = lazy(() => import("modules/lead-new/ClientDetailsPage"));
 const LeaderboardPage = lazy(() => import("modules/leaderboard"));
 const Billings = lazy(() => import("modules/billing/pages/billing-and-payments"));
@@ -21,6 +18,13 @@ const OperatorPage = lazy(() => import("modules/call-center/pages/operator"));
 const AudioAnalyze = lazy(() => import("modules/call-center/pages/audio-analyze/audio-analyze"));
 const ClientsHistory = lazy(() => import("modules/client-history"));
 const LeadsList = lazy(() => import("modules/lead-new/LeadsPage"));
+const QaPage = lazy(() => import("modules/qa/index"));
+const Login = lazy(() => import("pages/Login"));
+const RedirectPage = lazy(() => import("pages/redirect"));
+const NotFound = lazy(() => import("modules/NotFount"));
+const QAdashboard = lazy(() => import("modules/QAdashboard/index"));
+const UserManage = lazy(() => import("modules/settings/pages/operator-list"));
+
 
 const router = createBrowserRouter([
   {
@@ -42,6 +46,7 @@ const router = createBrowserRouter([
           { path: "history", element: <History /> },
           { path: "statistics", element: <DashboardStatistics /> },
           { path: "settings", element: <Settings /> },
+          { path: "settings/user-manage", element: <UserManage /> },
           { path: "billings", element: <Billings /> },
           { path: "call-center", element: <CallCenter /> },
           { path: "call-center/operator/:operatorId", element: <OperatorPage /> },
@@ -53,6 +58,7 @@ const router = createBrowserRouter([
           { path: "client/:leadId", element: <ClientDetailsPage /> },
           { path: "leaderboard", element: <LeaderboardPage /> },
           { path: "qa", element: <QaPage /> },
+          { path: "qadashboard", element: <QAdashboard /> },
         ],
       },
     ],

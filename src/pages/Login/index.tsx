@@ -16,8 +16,8 @@ export default function AuthPage() {
     };
     const { t } = useTranslation();
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#1A1A1D]">
-            <div className="bg-[#2A2A2D] p-8 rounded-lg shadow-md w-full max-w-md">
+        <div className="min-h-screen flex items-center justify-center bg-[#F9FAFB]">
+            <div className=" p-8 rounded-lg shadow-md w-full max-w-md bg-white">
                 {isLogin ? (
                     <LoginForm />
                 ) : showVerification ? (

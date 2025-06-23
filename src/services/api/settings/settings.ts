@@ -23,7 +23,28 @@ export const settingsApi = createApi({
         method: "GET",
       }),
     }),
+    getOperatorList: builder.query<
+      SettingsResponse,
+      {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        sort?: string;
+      }
+    >({
+      query: ({ page, per_page, search, sort }) => ({
+        url: `api/operators/`,
+        params: {
+          page,
+          per_page,
+          search,
+          sort,
+        },
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetSettingResponseMutation } = settingsApi;
+export const { useGetSettingResponseMutation, useGetOperatorListQuery } =
+  settingsApi;

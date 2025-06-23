@@ -81,7 +81,7 @@ export default function PipelineSnapshot() {
                 {stages.map((stage) => (
                     <div
                         key={stage.name}
-                        className={`border rounded-lg p-4 ${isFullscreen ? "flex flex-col justify-between" : ""}`}
+                        className={`border rounded-lg p-4 ${isFullscreen ? "flex flex-col justify-between max-h-[250px] " : ""}`}
                     >
                         <div className="flex justify-between items-center mb-2">
                             <div className={`font-medium ${isFullscreen ? "text-lg" : ""}`}>{stage.name}</div>

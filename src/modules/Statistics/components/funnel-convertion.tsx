@@ -12,8 +12,6 @@ import {
 import { Maximize2, Minimize2 } from 'lucide-react'
 
 export default function FunnelConversion() {
-    const [activeBar, setActiveBar] = useState<string | null>(null)
-    console.log(activeBar)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
 
@@ -45,13 +43,13 @@ export default function FunnelConversion() {
         return null
     }
 
-    const handleMouseEnter = (data: any) => {
-        setActiveBar(data.name)
-    }
+    // const handleMouseEnter = (data: any) => {
+    //     setActiveBar(data.name)
+    // }
 
-    const handleMouseLeave = () => {
-        setActiveBar(null)
-    }
+    // const handleMouseLeave = () => {
+    //     setActiveBar(null)
+    // }
 
     const toggleFullscreen = () => {
         if (!document.fullscreenElement) {
@@ -117,7 +115,7 @@ export default function FunnelConversion() {
                         layout="vertical"
                         margin={{ top: 5, right: 30, left: 30, bottom: 25 }}
                         barSize={isFullscreen ? 30 : 20}
-                        onMouseLeave={handleMouseLeave}
+                    // onMouseLeave={handleMouseLeave}
                     >
                         <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
                         <XAxis
@@ -144,7 +142,7 @@ export default function FunnelConversion() {
                             dataKey="value"
                             background={{ fill: "#e5e7eb" }}
                             radius={0}
-                            onMouseEnter={handleMouseEnter}
+                            // onMouseEnter={handleMouseEnter}
                             label={renderCustomLabel}
                         >
                             {data.map((entry, index) => (

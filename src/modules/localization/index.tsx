@@ -1,4 +1,4 @@
-import { Input, PaginationProps, Table } from "antd";
+import { Input, PaginationProps, Spin, Table } from "antd";
 import { useDebounce } from "hooks";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -13,7 +13,7 @@ const Localization = () => {
   const [inputValue, setInputValue] = useState<{
     value: string;
     data: Text | null;
-    changedLangCode: "uz" | "ky" | "ru" | "tj" | null;
+    changedLangCode: "uz" | "kg" | "ru" | "tj" | "en" | null;
   }>({
     data: null,
     value: "",
@@ -32,18 +32,6 @@ const Localization = () => {
   });
   const [changeTranslate] = useChangeTranslationMutation();
 
-  function handleTranslationInput(
-    e: ChangeEvent<HTMLInputElement>,
-    data: Text,
-    langCode: "uz" | "ky" | "ru" | "tj" | null
-  ) {
-    setInputValue({
-      value: e.target.value,
-      data: data,
-      changedLangCode: langCode,
-    });
-  }
-
   useEffect(() => {
     if (inputValue.data) {
       try {
@@ -57,6 +45,19 @@ const Localization = () => {
       }
     }
   }, [inputValueDebounced]);
+
+
+  function handleTranslationInput(
+    e: ChangeEvent<HTMLInputElement>,
+    data: Text,
+    langCode: "uz" | "kg" | "ru" | "tj" | "en" | null
+  ) {
+    setInputValue({
+      value: e.target.value,
+      data: data,
+      changedLangCode: langCode,
+    });
+  }
 
   const itemRender: PaginationProps["itemRender"] = (
     _,
@@ -72,8 +73,21 @@ const Localization = () => {
     return originalElement;
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <div>
+
+      <div className="mb-6 p-4">
+        <h1 className="text-3xl font-semibold ">
+          {t("Localization")}
+        </h1>
+      </div>
       <div className="p-4">
         <Input
           placeholder="Search"
@@ -99,6 +113,25 @@ const Localization = () => {
               dataIndex: "key",
               key: "key",
             },
+            {
+              title: "English",
+              dataIndex: "en",
+              key: "en",
+              render: (_, data) => {
+                return (
+                  <div>
+                    <Input
+                      key={data.id + "en"}
+                      defaultValue={data.key}
+                      onChange={(e) => {
+                        handleTranslationInput(e, data, "en");
+                      }}
+                    />
+                  </div>
+                );
+              },
+            },
+
             {
               title: "Uzbek",
               dataIndex: "uz",
@@ -137,16 +170,16 @@ const Localization = () => {
             },
             {
               title: "Kyrgyz",
-              dataIndex: "ky",
-              key: "ky",
+              dataIndex: "kg",
+              key: "kg",
               render: (value, data) => {
                 return (
                   <div>
                     <Input
-                      key={data.id + "ky"}
+                      key={data.id + "kg"}
                       defaultValue={value}
                       onChange={(e) => {
-                        handleTranslationInput(e, data, "ky");
+                        handleTranslationInput(e, data, "kg");
                       }}
                     />
                   </div>

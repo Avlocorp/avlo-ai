@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Mic, StopCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface SimpleAIChatProps {
     context?: string;
@@ -13,7 +14,7 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
     const [isRecording, setIsRecording] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
+    const { t } = useTranslation();
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -78,7 +79,7 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
                 >
                     <div className="flex items-center space-x-2">
                         <span className="text-sm font-medium text-gray-700 ">
-                            Ask AI everything about this page
+                            {t("Ask AI everything about this page")}
                         </span>
                     </div>
                     <button className="p-1 hover:bg-gray-100  rounded-full">
@@ -136,7 +137,7 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
                             value={input}
 
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask anything about the data..."
+                            placeholder={t("Ask anything about the data...")}
                             className="flex-1 px-1  outline-none  "
                             disabled={isLoading || isRecording}
                         />

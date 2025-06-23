@@ -68,10 +68,12 @@ const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) => {
       style={{ maxWidth: "100vw", margin: 0, top: 0, padding: 0 }}
       className="!p-0"
       rootClassName="[&_.ant-modal-content]:!p-0"
-      bodyStyle={{
-        background: "#1E1E1E",
-        minHeight: "100vh",
-        padding: "40px 20px",
+      styles={{
+        body: {
+          backgroundColor: "#1E1E1E",
+          minHeight: "100vh",
+          padding: "40px 20px",
+        },
       }}
       closable
       closeIcon={<CloseOutlined style={{ color: "white", fontSize: "20px" }} />}
@@ -134,7 +136,11 @@ const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) => {
                 borderRadius: "12px",
                 border: plan.popular ? "none" : "1px solid #4A554F",
               }}
-              bodyStyle={{ padding: "24px" }}
+              styles={{
+                body: {
+                  padding: "24px"
+                },
+              }}
             >
               {plan.popular && (
                 <div

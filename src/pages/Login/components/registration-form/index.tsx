@@ -33,10 +33,9 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
             name="register"
             onFinish={onsubmit}
             layout="vertical"
-            className="text-white"
         >
             <div>
-                <p className="text-white text-[22px] flex items-center justify-center my-2 pb-4">
+                <p className=" text-[22px] flex items-center justify-center my-2 pb-4">
                     {t("Enter your data to register")}
                 </p>
             </div>

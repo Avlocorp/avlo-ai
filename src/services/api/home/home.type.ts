@@ -25,6 +25,13 @@ export type Transcription = {
   text: string;
 }[];
 
+export interface TotalDuration {
+  total_duration: number;
+  anaylsed_data: number;
+
+  // boshqa statistikalar bo‘lsa, shu yerga qo‘shing
+}
+
 export type DashboardStatistics = {
   overall_performance_score: number;
   communication_skills_score: number;

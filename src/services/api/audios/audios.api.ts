@@ -28,7 +28,6 @@ export const audiosApi = createApi({
       query: ({ operatorId, page }) => ({
         url: "/api/audios/",
         params: {
-          //   sort: "-file_upload_date",
           "filter[operator_id]": operatorId,
           page,
           include: "operator",

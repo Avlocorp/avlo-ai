@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 const NotFound: React.FC = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-[#1A1A1D] p-4 overflow-hidden">
+        <div className="flex flex-col items-center justify-center h-screen  p-4 overflow-hidden">
             <motion.div
-                className="text-6xl mb-8 text-white"
+                className="text-6xl mb-8 "
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
@@ -14,7 +14,7 @@ const NotFound: React.FC = () => {
                 🤖
             </motion.div>
             <motion.h1
-                className="text-4xl font-bold mb-4 text-center text-white"
+                className="text-4xl font-bold mb-4 text-center "
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -22,7 +22,7 @@ const NotFound: React.FC = () => {
                 404 - Page Not Found
             </motion.h1>
             <motion.p
-                className="text-xl mb-8 text-center max-w-md text-white"
+                className="text-xl mb-8 text-center max-w-md "
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.5 }}

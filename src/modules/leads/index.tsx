@@ -16,7 +16,7 @@ const LeadsList: React.FC = () => {
 
   return (
     <div className="min-h-screen p-6">
-      <div className="mb-6">
+      <div className="mb-6 ">
         <h1 className="text-3xl font-semibold text-white">
           {t("Call centre leads")}
         </h1>

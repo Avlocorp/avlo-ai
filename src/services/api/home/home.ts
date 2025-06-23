@@ -5,17 +5,22 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import type { AIResponse, DashboardStatistics } from "./home.type";
+import type {
+  AIResponse,
+  DashboardStatistics,
+  TotalDuration,
+} from "./home.type";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
 import storage from "services/storage";
 import { setUserState } from "../auth";
 
-// Custom baseQuery with 401 handling
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_ROOT_API || "",
   prepareHeaders: (headers) => {
     const access = storage.get(ACCESS_TOKEN_KEY);
-    headers.set("Authorization", `Bearer ${access}`);
+    if (access) {
+      headers.set("Authorization", `Bearer ${access}`);
+    }
     return headers;
   },
 });
@@ -27,15 +32,11 @@ const baseQueryWithAuth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
 
-  // Handle 401 error
   if (result.error && result.error.status === 401) {
     const errorData = result.error.data as { message?: string };
     if (errorData?.message === "Your token is expired") {
-      // Clear the token
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       localStorage.removeItem(REFRESH_TOKEN_KEY);
-      // Dispatch a Redux action to trigger logout
-      // api.dispatch({ type: "authApi/logout" });
       api.dispatch(setUserState({ isAuthenticated: false }));
     }
   }
@@ -66,7 +67,21 @@ export const homeApi = createApi({
     getStatistics: builder.query<DashboardStatistics, void>({
       query: () => "api/dashboard/",
     }),
+    getTotalTalkTime: builder.query<
+      TotalDuration,
+      { start_date?: string; end_date?: string }
+    >({
+      query: ({ start_date, end_date }) => ({
+        url: "api/dashboard/",
+        method: "GET",
+        params: { start_date, end_date },
+      }),
+    }),
   }),
 });
 
-export const { useGetAIResponseMutation, useGetStatisticsQuery } = homeApi;
+export const {
+  useGetAIResponseMutation,
+  useGetStatisticsQuery,
+  useGetTotalTalkTimeQuery,
+} = homeApi;

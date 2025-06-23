@@ -49,7 +49,7 @@ export const operatorsApi = createApi({
       query: ({ operatorId }) => ({
         url: `api/operators/`,
         params: {
-          "filter[id]": operatorId,
+          "filter[operator_id]": operatorId,
         },
         timeout: 60000,
       }),

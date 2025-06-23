@@ -24,7 +24,7 @@ const DealsTable = (props: IProps) => {
     setSearchParams({ page: String(page) }); // URLga yangi sahifani saqlash
   };
 
-  const { data, isLoading, isFetching } = useGetDealsListQuery({
+  const { isLoading, isFetching } = useGetDealsListQuery({
     page: currentPage,
     search: searchValue,
   });
@@ -77,7 +77,7 @@ const DealsTable = (props: IProps) => {
   return (
     <Table
       columns={columns}
-      dataSource={data}
+      // dataSource={data}
       pagination={{
         // total: data?.total,
         pageSize: perPage,

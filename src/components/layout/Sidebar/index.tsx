@@ -8,7 +8,8 @@ import {
   Settings as SettingsIcon,
   UserSquare2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LayoutDashboardIcon,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -51,10 +52,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
     { path: '/pm/leads', icon: Users, label: t('Leads') },
     { path: '/pm/leaderboard', icon: Trophy, label: t('Leaderboard') },
     { path: '/pm/qa', icon: ClipboardCheck, label: t('Quality Assurance') },
+    { path: "/pm/qadashboard", icon: LayoutDashboardIcon, label: t('QA Dashboard') },
   ];
 
   // Settings item - separate to add visual separation
-  const settingsItem = { path: '/settings', icon: SettingsIcon, label: t('Settings') };
+  const settingsItem = { path: '/pm/settings', icon: SettingsIcon, label: t('Settings') };
 
   return (
     <div
@@ -66,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
     >
       <div className="flex items-center justify-between h-16 px-4 border-b border-[#34495e]">
         <div className={clsx('font-bold transition-opacity duration-300 flex gap-2 items-center', isCollapsed && 'opacity-0 overflow-hidden')}>
-
+          {/* <LayoutDashboardIcon /> */}
           <span className="w-[30px] h-[30px]">
             <LogoIcon h={30} w={30} />
           </span>

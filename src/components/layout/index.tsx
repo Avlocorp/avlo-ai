@@ -26,7 +26,7 @@ const LayoutComponent: React.FC = () => {
 
   return (
     <div className={`flex h-screen bg-gray-50 `}>
-      {/* Sidebar for non-mobile */}
+
       {!isMobile && (
         <Sidebar
           isMobile={false}
@@ -35,7 +35,6 @@ const LayoutComponent: React.FC = () => {
         />
       )}
 
-      {/* Mobile Sidebar */}
       {isMobile && isMobileOpen && (
         <Sidebar
           isMobile={true}
@@ -44,9 +43,7 @@ const LayoutComponent: React.FC = () => {
         />
       )}
 
-      {/* Main Content */}
       <div className={`flex-1 overflow-auto transition-all duration-300 ease-in-out ${isMobile ? 'ml-0' : 'ml-[70px] md:ml-[250px]'}`}>
-        {/* Top Bar for Mobile */}
         {isMobile && (
           <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm p-4 flex items-center">
             <button
@@ -61,7 +58,6 @@ const LayoutComponent: React.FC = () => {
           </div>
         )}
 
-        {/* Router outlet */}
         <Outlet />
       </div>
     </div>

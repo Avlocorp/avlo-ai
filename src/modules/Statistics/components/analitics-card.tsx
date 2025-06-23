@@ -1,15 +1,18 @@
 import { motion } from "framer-motion"
 import { Card } from "antd"
+import { useTranslation } from "react-i18next"
 
 interface AnalyticsCardProps {
-    icon: React.ReactNode
-    title: string
-    value: string
-    description: string
-    borderColor: string
+    icon: React.ReactNode;
+    title: string;
+    value: string | number;
+    description: string;
+    borderColor: string;
 }
 
 export function AnalyticsCard({ icon, title, value, description, borderColor }: AnalyticsCardProps) {
+    const { t } = useTranslation();
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -20,9 +23,9 @@ export function AnalyticsCard({ icon, title, value, description, borderColor }: 
                 <div className="flex items-start gap-4">
                     <div className="p-3 bg-indigo-50 rounded-full">{icon}</div>
                     <div>
-                        <div className="text-gray-600 mb-1 text-sm">{title}</div>
+                        <div className="text-gray-600 mb-1 text-sm">{t(title)}</div>
                         <div className="text-3xl font-bold mb-1">{value}</div>
-                        <div className="text-sm text-gray-500">{description}</div>
+                        <div className="text-sm text-gray-500">{t(description)}</div>
                     </div>
                 </div>
             </Card>

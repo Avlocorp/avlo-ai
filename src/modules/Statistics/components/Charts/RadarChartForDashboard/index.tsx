@@ -19,7 +19,7 @@ export default function RadarChartForDashboard({
     { metric: t("Protocol Adherence"), series: protocol_adherence_score },
   ];
   return (
-    <div className=" w-full bg-[#2A2A2D] p-4 rounded-lg text-gray-100">
+    <div className=" w-full  rounded-lg ">
       <div className="flex justify-between items-center">
         <p className="text-2xl">{t("Performance metrics")}</p>
       </div>

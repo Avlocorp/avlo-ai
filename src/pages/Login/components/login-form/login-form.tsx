@@ -44,7 +44,7 @@ export default function LoginForm() {
       className="space-y-4"
     >
       <div>
-        <p className="text-white text-[22px] flex items-center justify-center my-2 pb-2">
+        <p className=" text-[22px] flex items-center justify-center my-2 pb-2">
           {t("Enter your data to login")}
         </p>
       </div>

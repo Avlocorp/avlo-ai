@@ -115,15 +115,15 @@ const CallCenter: React.FC = () => {
   return (
     <div className="min-h-screen p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-white">
+        <h1 className="text-3xl font-semibold ">
           {t("Call centre members")}
         </h1>
-        <p className="mt-1 text-white">
+        <p className="mt-1 ">
           {t("This section features staff listings and audio recordings.")}
         </p>
       </div>
 
-      <div className="mb-6 px-4 py-3 bg-[#343436] rounded-xl">
+      <div className="mb-6 px-4 py-3 bg-[#fff] rounded-xl">
         <div className="flex justify-between">
           <Input
             placeholder={t("Search for members")}
@@ -137,15 +137,15 @@ const CallCenter: React.FC = () => {
         </div>
       </div>
 
-      <div className="rounded-lg border border-zinc-800 bg-[#343436]">
+      <div className="rounded-lg border border-zinc-800 bg-[#fff]">
         <div className="flex items-center justify-between p-4 border-b border-zinc-800">
           <Space>
-            <span className="font-semibold text-white">{t("All members")}</span>
+            <span className="font-semibold ">{t("All members")}</span>
             {operators?.all_data && (
               <Badge
                 count={`${operators?.all_data} members`}
                 style={{ backgroundColor: "#27272a" }}
-                className="text-white"
+                className=""
               />
             )}
           </Space>
