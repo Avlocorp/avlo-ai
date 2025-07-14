@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useGetOperatorListQuery } from "services/api/settings";
 import { ArrowDownAZ, ArrowDownUp, ArrowLeft, ArrowUpZA } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function UserManage() {
     const [page, setPage] = useState(1);
@@ -15,17 +16,14 @@ export default function UserManage() {
     const navigate = useNavigate();
     const [sortField, setSortField] = useState<string | undefined>();
     const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
+    const { t } = useTranslation();
 
-    // debounce qilingan search
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(searchValue);
             setPage(1);
         }, 300);
-
-        return () => {
-            clearTimeout(handler);
-        };
+        return () => clearTimeout(handler);
     }, [searchValue]);
 
     const toggleSort = (field: string) => {
@@ -45,12 +43,10 @@ export default function UserManage() {
     });
 
     const columns: ColumnsType<Operator> = [
-
-
         {
-            title: "ID",
+            title: t("ID"),
             dataIndex: "id",
-            render: (id: number) => <span className="text-zinc-500">{id}</span>,
+            render: (id: number) => <span className="text-zinc-500 dark:text-zinc-400">{id}</span>,
         },
         {
             title: (
@@ -62,8 +58,7 @@ export default function UserManage() {
                                 : <ArrowUpZA />
                             : <ArrowDownAZ />}
                     </button>
-
-                    <p>Name</p>
+                    <p>{t("Name")}</p>
                 </div>
             ),
             dataIndex: "name",
@@ -71,10 +66,10 @@ export default function UserManage() {
                 <div className="flex items-center gap-3">
                     <Avatar src={record.photo} size={40} icon={<UserOutlined />} />
                     <div>
-                        <div className="font-medium">
+                        <div className="font-medium text-gray-800 dark:text-gray-100">
                             {(record.name || "-") + " " + (record.last_name || "")}
                         </div>
-                        <div className="text-sm text-zinc-400">{record.email || "-"}</div>
+                        <div className="text-sm text-zinc-400 dark:text-zinc-500">{record.email || "-"}</div>
                     </div>
                 </div>
             ),
@@ -82,35 +77,30 @@ export default function UserManage() {
         {
             title: (
                 <div className="flex items-center gap-2">
-                    <p>All calls</p>
+                    <p>{t("All calls")}</p>
                     <button onClick={() => toggleSort("all_calls")}>
                         <ArrowDownUp
-                            className={`
-                      transition-transform duration-300
-                      ${sortField === "all_calls" && sortOrder === "desc" ? "rotate-180" : ""}
-                    `}
+                            className={`transition-transform duration-300
+                            ${sortField === "all_calls" && sortOrder === "desc" ? "rotate-180" : ""}`}
                         />
                     </button>
                 </div>
             ),
             dataIndex: "all_calls",
             render: (calls: number) => (
-                <span className="text-zinc-500">
+                <span className="text-zinc-500 dark:text-zinc-400">
                     {calls ? calls.toLocaleString() : "0"}
                 </span>
             ),
         },
-
         {
             title: (
                 <div className="flex items-center gap-2">
-                    <p>Overall Score</p>
+                    <p>{t("Overall Score")}</p>
                     <button onClick={() => toggleSort("overall_performance_score")}>
                         <ArrowDownUp
-                            className={`
-                      transition-transform duration-300
-                      ${sortField === "overall_performance_score" && sortOrder === "desc" ? "rotate-180" : ""}
-                    `}
+                            className={`transition-transform duration-300
+                            ${sortField === "overall_performance_score" && sortOrder === "desc" ? "rotate-180" : ""}`}
                         />
                     </button>
                 </div>
@@ -119,28 +109,27 @@ export default function UserManage() {
             render: (score) => {
                 if (!score) return "-";
                 return (
-                    <div className="text-sm space-y-1">
+                    <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200">
                         <div>{score.overall_performance_score ?? 0}</div>
                     </div>
                 );
             },
         },
-
         {
-            title: "Position",
+            title: t("Position"),
             dataIndex: "work_position",
-            render: (position: string) => <span>{position || "-"}</span>,
+            render: (position: string) => <span className="text-gray-800 dark:text-gray-200">{position || "-"}</span>,
         },
         {
-            title: "Phone number",
+            title: t("Phone number"),
             dataIndex: "mobile_phone",
-            render: (phone: string) => phone || "-",
+            render: (phone: string) => <span className="text-gray-800 dark:text-gray-200">{phone || "-"}</span>,
         },
         {
             title: (
                 <div className="flex items-center gap-2">
-                    Status{" "}
-                    <Switch checkedChildren="On" unCheckedChildren="Off" defaultChecked />
+                    {t("Status")}
+                    <Switch checkedChildren={t("On")} unCheckedChildren={t("Off")} defaultChecked />
                 </div>
             ),
             key: "actions",
@@ -149,11 +138,10 @@ export default function UserManage() {
         },
     ];
 
-    const handleBack = () => {
-        navigate('/pm/settings');
-    };
+    const handleBack = () => navigate('/pm/settings');
+
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen p-6 bg-white dark:bg-gray-900">
             <div className="flex items-center mb-8">
                 <button
                     onClick={handleBack}
@@ -161,11 +149,13 @@ export default function UserManage() {
                 >
                     <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
-                <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">User Management</h1>
+                <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
+                    {t("User Management")}
+                </h1>
             </div>
             <div className="flex justify-between mb-4">
                 <Input
-                    placeholder="Search for members"
+                    placeholder={t("Search for members")}
                     prefix={<SearchOutlined className="[&_svg]:w-6 [&_svg]:h-6 text-zinc-400" />}
                     className="w-[400px] h-10 placeholder-zinc-400"
                     value={searchValue}
@@ -173,7 +163,7 @@ export default function UserManage() {
                     allowClear
                 />
             </div>
-            <div className="rounded-lg border mt-4">
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 mt-4">
                 <Table
                     columns={columns}
                     dataSource={syncData?.data || []}
@@ -188,7 +178,7 @@ export default function UserManage() {
                             setPageSize(newSize);
                         },
                         showSizeChanger: true,
-                        showTotal: (total) => `Total ${total} operators`,
+                        showTotal: (total) => `${t("Total")} ${total} ${t("operators")}`,
                     }}
                 />
             </div>

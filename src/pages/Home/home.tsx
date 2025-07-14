@@ -1,6 +1,5 @@
-"use client"
 
-import { Button, ConfigProvider, DatePicker } from "antd"
+import { Button, ConfigProvider, DatePicker, theme as antdTheme } from "antd"
 import { SettingOutlined } from "@ant-design/icons"
 import { Headset, Printer, UsersRound } from "lucide-react"
 import SimpleAIChat from "components/simpleAIchat"
@@ -16,6 +15,7 @@ import { useGetTotalTalkTimeQuery } from "services/api/home"
 import { useGetStatisticsResponseMutation } from "services/api/statistics/statistics.api"
 import { ACCESS_TOKEN_KEY } from "config"
 import { storage } from "services"
+import { useTheme } from "services/contexts/ThemeContext"
 
 const { RangePicker } = DatePicker
 
@@ -24,7 +24,10 @@ export default function BusinessDashboard() {
     const [isMetricsModalOpen, setIsMetricsModalOpen] = useState(false)
     const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([dayjs().startOf("month"), dayjs().endOf("month")])
     const baseUrl = import.meta.env.VITE_ROOT_API || ""
+
     const formatDateForApi = (date: Dayjs | null): string => (date ? date.format("YYYY-MM-DD") : "")
+
+    const { theme } = useTheme()
 
     const formData = {
         start_date: formatDateForApi(dateRange[0]),
@@ -43,6 +46,7 @@ export default function BusinessDashboard() {
     const handleRangeSelect = (range: string) => {
         let startDate: Dayjs
         let endDate: Dayjs = dayjs()
+
         switch (range) {
             case "Last 7 Days":
                 startDate = dayjs().subtract(6, "days")
@@ -61,6 +65,7 @@ export default function BusinessDashboard() {
             default:
                 return
         }
+
         setDateRange([startDate, endDate])
     }
 
@@ -78,7 +83,7 @@ export default function BusinessDashboard() {
         return {
             date_range: {
                 start: data.summary?.date_range?.start || "",
-                end: data.summary?.date_range?.end || ""
+                end: data.summary?.date_range?.end || "",
             },
             metrics: [
                 {
@@ -86,49 +91,49 @@ export default function BusinessDashboard() {
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
                 {
                     title: "Quarter-over-Quarter Growth",
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
                 {
                     title: "Funnel Potential",
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
                 {
                     title: "Lead to Sale",
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
                 {
                     title: "Average Deal Size",
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
                 {
                     title: "Average Sales Cycle",
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
                 {
                     title: "New Customers",
                     display_value: "0%",
                     value: "0",
                     change_text: "no change",
-                    change_type: "neutral"
+                    change_type: "neutral",
                 },
             ],
             info_cards: [
@@ -138,7 +143,7 @@ export default function BusinessDashboard() {
                     value: Math.floor(totalTalk.total_duration / 60),
                     description: "Total audio minutes analyzed during the selected period",
                     icon: "🎧",
-                    icon_class: "purple"
+                    icon_class: "purple",
                 },
                 {
                     title: "Number of audios analyzed",
@@ -146,7 +151,7 @@ export default function BusinessDashboard() {
                     value: totalTalk.anaylsed_data || 0,
                     description: "Total number of audios analyzed during the selected period",
                     icon: "👥",
-                    icon_class: "blue"
+                    icon_class: "blue",
                 },
                 {
                     title: "Total of audio minutes",
@@ -154,7 +159,7 @@ export default function BusinessDashboard() {
                     value: Math.floor((data.summary?.total_talk_time || 0) / 60),
                     description: "Total audio minutes analyzed during the selected period",
                     icon: "🎧",
-                    icon_class: "purple"
+                    icon_class: "purple",
                 },
                 {
                     title: "Total number of leads",
@@ -162,12 +167,11 @@ export default function BusinessDashboard() {
                     value: data.summary?.total_leads || 0,
                     description: "Total number of leads analyzed during the selected period",
                     icon: "👥",
-                    icon_class: "blue"
-                }
-            ]
+                    icon_class: "blue",
+                },
+            ],
         }
     }
-
 
     const handleSendToServer = async () => {
         const payload = buildPayload()
@@ -178,17 +182,16 @@ export default function BusinessDashboard() {
 
         try {
             const response = await fetch(`${baseUrl}/api/stats/pdf/overall/`, {
-                method: "POST", // BU MUHIM
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${storage.get(ACCESS_TOKEN_KEY) || ""}`
+                    Authorization: `Bearer ${storage.get(ACCESS_TOKEN_KEY) || ""}`,
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             })
 
             if (!response.ok) throw new Error(`Server error ${response.status}`)
 
-            // Agar PDF blob qaytarsa:
             const blob = await response.blob()
             const url = window.URL.createObjectURL(blob)
             const link = document.createElement("a")
@@ -198,51 +201,130 @@ export default function BusinessDashboard() {
             link.click()
             link.remove()
             window.URL.revokeObjectURL(url)
-
         } catch (err) {
             console.error("Serverga yuborishda xatolik:", err)
             alert("Serverga yuborishda xatolik yuz berdi")
         }
     }
 
+    // Theme configuration for Ant Design
+    const getThemeConfig = () => {
+        if (theme === "dark") {
+            return {
+                algorithm: antdTheme.darkAlgorithm,
+                token: {
+                    colorPrimary: "#4338ca",
+                    borderRadius: 8,
+                    colorBgContainer: "#374151",
+                    colorBgElevated: "#374151",
+                    colorBgLayout: "#1f2937",
+                    colorText: "#f3f4f6",
+                    colorTextSecondary: "#9ca3af",
+                    colorBorder: "#4b5563",
+                },
+            }
+        }
+
+        return {
+            algorithm: antdTheme.defaultAlgorithm,
+            token: {
+                colorPrimary: "#4338ca",
+                borderRadius: 8,
+                colorBgContainer: "#ffffff",
+                colorBgElevated: "#ffffff",
+                colorBgLayout: "#f9fafb",
+                colorText: "#111827",
+                colorTextSecondary: "#6b7280",
+                colorBorder: "#d1d5db",
+            },
+        }
+    }
+
+    // Main container styles
+    const containerStyle = {
+        minHeight: "calc(100vh)",
+        backgroundColor: theme === "dark" ? "#1f2937" : "#f9fafb",
+        color: theme === "dark" ? "#f3f4f6" : "#111827",
+    }
+
+    const headerTextStyle = {
+        color: theme === "dark" ? "#f3f4f6" : "#111827",
+    }
+
     if (statisticsError || totalTalkError) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold text-red-600 mb-2">Error Loading Dashboard</h2>
-                    <p className="text-gray-600">Please try refreshing the page</p>
+            <div
+                style={{
+                    minHeight: "100vh",
+                    backgroundColor: theme === "dark" ? "#1f2937" : "#f9fafb",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <div style={{ textAlign: "center" }}>
+                    <h2
+                        style={{
+                            fontSize: "1.25rem",
+                            fontWeight: 600,
+                            color: "#dc2626",
+                            marginBottom: "0.5rem",
+                        }}
+                    >
+                        Error Loading Dashboard
+                    </h2>
+                    <p style={{ color: theme === "dark" ? "#9ca3af" : "#6b7280" }}>Please try refreshing the page</p>
                 </div>
             </div>
         )
     }
 
     return (
-        <ConfigProvider
-            theme={{
-                token: {
-                    colorPrimary: "#4338ca",
-                    borderRadius: 8,
-                },
-            }}
-        >
-            <main className="px-8 py-5 flex flex-col min-h-[calc(100vh-64px)]">
+        <ConfigProvider theme={getThemeConfig()}>
+            <main style={{ ...containerStyle, padding: "20px 32px" }}>
                 {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                    <h1 className="text-2xl font-bold text-gray-900">{t("Business Overview")}</h1>
-                    <div className="flex gap-3 items-center">
+                <div
+                    style={{
+                        display: "flex",
+                        // flexDirection: "column",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        marginBottom: "24px",
+                        gap: "16px",
+                    }}
+                    className="md:flex-row md:items-center"
+                >
+                    <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", ...headerTextStyle, margin: 0 }}>
+                        {t("Business Overview")}
+                    </h1>
+
+                    <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                         <Language />
-                        <Button type="primary" onClick={handleSendToServer} className="flex items-center bg-[#4338CA] hover:bg-[#3730A3] h-8">
-                            <Printer className="h-5 w-5 mr-2" />
+                        <Button
+                            type="primary"
+                            onClick={handleSendToServer}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                backgroundColor: "#4338CA",
+                                borderColor: "#4338CA",
+                                height: "32px",
+                            }}
+                        >
+                            <Printer style={{ height: "20px", width: "20px", marginRight: "8px" }} />
                             <span>{t("Download PDF")}</span>
                         </Button>
-                        <SettingsButton onClick={() => setIsMetricsModalOpen(true)} icon={<SettingOutlined />} />
+                        <SettingsButton
+                            onClick={() => setIsMetricsModalOpen(true)}
+                            icon={<SettingOutlined style={{ fontSize: '16px' }} />}
+                        />
                     </div>
                 </div>
 
                 {/* Date Range Picker */}
-                <div className="mb-4">
+                <div style={{ marginBottom: "6px" }}>
                     <RangePicker
-                        className="w-full md:w-80 border rounded-md mb-2"
+                        style={{ width: "100%", maxWidth: "320px", marginBottom: "2px" }}
                         format="MMM D, YYYY"
                         onChange={handleDateChange}
                         value={dateRange}
@@ -251,29 +333,46 @@ export default function BusinessDashboard() {
                 </div>
 
                 {/* Filter Tabs */}
-                <div className="mb-6 flex flex-wrap gap-3">
+                <div style={{ marginBottom: "24px", display: "flex", flexWrap: "wrap", gap: "12px" }}>
                     {["Last 7 Days", "Last 30 Days", "This Month", "Last Month"].map((range) => (
-                        <Button
-                            key={range}
-                            className="bg-gray-100 hover:bg-gray-200 border-gray-200 cursor-pointer h-7"
-                            onClick={() => handleRangeSelect(range)}
-                        >
+                        <Button key={range} style={{ height: "28px" }} onClick={() => handleRangeSelect(range)}>
                             {t(range)}
                         </Button>
                     ))}
                 </div>
 
-
-
                 {/* Loading State */}
                 {(isStatisticsLoading || isTotalTalkLoading) && (
-                    <div className="flex justify-center items-center py-12">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: "48px 0",
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: "32px",
+                                height: "32px",
+                                border: "2px solid transparent",
+                                borderTop: "2px solid #4338ca",
+                                borderRadius: "50%",
+                                animation: "spin 1s linear infinite",
+                            }}
+                        />
                     </div>
                 )}
 
                 {/* Stat Cards Row 1 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                        gap: "24px",
+                        marginBottom: "24px",
+                    }}
+                >
                     <StatCard
                         title={t("Month-over-Month Growth")}
                         value="0%"
@@ -293,7 +392,14 @@ export default function BusinessDashboard() {
                 </div>
 
                 {/* Stat Cards Row 2 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                        gap: "24px",
+                        marginBottom: "24px",
+                    }}
+                >
                     <StatCard title={t("Average Deal Size")} value="$0" change={0} status="neutral" changeText={t("no change")} />
                     <StatCard
                         title={t("Average Sales Cycle")}
@@ -307,25 +413,30 @@ export default function BusinessDashboard() {
 
                 {/* Analytics Cards */}
                 {!isStatisticsLoading && !isTotalTalkLoading && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fit, minmax(600px, 1fr))",
+                            gap: "24px",
+                            marginBottom: "24px",
+                        }}
+                    >
                         <AnalyticsCard
-                            icon={<Headset height={36} width={36} className="text-4xl text-indigo-500" />}
+                            icon={<Headset height={36} width={36} style={{ color: "#4338ca" }} />}
                             title={t("Number of minutes analyzed")}
                             value={totalTalk ? `${Math.floor(totalTalk?.total_duration / 60)} min` : "0 min"}
                             description={t("Total audio minutes analyzed during the selected period")}
                             borderColor="border-indigo-500"
                         />
-
                         <AnalyticsCard
-                            icon={<UsersRound height={36} width={36} className="text-4xl text-indigo-500" />}
+                            icon={<UsersRound height={36} width={36} style={{ color: "#4338ca" }} />}
                             title={t("Number of audios analyzed")}
                             value={totalTalk?.anaylsed_data?.toString() || "0"}
                             description={t("Total number of audios analyzed during the selected period")}
                             borderColor="border-indigo-500"
                         />
-
                         <AnalyticsCard
-                            icon={<Headset height={36} width={36} className="text-4xl text-indigo-500" />}
+                            icon={<Headset height={36} width={36} style={{ color: "#4338ca" }} />}
                             title={t("Total of audio minutes")}
                             value={
                                 typeof data?.summary?.total_talk_time === "number"
@@ -335,9 +446,8 @@ export default function BusinessDashboard() {
                             description={t("Total audio minutes analyzed during the selected period")}
                             borderColor="border-indigo-500"
                         />
-
                         <AnalyticsCard
-                            icon={<UsersRound height={36} width={36} className="text-4xl text-indigo-500" />}
+                            icon={<UsersRound height={36} width={36} style={{ color: "#4338ca" }} />}
                             title={t("Total number of leads")}
                             value={data?.summary?.total_leads?.toString() || "0"}
                             description={t("Total number of leads analyzed during the selected period")}
@@ -346,7 +456,7 @@ export default function BusinessDashboard() {
                     </div>
                 )}
 
-                <div className="mt-auto mb-4">
+                <div style={{ marginTop: "auto", marginBottom: "16px" }}>
                     <SimpleAIChat context="sdr" />
                 </div>
             </main>
@@ -354,8 +464,10 @@ export default function BusinessDashboard() {
             <MetricsSelectionModal
                 isOpen={isMetricsModalOpen}
                 onClose={() => setIsMetricsModalOpen(false)}
-                icon={<SettingOutlined />}
             />
+
+
         </ConfigProvider>
     )
 }
+//notification hide

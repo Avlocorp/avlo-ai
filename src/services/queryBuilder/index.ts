@@ -16,7 +16,7 @@ const queryBuilder = (
   const params = new URLSearchParams();
 
   // Handle `fields`
-  if (fields.length) {
+  if (fields?.length) {
     params.append("fields", fields.join(","));
   }
 

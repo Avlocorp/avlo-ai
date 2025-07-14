@@ -1,6 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export function formatNumber(num?: number | string | null): string {
+  if (num === null || num === undefined) return "-";
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -37,13 +42,14 @@ export function formatDate(isoDate: string): string {
 
   return `${day}.${month}.${year}`;
 }
-
-export function formatPhoneNumber(phone: string): string {
-  const cleaned = phone.replace(/\D/g, ""); // Faqat raqamlarni olish
-  if (cleaned.length !== 12) return phone; // Agar noto'g'ri uzunlik bo'lsa, o'zgarishsiz qaytarish
-
-  return `+${cleaned.slice(0, 3)} ${cleaned.slice(3, 5)} ${cleaned.slice(
-    5,
-    8
-  )} ${cleaned.slice(8, 10)} ${cleaned.slice(10, 12)}`;
+export function formatPhoneNumber(phone?: string | null): string {
+  if (!phone) return "-";
+  try {
+    return phone.replace(
+      /(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
+      "$1 ($2) $3-$4-$5"
+    );
+  } catch {
+    return phone;
+  }
 }

@@ -16,6 +16,7 @@ export interface Text {
   key: string;
   id: number;
   uz: string;
+  kg: string | null;
   tj: string | null;
   en: string | null;
   ru: string | null;

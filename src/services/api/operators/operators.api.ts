@@ -1,14 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 import { ACCESS_TOKEN_KEY } from "config";
 import storage from "services/storage";
-import { OperatorsList } from "./operators.types";
+import { OperatorDashboard, OperatorsList } from "./operators.types";
 
 export const operatorsApi = createApi({
   reducerPath: "operatorsApi",
   baseQuery: async (args, api, extraOptions) => {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60000); // 30 seconds
+    const timeout = setTimeout(() => controller.abort(), 60000); // 60 seconds
 
     try {
       return await fetchBaseQuery({
@@ -26,12 +25,15 @@ export const operatorsApi = createApi({
     }
   },
   endpoints: (builder) => ({
+    // Operatorlarni qayta sync qilish
     syncOperators: builder.query<{ success: boolean }, void>({
       query: () => ({
         url: `api/operators/reload/`,
         timeout: 60000,
       }),
     }),
+
+    // Operatorlar listini olish
     getOperators: builder.query<
       OperatorsList,
       { page: number; search: string }
@@ -45,6 +47,8 @@ export const operatorsApi = createApi({
         timeout: 60000,
       }),
     }),
+
+    // Bitta operatorni filter qilib olish
     getSingleOperator: builder.query<OperatorsList, { operatorId: number }>({
       query: ({ operatorId }) => ({
         url: `api/operators/`,
@@ -54,6 +58,8 @@ export const operatorsApi = createApi({
         timeout: 60000,
       }),
     }),
+
+    // Operatorlar statistikasini olish
     getOperatorsStatistics: builder.query<
       OperatorsList,
       {
@@ -76,13 +82,33 @@ export const operatorsApi = createApi({
         timeout: 60000,
       }),
     }),
+
+    // Operator dashboard uchun umumiy ma'lumot
+    getOperatorDashboard: builder.query<
+      OperatorDashboard,
+      { operatorId: number }
+    >({
+      query: ({ operatorId }) => ({
+        url: `api/leads/price/?operator_id=${operatorId}`,
+      }),
+    }),
+
+    // Barcha operatorlar uchun umumiy dashboard statistikasi
+    getOperatorDashboardStatics: builder.query<OperatorDashboard, void>({
+      query: () => ({
+        url: `api/leads/price/`,
+      }),
+    }),
   }),
 });
 
+// Export qilish
 export const {
-  useGetOperatorsStatisticsQuery,
   useSyncOperatorsQuery,
   useGetOperatorsQuery,
   useLazyGetOperatorsQuery,
   useGetSingleOperatorQuery,
+  useGetOperatorsStatisticsQuery,
+  useGetOperatorDashboardQuery,
+  useGetOperatorDashboardStaticsQuery,
 } = operatorsApi;

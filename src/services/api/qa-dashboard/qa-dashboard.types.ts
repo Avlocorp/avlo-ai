@@ -1,8 +1,12 @@
+// qa-dashboard.types.ts
+
 // Checklist modelining yagona itemi
 export interface ChecklistResponse {
   id: number;
   name: string;
   description: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 // CRM Status itemi
@@ -39,6 +43,8 @@ export interface Criteria {
   text: string;
   checklist_name: string;
   checklist_description: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 // Criteria list response (paginated)
@@ -55,6 +61,7 @@ export interface CriteriaListResponse {
   to: number;
 }
 
+// Checklist Status
 export interface ChecklistStatus {
   id: string;
   name: string;
@@ -63,14 +70,22 @@ export interface ChecklistStatus {
   checklist_id: string;
 }
 
+// Status List Response
 export interface StatusListResponse {
   data: ChecklistStatus[];
   total: number;
 }
 
+// Component Props
 export interface ChecklistModalsProps {
   className?: string;
 }
+
+export interface ChecklistDashboardProps {
+  className?: string;
+}
+
+// Checklist for Dashboard
 export interface Checklist {
   id: string;
   name: string;
@@ -80,23 +95,57 @@ export interface Checklist {
   assignedStages: string[];
 }
 
-export interface ChecklistDashboardProps {
-  className?: string;
+// Criteria Results
+export interface CriteriaResults {
+  positive: number;
+  negative: number;
+  neutral: number;
+  positive_percentage: number;
+  negative_percentage: number;
+  neutral_percentage: number;
 }
 
-export interface Criteria {
+// Criteria with Results
+export interface CriteriaWithResults {
   id: number;
   text: string;
-  results: {
-    positive: number;
-    negative: number;
-    neutral: number;
-    positive_percentage: number;
-    negative_percentage: number;
-    neutral_percentage: number;
+  results: CriteriaResults;
+}
+
+// Metrics Response
+export interface MetricsResponse {
+  criterias: CriteriaWithResults[];
+  overall_compliance?: string;
+  total_calls?: string;
+  top_criterion?: {
+    name: string;
+    percentage: string;
+  };
+  summary?: {
+    total_positive: number;
+    total_negative: number;
+    total_neutral: number;
+    overall_compliance_rate: number;
   };
 }
 
-export interface MetricsResponse {
-  criterias: Criteria[];
+// API Error Response
+export interface ApiError {
+  message: string;
+  status: number;
+  details?: Record<string, any>;
+}
+
+// Date Range Type
+export interface DateRange {
+  start_date: string;
+  end_date: string;
+}
+
+// Filter Parameters
+export interface MetricsFilters {
+  checklist_id?: number;
+  operator_id?: number;
+  start_date?: string;
+  end_date?: string;
 }

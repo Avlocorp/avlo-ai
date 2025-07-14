@@ -1,41 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown, Button } from "antd";
-import { Globe } from "lucide-react"; // yoki o'zingizning ikonka paketingiz
+import { Globe } from "lucide-react";
 import i18next from "services/i18n";
 import { storage } from "services";
 
-export default function Language() {
-    // Saqlangan tilni olish
-    const [language, setLanguage] = useState(storage.get("i18nextLng") || "uz");
+interface LangProps {
+    width?: string | number;
+    height?: string | number;
+}
 
-    // Menyudagi tillar
+export default function Language({ width, height }: LangProps) {
+    const [language, setLanguage] = useState(
+        i18next.language || storage.get("i18nextLng") || "uz"
+    );
+
+    useEffect(() => {
+        const onLangChange = (lang: string) => {
+            setLanguage(lang);
+        };
+        i18next.on("languageChanged", onLangChange);
+        return () => {
+            i18next.off("languageChanged", onLangChange);
+        };
+    }, []);
+
     const items = [
         { key: "uz", label: "O‘zbek" },
         { key: "en", label: "English" },
         { key: "ru", label: "Русский" },
-        { key: "ky", label: "Kyrgyz" },
-        { key: "tj", label: "Тоҷикӣ" }
     ];
 
-    // Tanlangan tilni o'zgartirish
-    const handleMenuClick = ({ key }: { key: string }) => {
-        setLanguage(key);             // State yangilanadi
-        i18next.changeLanguage(key);  // i18n ichki tilni o'zgartiradi
-        storage.set("i18nextLng", key); // localStorage ga yoziladi
+    const handleMenuClick = async ({ key }: { key: string }) => {
+        if (key !== language) {
+            await i18next.changeLanguage(key);
+            storage.set("i18nextLng", key);
+            // event trigger qiladi setLanguage
+        }
     };
 
     return (
         <Dropdown
             menu={{ items, onClick: handleMenuClick }}
             trigger={["click"]}
-            className="h-8 flex items-center justify-center"
+            destroyPopupOnHide
         >
-            <Button className="flex items-center gap-2">
+            <Button
+                className={`h-8 flex items-center justify-center gap-2 ${width ? `w-[${width}]` : ""}`}
+                style={{
+                    ...(width ? { width } : {}),
+                    ...(height ? { height } : {})
+                }}
+            >
                 <Globe className="w-4 h-4" />
                 <p>
-                    {
-                        items.find((item) => item.key === language)?.label || "Tilni tanlang"
-                    }
+                    {items.find((item) => item.key === language)?.label || "Tilni tanlang"}
                 </p>
             </Button>
         </Dropdown>

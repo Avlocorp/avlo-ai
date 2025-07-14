@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { ArrowDownIcon, ArrowUpIcon, X, Download, CircleEllipsis } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
+import { useTheme } from "services/contexts/ThemeContext"
 
 interface PerformanceCardProps {
     title: string
@@ -40,30 +41,51 @@ export default function PerformanceCard({
     chartData = sampleChartData,
 }: PerformanceCardProps) {
     const { t } = useTranslation()
+    const { theme } = useTheme()
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const colorMap = {
         positive: {
-            border: "border-l-green-500",
-            text: "text-green-500",
+            borderColor: "#22c55e", // green-500
+            textColor: theme === "dark" ? "#4ade80" : "#22c55e", // green-400 for dark, green-500 for light
             rotate: 45,
             Icon: ArrowUpIcon,
         },
         negative: {
-            border: "border-l-red-500",
-            text: "text-red-500",
+            borderColor: "#ef4444", // red-500
+            textColor: theme === "dark" ? "#f87171" : "#ef4444", // red-400 for dark, red-500 for light
             rotate: -45,
             Icon: ArrowDownIcon,
         },
         neutral: {
-            border: "border-l-gray-400",
-            text: "text-gray-500",
+            borderColor: theme === "dark" ? "#6b7280" : "#9ca3af", // gray-500/gray-400
+            textColor: theme === "dark" ? "#9ca3af" : "#6b7280", // gray-400/gray-500
             rotate: 0,
             Icon: () => null,
         },
     } as const;
 
-    const { border, text, Icon, rotate } = colorMap[comparisonColor] || colorMap["neutral"]
+    const { borderColor, textColor, Icon, rotate } = colorMap[comparisonColor] || colorMap["neutral"]
+
+    // Theme-aware styles
+    const cardStyle = {
+        backgroundColor: theme === "dark" ? "#374151" : "#ffffff",
+        borderLeft: `4px solid ${borderColor}`,
+        border: `1px solid ${theme === "dark" ? "#4b5563" : "#e5e7eb"}`,
+        color: theme === "dark" ? "#f3f4f6" : "#111827",
+        boxShadow: theme === "dark" ? "0 1px 3px 0 rgba(0, 0, 0, 0.3)" : "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+    }
+
+    const modalStyle = {
+        backgroundColor: theme === "dark" ? "#374151" : "#ffffff",
+        color: theme === "dark" ? "#f3f4f6" : "#111827",
+        border: `1px solid ${theme === "dark" ? "#4b5563" : "#e5e7eb"}`,
+    }
+
+    const titleColor = theme === "dark" ? "#9ca3af" : "#6b7280"
+    const borderBottomColor = theme === "dark" ? "#4b5563" : "#e5e7eb"
+    const buttonBorderColor = theme === "dark" ? "#4b5563" : "#d1d5db"
+    const buttonHoverBg = theme === "dark" ? "#4b5563" : "#f9fafb"
 
     const handleExportCSV = () => {
         const csvContent =
@@ -93,21 +115,30 @@ export default function PerformanceCard({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className={`bg-white rounded-lg shadow-sm p-4 border-l-4 ${border} flex flex-col cursor-pointer hover:shadow-md transition-shadow`}
+                className="rounded-lg p-4 flex flex-col cursor-pointer hover:shadow-md transition-shadow"
+                style={cardStyle}
                 onClick={() => setIsModalOpen(true)}
             >
                 <div className="flex justify-between items-center mb-2">
-                    <h4 className="text-sm font-medium text-gray-600">{t(title)}</h4>
+                    <h4 className="text-sm font-medium" style={{ color: titleColor }}>
+                        {t(title)}
+                    </h4>
                     <button>
-                        <CircleEllipsis className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <CircleEllipsis
+                            className="w-4 h-4"
+                            style={{ color: titleColor }}
+                        />
                     </button>
                 </div>
                 <div className="text-3xl font-bold mb-2">{value}</div>
-                <div className={`flex items-center ${text} text-sm`}>
+                <div className="flex items-center text-sm" style={{ color: textColor }}>
                     {Icon && (
                         <Icon
-                            className={`w-5 h-5 mr-1 ${text}`}
-                            style={{ transform: `rotate(${rotate}deg)` }}
+                            className="w-5 h-5 mr-1"
+                            style={{
+                                color: textColor,
+                                transform: `rotate(${rotate}deg)`
+                            }}
                         />
                     )}
                     <span>{t(comparison)}</span>
@@ -127,15 +158,20 @@ export default function PerformanceCard({
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                            className="rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                            style={modalStyle}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Modal Header */}
-                            <div className="flex justify-between items-center p-4 border-b">
-                                <h2 className="text-xl font-semibold text-gray-900">{t(title)}</h2>
+                            <div
+                                className="flex justify-between items-center p-4"
+                                style={{ borderBottom: `1px solid ${borderBottomColor}` }}
+                            >
+                                <h2 className="text-xl font-semibold">{t(title)}</h2>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="hover:opacity-70 transition-opacity"
+                                    style={{ color: titleColor }}
                                 >
                                     <X className="w-6 h-6" />
                                 </button>
@@ -145,21 +181,35 @@ export default function PerformanceCard({
                             <div className="p-6">
                                 {/* Metrics Row */}
                                 <div className="flex justify-start gap-6 mb-6">
-                                    <div className="">
-                                        <div className="text-sm text-gray-500 mb-1">{t("Current Value")}</div>
-                                        <div className="text-3xl font-bold text-gray-900">{value}</div>
+                                    <div>
+                                        <div className="text-sm mb-1" style={{ color: titleColor }}>
+                                            {t("Current Value")}
+                                        </div>
+                                        <div className="text-3xl font-bold">{value}</div>
                                     </div>
-                                    <div className="">
-                                        <div className="text-sm text-gray-500 mb-1">{t("Peer Median")}</div>
-                                        <div className="text-3xl font-bold text-gray-600">{peerMedian}</div>
+                                    <div>
+                                        <div className="text-sm mb-1" style={{ color: titleColor }}>
+                                            {t("Peer Median")}
+                                        </div>
+                                        <div className="text-3xl font-bold" style={{ color: titleColor }}>
+                                            {peerMedian}
+                                        </div>
                                     </div>
-                                    <div className="">
-                                        <div className="text-sm text-gray-500 mb-1">{t("Performance")}</div>
-                                        <div className={`text-[18px] font-bold ${text} flex items-center justify-center`}>
+                                    <div>
+                                        <div className="text-sm mb-1" style={{ color: titleColor }}>
+                                            {t("Performance")}
+                                        </div>
+                                        <div
+                                            className="text-[18px] font-bold flex items-center justify-center"
+                                            style={{ color: textColor }}
+                                        >
                                             {Icon && (
                                                 <Icon
-                                                    className={`w-5 h-5 mr-1 ${text}`}
-                                                    style={{ transform: `rotate(${rotate}deg)` }}
+                                                    className="w-5 h-5 mr-1"
+                                                    style={{
+                                                        color: textColor,
+                                                        transform: `rotate(${rotate}deg)`
+                                                    }}
                                                 />
                                             )}
                                             {t(comparison)}
@@ -168,16 +218,36 @@ export default function PerformanceCard({
                                 </div>
 
                                 {/* Description */}
-                                <p className="text-gray-600 mb-6 text-start text-sm">{t(description || "")}</p>
+                                <p className="mb-6 text-start text-sm" style={{ color: titleColor }}>
+                                    {t(description || "")}
+                                </p>
 
                                 {/* Chart */}
                                 <div className="mb-6">
                                     <div className="h-64 w-full">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={chartData}>
-                                                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                                                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#666" }} />
-                                                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#666" }} />
+                                                <CartesianGrid
+                                                    strokeDasharray="3 3"
+                                                    stroke={theme === "dark" ? "#4b5563" : "#f0f0f0"}
+                                                />
+                                                <XAxis
+                                                    dataKey="date"
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    tick={{
+                                                        fontSize: 12,
+                                                        fill: theme === "dark" ? "#9ca3af" : "#666"
+                                                    }}
+                                                />
+                                                <YAxis
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    tick={{
+                                                        fontSize: 12,
+                                                        fill: theme === "dark" ? "#9ca3af" : "#666"
+                                                    }}
+                                                />
                                                 <Line
                                                     type="monotone"
                                                     dataKey="value"
@@ -195,14 +265,34 @@ export default function PerformanceCard({
                                 <div className="flex justify-end gap-4">
                                     <button
                                         onClick={handleExportCSV}
-                                        className="flex items-center gap-2 px-3 py-1 h-[38px] border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                                        className="flex items-center gap-2 px-3 py-1 h-[38px] rounded-md transition-colors"
+                                        style={{
+                                            border: `1px solid ${buttonBorderColor}`,
+                                            backgroundColor: 'transparent'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = buttonHoverBg
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'transparent'
+                                        }}
                                     >
                                         <Download className="w-4 h-4" />
                                         {t("Export CSV")}
                                     </button>
                                     <button
                                         onClick={handleExportPNG}
-                                        className="flex items-center gap-2 px-3 py-1 h-[38px] border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                                        className="flex items-center gap-2 px-3 py-1 h-[38px] rounded-md transition-colors"
+                                        style={{
+                                            border: `1px solid ${buttonBorderColor}`,
+                                            backgroundColor: 'transparent'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = buttonHoverBg
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'transparent'
+                                        }}
                                     >
                                         <Download className="w-4 h-4" />
                                         {t("Export PNG")}

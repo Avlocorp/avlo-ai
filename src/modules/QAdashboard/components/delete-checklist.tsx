@@ -1,6 +1,7 @@
 import { Button, Popconfirm, PopconfirmProps, message } from "antd";
 import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import {
     useDeleteChecklistMutation,
     useGetCheckListQuery,
@@ -13,35 +14,35 @@ interface DeleteChecklistProps {
 export default function DeleteChecklist({ id }: DeleteChecklistProps) {
     const [deleteChecklist, { isLoading }] = useDeleteChecklistMutation();
     const { refetch } = useGetCheckListQuery();
+    const { t } = useTranslation();
 
     const confirm: PopconfirmProps["onConfirm"] = async () => {
         try {
             await deleteChecklist({ checklist_id: id }).unwrap();
             refetch();
-            toast.success("Checklist successfully deleted");
+            toast.success(t("Checklist successfully deleted"));
         } catch (err: any) {
-            console.log(err?.data.error);
             const errorMessage =
                 typeof err?.data.error === "string"
                     ? err?.data.error
-                    : "Failed to delete checklist";
+                    : t("Failed to delete checklist");
 
             toast.error(errorMessage);
         }
     };
 
     const cancel: PopconfirmProps["onCancel"] = () => {
-        message.info("Delete cancelled");
+        message.info(t("Delete cancelled"));
     };
 
     return (
         <Popconfirm
-            title="Delete the checklist"
-            description="Are you sure to delete this checklist?"
+            title={t("Delete the checklist")}
+            description={t("Are you sure to delete this checklist?")}
             onConfirm={confirm}
             onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
+            okText={t("Yes")}
+            cancelText={t("No")}
         >
             <Button
                 type="text"

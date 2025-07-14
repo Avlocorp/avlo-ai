@@ -11,15 +11,15 @@ interface AvatarProps {
 // Function to generate color based on name (for consistent avatar colors)
 const stringToColor = (str: string): string => {
   let hash = 0;
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0; i < str?.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   // Use primary color variants
   const hue = 230; // Approximate hue for primary blue
   const saturation = 25 + (Math.abs(hash) % 70); // 25-95%
   const lightness = 45 + (Math.abs(hash) % 30); // 45-75%
-  
+
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
 
@@ -28,7 +28,7 @@ const getInitials = (name: string): string => {
   return name.split(' ').map(part => part[0]).join('').toUpperCase();
 };
 
-const Avatar: React.FC<AvatarProps> = ({ 
+const Avatar: React.FC<AvatarProps> = ({
   name,
   photo = null,
   initials,
@@ -42,22 +42,22 @@ const Avatar: React.FC<AvatarProps> = ({
     lg: 'w-14 h-14 text-base',
     xl: 'w-20 h-20 text-xl',
   };
-  
+
   const sizeClass = sizeClasses[size] || sizeClasses.md;
   const displayInitials = initials || getInitials(name);
   const avatarColor = stringToColor(name);
-  
+
   return (
     <>
       {photo ? (
-        <img 
-          src={photo} 
+        <img
+          src={photo}
           alt={name}
           className={`${sizeClass} rounded-full object-cover ${className}`}
           title={name}
         />
       ) : (
-        <div 
+        <div
           className={`${sizeClass} rounded-full flex items-center justify-center text-white font-medium ${className}`}
           style={{ backgroundColor: avatarColor }}
           title={name}

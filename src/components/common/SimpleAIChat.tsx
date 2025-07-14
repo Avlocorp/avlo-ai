@@ -28,10 +28,10 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
 
   // Auto-expand when new messages are added
   useEffect(() => {
-    if (messages.length > 0 && !isExpanded) {
+    if (messages?.length > 0 && !isExpanded) {
       setIsExpanded(true);
     }
-  }, [messages.length]);
+  }, [messages?.length]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +67,7 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
       <motion.div
         initial={false}
         animate={{
-          height: isExpanded && messages.length > 0 ? 'auto' : 'auto'
+          height: isExpanded && messages?.length > 0 ? 'auto' : 'auto'
         }}
         className={`
           bg-white dark:bg-gray-800 shadow-lg border dark:border-gray-700 rounded-lg
@@ -93,7 +93,7 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
         </div>
 
         <AnimatePresence>
-          {isExpanded && messages.length > 0 && (
+          {isExpanded && messages?.length > 0 && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
@@ -107,8 +107,8 @@ const SimpleAIChat: React.FC<SimpleAIChatProps> = ({ context = 'business' }) => 
                 >
                   <div
                     className={`max-w-[80%] rounded-lg p-3 ${message.type === 'user'
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
                       }`}
                   >
                     {message.content}
