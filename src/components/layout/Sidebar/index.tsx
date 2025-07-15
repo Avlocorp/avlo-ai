@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   BarChart3,
@@ -7,6 +7,7 @@ import {
   ClipboardCheck,
   Settings as SettingsIcon,
   UserSquare2,
+  UserRoundCheck,
   ChevronLeft,
   ChevronRight,
   LayoutDashboardIcon,
@@ -20,10 +21,17 @@ interface SidebarProps {
   isMobile: boolean;
   isMobileOpen: boolean;
   onMobileToggle: () => void;
+  isCollapsed: boolean;
+  onCollapseToggle: (collapsed: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggle }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const Sidebar: React.FC<SidebarProps> = ({
+  isMobile,
+  isMobileOpen,
+  onMobileToggle,
+  isCollapsed,
+  onCollapseToggle
+}) => {
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -31,14 +39,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768 && !isCollapsed) {
-        setIsCollapsed(true);
+        onCollapseToggle(true);
       }
     };
 
     handleResize(); // Initial check
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isCollapsed]);
+  }, [isCollapsed, onCollapseToggle]);
+
 
   // Don't render if mobile and not open
   if (isMobile && !isMobileOpen) {
@@ -51,6 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
     { path: '/pm/statistics', icon: UserSquare2, label: t('SDR Dashboard') },
     { path: '/pm/leads', icon: Users, label: t('Leads') },
     { path: '/pm/leaderboard', icon: Trophy, label: t('Leaderboard') },
+    { path: '/pm/operators', icon: UserRoundCheck, label: t('Operators') },
     { path: '/pm/qa', icon: ClipboardCheck, label: t('Quality Assurance') },
     { path: "/pm/qadashboard", icon: LayoutDashboardIcon, label: t('QA Dashboard') },
   ];
@@ -68,7 +78,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
     >
       <div className="flex items-center justify-between h-16 px-4 border-b border-[#34495e]">
         <div className={clsx('font-bold transition-opacity duration-300 flex gap-2 items-center', isCollapsed && 'opacity-0 overflow-hidden')}>
-          {/* <LayoutDashboardIcon /> */}
           <span className="w-[30px] h-[30px]">
             <LogoIcon h={30} w={30} />
           </span>
@@ -79,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
 
         {!isMobile && (
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={() => onCollapseToggle(!isCollapsed)}
             className="p-2 rounded-full hover:bg-[#34495e] transition-colors !cursor-pointer"
             aria-label={isCollapsed ? t('Expand sidebar') : t('Collapse sidebar')}
           >
@@ -133,32 +142,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isMobileOpen, onMobileToggl
 
         {/* Settings with visual separation */}
         <div className="mt-auto border-t border-[#34495e]">
-          <Link
-            to={settingsItem.path}
-            className={clsx(
-              'flex items-center px-4 py-3 transition-colors relative group',
-              location.pathname === settingsItem.path
-                ? 'bg-[#34495e] text-white'
-                : 'text-gray-300 hover:bg-[#34495e] hover:text-white'
-            )}
-            aria-label={settingsItem.label}
-          >
-            <settingsItem.icon className={clsx('w-5 h-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
-            <span className={clsx(
-              'transition-all duration-300',
-              isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'
-            )}>
-              {settingsItem.label}
-            </span>
+          {(() => {
+            const Icon = settingsItem.icon;
+            return (
+              <Link
+                to={settingsItem.path}
+                className={clsx(
+                  'flex items-center px-4 py-3 transition-colors relative group',
+                  location.pathname === settingsItem.path
+                    ? 'bg-[#34495e] text-white'
+                    : 'text-gray-300 hover:bg-[#34495e] hover:text-white'
+                )}
+                aria-label={settingsItem.label}
+              >
+                <Icon className={clsx('w-5 h-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
+                <span className={clsx(
+                  'transition-all duration-300',
+                  isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'
+                )}>
+                  {settingsItem.label}
+                </span>
 
-            {/* Tooltip for collapsed state */}
-            {isCollapsed && (
-              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity whitespace-nowrap z-50">
-                {settingsItem.label}
-              </div>
-            )}
-          </Link>
+                {isCollapsed && (
+                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity whitespace-nowrap z-50">
+                    {settingsItem.label}
+                  </div>
+                )}
+              </Link>
+            )
+          })()}
         </div>
+
       </nav>
     </div>
   );

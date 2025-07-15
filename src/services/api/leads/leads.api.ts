@@ -45,7 +45,7 @@ export const leadsApi = createApi({
         if (Array.isArray(response)) {
           return {
             result: response,
-            total: response.length,
+            total: response?.length,
             next: null,
             time: defaultTime(),
           };
@@ -74,7 +74,7 @@ export const leadsApi = createApi({
         if (Array.isArray(response)) {
           return {
             result: response,
-            total: response.length,
+            total: response?.length,
             next: null,
             time: defaultTime(),
           };

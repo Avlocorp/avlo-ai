@@ -1,15 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
+import App from "./App";
 import { Provider } from "react-redux";
-import { store } from "store/index.ts";
-import "services/i18n";
-
+import { store } from "./store"; // bu sening redux store fayling
+import { ThemeProvider } from "services/contexts/ThemeContext";
+import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.Suspense fallback="...loading">
+  <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </Provider>
-  </React.Suspense>
+  </React.StrictMode>
 );

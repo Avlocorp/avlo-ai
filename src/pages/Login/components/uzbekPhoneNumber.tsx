@@ -13,10 +13,10 @@ export default function UzbekPhoneInput() {
         }
 
         // ✅ To‘g‘ri formatlash: +998 XX XXX XX XX
-        if (value.length > 4) value = value.slice(0, 4) + " " + value.slice(4);
-        if (value.length > 8) value = value.slice(0, 7) + " " + value.slice(7);
-        if (value.length > 11) value = value.slice(0, 11) + " " + value.slice(11);
-        if (value.length > 14) value = value.slice(0, 14) + " " + value.slice(14);
+        if (value?.length > 4) value = value.slice(0, 4) + " " + value.slice(4);
+        if (value?.length > 8) value = value.slice(0, 7) + " " + value.slice(7);
+        if (value?.length > 11) value = value.slice(0, 11) + " " + value.slice(11);
+        if (value?.length > 14) value = value.slice(0, 14) + " " + value.slice(14);
 
         setPhone(value.slice(0, 17)); // Maksimal uzunlik 17 ta belgi
     };

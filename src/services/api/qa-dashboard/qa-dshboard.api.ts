@@ -1,3 +1,4 @@
+// qa-dashboard.api.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import config, { ACCESS_TOKEN_KEY } from "config";
 import storage from "services/storage";
@@ -20,6 +21,7 @@ export const qadashboardApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Checklist", "Criteria", "Metrics", "Status"],
   endpoints: (builder) => ({
     // ✅ Get Status List
     getStatusList: builder.query<
@@ -30,6 +32,7 @@ export const qadashboardApi = createApi({
         url: "/api/stats/crm-statuses/",
         params: { search, page, per_page },
       }),
+      providesTags: ["Status"],
     }),
 
     // ✅ Get Checklist List
@@ -37,6 +40,7 @@ export const qadashboardApi = createApi({
       query: () => ({
         url: "/api/stats/checklists/",
       }),
+      providesTags: ["Checklist"],
     }),
 
     // ✅ Update Status
@@ -49,6 +53,7 @@ export const qadashboardApi = createApi({
         method: "PUT",
         body: { checklist_id },
       }),
+      invalidatesTags: ["Status"],
     }),
 
     // ✅ Create Checklist
@@ -61,6 +66,7 @@ export const qadashboardApi = createApi({
         method: "POST",
         body: { name, description },
       }),
+      invalidatesTags: ["Checklist"],
     }),
 
     // ✅ Update Checklist
@@ -73,6 +79,7 @@ export const qadashboardApi = createApi({
         method: "PUT",
         body: { name, description },
       }),
+      invalidatesTags: ["Checklist"],
     }),
 
     // ✅ Delete Checklist
@@ -81,6 +88,7 @@ export const qadashboardApi = createApi({
         url: `/api/stats/checklists/${checklist_id}/`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Checklist", "Metrics"],
     }),
 
     // ✅ Create Criterion
@@ -93,6 +101,7 @@ export const qadashboardApi = createApi({
         method: "POST",
         body: { checklist_id, text },
       }),
+      invalidatesTags: ["Criteria", "Metrics"],
     }),
 
     // ✅ Get Criteria List
@@ -104,6 +113,7 @@ export const qadashboardApi = createApi({
         url: `/api/stats/checklists/${checklist_id}/criteria/`,
         method: "GET",
       }),
+      providesTags: ["Criteria"],
     }),
 
     // ✅ Update Criterion
@@ -116,6 +126,7 @@ export const qadashboardApi = createApi({
         method: "PUT",
         body: { checklist_id, text },
       }),
+      invalidatesTags: ["Criteria", "Metrics"],
     }),
 
     // ✅ Delete Criterion
@@ -124,31 +135,49 @@ export const qadashboardApi = createApi({
         url: `/api/stats/criteria/${criteria_id}/`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Criteria", "Metrics"],
     }),
 
+    // ✅ Get All Checklists
     getAllCheckList: builder.query<ResponseCheckList, {}>({
-      query: ({}) => ({
+      query: () => ({
         url: "/api/stats/checklists/",
       }),
+      providesTags: ["Checklist"],
     }),
 
+    // ✅ Get Metrics with Date Range Support
     getMetrics: builder.query<
       MetricsResponse,
       {
         checklist_id?: number;
         operator_id?: number;
+        start_date?: string;
+        end_date?: string;
       }
     >({
-      query: ({ checklist_id, operator_id }) => {
-        let url = `api/stats/checklist_check/?checklist_id=${checklist_id}`;
-        if (operator_id !== undefined) {
-          url += `&operator_id=${operator_id}`;
+      query: ({ checklist_id, operator_id, start_date, end_date }) => {
+        const params = new URLSearchParams();
+
+        if (checklist_id !== undefined) {
+          params.append("checklist_id", checklist_id.toString());
         }
+        if (operator_id !== undefined) {
+          params.append("operator_id", operator_id.toString());
+        }
+        if (start_date) {
+          params.append("start_date", start_date);
+        }
+        if (end_date) {
+          params.append("end_date", end_date);
+        }
+
         return {
-          url,
+          url: `api/stats/checklist_check/?${params.toString()}`,
           method: "GET",
         };
       },
+      providesTags: ["Metrics"],
     }),
   }),
 });

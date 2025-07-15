@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Input, Modal } from "antd";
+import { Button, Input, Modal, ConfigProvider, theme as antdTheme } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Edit, Plus, Trash2, X } from "lucide-react";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ import {
 } from "services/api/qa-dashboard/qa-dshboard.api";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "services/contexts/ThemeContext";
 
 interface EditChecklistProps {
     checklist_id?: number;
@@ -32,6 +33,7 @@ export default function EditChecklist({
     onUpdated,
 }: EditChecklistProps) {
     const { t } = useTranslation();
+    const { theme } = useTheme();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [checklistName, setChecklistName] = useState(name || "");
     const [checklistDescription, setChecklistDescription] = useState(description || "");
@@ -47,6 +49,122 @@ export default function EditChecklist({
     const [updateChecklist] = useUpdateChecklistMutation();
     const [deleteCriteria] = useDeleteCriteriaMutation();
     const [createCriteria] = useCreateCriteriaMutation();
+
+    // Theme configuration for Ant Design
+    const getThemeConfig = () => {
+        if (theme === "dark") {
+            return {
+                algorithm: antdTheme.darkAlgorithm,
+                token: {
+                    colorPrimary: "#4338ca",
+                    borderRadius: 8,
+                    colorBgContainer: "#374151",
+                    colorBgElevated: "#374151",
+                    colorBgLayout: "#1f2937",
+                    colorText: "#f3f4f6",
+                    colorTextSecondary: "#9ca3af",
+                    colorBorder: "#4b5563",
+                },
+            };
+        }
+
+        return {
+            algorithm: antdTheme.defaultAlgorithm,
+            token: {
+                colorPrimary: "#4338ca",
+                borderRadius: 8,
+                colorBgContainer: "#ffffff",
+                colorBgElevated: "#ffffff",
+                colorBgLayout: "#f9fafb",
+                colorText: "#111827",
+                colorTextSecondary: "#6b7280",
+                colorBorder: "#d1d5db",
+            },
+        };
+    };
+
+    // Consolidated styles object
+    const getStyles = () => {
+        const isDark = theme === "dark";
+        return {
+            modalContent: {
+                backgroundColor: isDark ? "#374151" : "#ffffff",
+                color: isDark ? "#f3f4f6" : "#111827",
+            },
+            title: {
+                color: isDark ? "#f3f4f6" : "#111827",
+                margin: "0 0 24px 0",
+                fontSize: "20px",
+                fontWeight: 600,
+            },
+            label: {
+                color: isDark ? "#f3f4f6" : "#374151",
+                fontWeight: 500,
+                marginBottom: "8px",
+                display: "block",
+            },
+            emptyState: {
+                backgroundColor: isDark ? "#1f2937" : "#f9fafb",
+                border: `1px solid ${isDark ? "#4b5563" : "#e5e7eb"}`,
+                color: isDark ? "#9ca3af" : "#6b7280",
+                padding: "32px",
+                textAlign: "center" as const,
+                borderRadius: "8px",
+            },
+            criteriaContainer: {
+                display: "flex",
+                flexDirection: "column" as const,
+                gap: "12px",
+                maxHeight: "400px",
+                overflowY: "auto" as const,
+                paddingRight: "16px",
+            },
+            criterionRow: {
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "8px 0",
+            },
+            primaryButton: {
+                backgroundColor: isDark ? "#4338ca" : "#111827",
+                borderColor: isDark ? "#4338ca" : "#111827",
+                color: "#ffffff",
+            },
+            secondaryButton: {
+                backgroundColor: "transparent",
+                borderColor: isDark ? "#6b7280" : "#d1d5db",
+                color: isDark ? "#f3f4f6" : "#374151",
+            },
+            footer: {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: "12px",
+                marginTop: "32px",
+                paddingTop: "24px",
+                borderTop: `1px solid ${isDark ? "#4b5563" : "#e5e7eb"}`,
+            },
+            spaceY: {
+                display: "flex",
+                flexDirection: "column" as const,
+                gap: "24px",
+            },
+            editButton: {
+                color: isDark ? "#9ca3af" : "#6b7280",
+            },
+            editButtonHover: isDark
+                ? "text-gray-300 hover:text-gray-100"
+                : "text-gray-400 hover:text-gray-600",
+            closeIcon: isDark
+                ? "text-gray-300 hover:text-gray-100"
+                : "text-gray-400 hover:text-gray-600",
+            deleteButtonHover: isDark
+                ? "text-gray-300 hover:text-red-400"
+                : "text-gray-400 hover:text-red-600",
+        };
+    };
+
+    const styles = getStyles();
 
     useEffect(() => {
         if (isEditModalOpen && isSuccess && data) {
@@ -64,6 +182,7 @@ export default function EditChecklist({
     }, [isEditModalOpen, isSuccess, data, name, description]);
 
     const openEditModal = () => setIsEditModalOpen(true);
+
     const closeEditModal = () => {
         setIsEditModalOpen(false);
         setChecklistName("");
@@ -126,116 +245,131 @@ export default function EditChecklist({
     };
 
     return (
-        <div>
-            <Button
-                type="text"
-                size="large"
-                icon={<Edit stroke="#000" className="w-4 h-4" />}
-                onClick={openEditModal}
-                className="text-gray-400 hover:text-gray-600"
-            />
+        <ConfigProvider theme={getThemeConfig()}>
+            <div>
+                <Button
+                    type="text"
+                    size="large"
+                    icon={<Edit stroke={styles.editButton.color} className="w-4 h-4" />}
+                    onClick={openEditModal}
+                    className={styles.editButtonHover}
+                />
 
-            <Modal
-                title={null}
-                open={isEditModalOpen}
-                onCancel={closeEditModal}
-                footer={null}
-                width={600}
-                closeIcon={<X className="w-5 h-5 text-gray-400 hover:text-gray-600" />}
-                className="checklist-modal"
-            >
-                <div className="p-6 overflow-auto">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-6">{t("Edit Checklist")}</h2>
+                <Modal
+                    title={null}
+                    open={isEditModalOpen}
+                    onCancel={closeEditModal}
+                    footer={null}
+                    width={600}
+                    closeIcon={<X className={`w-5 h-5 ${styles.closeIcon}`} />}
+                    className="checklist-modal"
+                    styles={{
+                        content: styles.modalContent,
+                        header: styles.modalContent,
+                    }}
+                >
+                    <div className="p-6 overflow-auto" style={styles.modalContent}>
+                        <h2 className="text-xl font-semibold mb-6" style={styles.title}>
+                            {t("Edit Checklist")}
+                        </h2>
 
-                    <div className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Checklist Name")}
-                            </label>
-                            <Input
-                                value={checklistName}
-                                onChange={(e) => setChecklistName(e.target.value)}
-                                placeholder={t("Enter checklist name")}
-                                size="large"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Description")}
-                            </label>
-                            <TextArea
-                                value={checklistDescription}
-                                onChange={(e) => setChecklistDescription(e.target.value)}
-                                placeholder={t("Enter description")}
-                                rows={4}
-                                className="resize-none"
-                            />
-                        </div>
-
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    {t("Criteria")}
+                        <div className="space-y-6" style={styles.spaceY}>
+                            <div>
+                                <label className="block text-sm font-medium mb-2" style={styles.label}>
+                                    {t("Checklist Name")}
                                 </label>
-                                <Button
-                                    size="small"
-                                    onClick={addCriterion}
-                                    className="bg-gray-900 text-white border-gray-900 flex items-center gap-1 h-8"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                    <p>{t("Add Criterion")}</p>
-                                </Button>
+                                <Input
+                                    value={checklistName}
+                                    onChange={(e) => setChecklistName(e.target.value)}
+                                    placeholder={t("Enter checklist name")}
+                                    size="large"
+                                />
                             </div>
 
-                            {criteria.length === 0 ? (
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-                                    <p className="text-gray-500">
-                                        {t('No criteria added yet. Click "Add Criterion" to get started.')}
-                                    </p>
+                            <div>
+                                <label className="block text-sm font-medium mb-2" style={styles.label}>
+                                    {t("Description")}
+                                </label>
+                                <TextArea
+                                    value={checklistDescription}
+                                    onChange={(e) => setChecklistDescription(e.target.value)}
+                                    placeholder={t("Enter description")}
+                                    rows={4}
+                                    className="resize-none"
+                                />
+                            </div>
+
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <label className="block text-sm font-medium" style={styles.label}>
+                                        {t("Criteria")}
+                                    </label>
+                                    <Button
+                                        size="small"
+                                        onClick={addCriterion}
+                                        className="flex items-center gap-1 h-8"
+                                        style={styles.primaryButton}
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                        <p>{t("Add Criterion")}</p>
+                                    </Button>
                                 </div>
-                            ) : (
-                                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-4">
-                                    {criteria.map((criterion, index) => (
-                                        <div
-                                            key={`${criterion.id}-${index}`}
-                                            className="flex items-center gap-3 py-2"
-                                        >
-                                            <Input
-                                                value={criterion.text}
-                                                onChange={(e) => updateCriterion(index, e.target.value)}
-                                                placeholder={t("Enter criterion text...")}
-                                                className="flex-1"
-                                                disabled={!criterion.isNew}
-                                            />
-                                            <Button
-                                                type="text"
-                                                size="small"
-                                                icon={<Trash2 className="w-5 h-5" stroke="red" />}
-                                                onClick={() => removeCriterion(criterion.id)}
-                                                className="text-gray-400 hover:text-red-600"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+
+                                {criteria?.length === 0 ? (
+                                    <div style={styles.emptyState}>
+                                        <p style={{ margin: 0 }}>
+                                            {t('No criteria added yet. Click "Add Criterion" to get started.')}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div style={styles.criteriaContainer}>
+                                        {criteria.map((criterion, index) => (
+                                            <div
+                                                key={`${criterion.id}-${index}`}
+                                                style={styles.criterionRow}
+                                            >
+                                                <Input
+                                                    value={criterion.text}
+                                                    onChange={(e) => updateCriterion(index, e.target.value)}
+                                                    placeholder={t("Enter criterion text...")}
+                                                    style={{ flex: 1 }}
+                                                    disabled={!criterion.isNew}
+                                                />
+                                                <Button
+                                                    type="text"
+                                                    size="small"
+                                                    icon={<Trash2 className="w-5 h-5" stroke="#ef4444" />}
+                                                    onClick={() => removeCriterion(criterion.id)}
+                                                    className={styles.deleteButtonHover}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div style={styles.footer}>
+                            <Button
+                                onClick={closeEditModal}
+                                style={{ padding: "0 24px" }}
+                            >
+                                {t("Cancel")}
+                            </Button>
+                            <Button
+                                type="primary"
+                                onClick={handleSaveChecklist}
+                                style={{
+                                    ...styles.primaryButton,
+                                    padding: "0 24px",
+                                }}
+                            >
+                                {t("Save Checklist")}
+                            </Button>
                         </div>
                     </div>
-
-                    <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
-                        <Button onClick={closeEditModal} className="px-6">
-                            {t("Cancel")}
-                        </Button>
-                        <Button
-                            type="primary"
-                            onClick={handleSaveChecklist}
-                            className="bg-gray-900 hover:bg-gray-800 border-gray-900 px-6"
-                        >
-                            {t("Save Checklist")}
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
-        </div>
+                </Modal>
+            </div>
+        </ConfigProvider>
     );
 }

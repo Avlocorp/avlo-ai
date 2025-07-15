@@ -31,7 +31,7 @@ export default function FunnelConversion() {
     }))
 
     const CustomTooltip = ({ active, payload }: any) => {
-        if (active && payload && payload.length && payload[0].payload.value > 0) {
+        if (active && payload && payload?.length && payload[0].payload.value > 0) {
             const data = payload[0].payload
             return (
                 <div className="bg-white p-4 border border-gray-200 shadow-md" style={{ minWidth: "150px" }}>

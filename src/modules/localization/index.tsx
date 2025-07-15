@@ -1,4 +1,4 @@
-import { Input, PaginationProps, Spin, Table } from "antd";
+import { Input, PaginationProps, Spin, Table, ConfigProvider, theme as antdTheme } from "antd";
 import { useDebounce } from "hooks";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import {
   useChangeTranslationMutation,
   useGetAllTranslationsQuery,
 } from "services/api/localization";
+import { useTheme } from "services/contexts/ThemeContext";
 
 const Localization = () => {
   const [inputValue, setInputValue] = useState<{
@@ -22,6 +23,7 @@ const Localization = () => {
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
   const inputValueDebounced = useDebounce(inputValue.value, 600);
   const searchValueDebounced = useDebounce(searchValue, 600);
@@ -45,7 +47,6 @@ const Localization = () => {
       }
     }
   }, [inputValueDebounced]);
-
 
   function handleTranslationInput(
     e: ChangeEvent<HTMLInputElement>,
@@ -73,33 +74,85 @@ const Localization = () => {
     return originalElement;
   };
 
+  // Theme config
+  const getThemeConfig = () => {
+    if (theme === "dark") {
+      return {
+        algorithm: antdTheme.darkAlgorithm,
+        token: {
+          colorPrimary: "#4338ca",
+          borderRadius: 8,
+          colorBgContainer: "#374151",
+          colorBgElevated: "#374151",
+          colorBgLayout: "#1f2937",
+          colorText: "#f3f4f6",
+          colorTextSecondary: "#9ca3af",
+          colorBorder: "#4b5563",
+        },
+      };
+    }
+    return {
+      algorithm: antdTheme.defaultAlgorithm,
+      token: {
+        colorPrimary: "#4338ca",
+        borderRadius: 8,
+        colorBgContainer: "#ffffff",
+        colorBgElevated: "#ffffff",
+        colorBgLayout: "#f9fafb",
+        colorText: "#111827",
+        colorTextSecondary: "#6b7280",
+        colorBorder: "#d1d5db",
+      },
+    };
+  };
+
+  const containerStyle = {
+    minHeight: "100vh",
+    backgroundColor: theme === "dark" ? "#1f2937" : "#f9fafb",
+    color: theme === "dark" ? "#f3f4f6" : "#111827",
+    padding: "24px",
+  };
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div style={{
+        ...containerStyle,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
         <Spin size="large" />
       </div>
     );
   }
+
   return (
-    <div>
+    <ConfigProvider theme={getThemeConfig()}>
+      <div style={containerStyle}>
+        <div style={{ marginBottom: "24px" }}>
+          <h1 style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            color: theme === "dark" ? "#f3f4f6" : "#111827"
+          }}>
+            {t("Localization")}
+          </h1>
+        </div>
 
-      <div className="mb-6 p-4">
-        <h1 className="text-3xl font-semibold ">
-          {t("Localization")}
-        </h1>
-      </div>
-      <div className="p-4">
-        <Input
-          placeholder="Search"
-          defaultValue={searchValue}
-          value={searchValue}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSearchValue(e.target.value)
-          }
-        />
-      </div>
+        <div style={{ marginBottom: "24px" }}>
+          <Input
+            placeholder="Search"
+            value={searchValue}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearchValue(e.target.value)
+            }
+            style={{
+              maxWidth: "400px",
+              height: "32px",
+            }}
+          />
+        </div>
 
-      <div className="px-4">
         <Table
           dataSource={data?.data}
           columns={[
@@ -117,113 +170,80 @@ const Localization = () => {
               title: "English",
               dataIndex: "en",
               key: "en",
-              render: (_, data) => {
-                return (
-                  <div>
-                    <Input
-                      key={data.id + "en"}
-                      defaultValue={data.key}
-                      onChange={(e) => {
-                        handleTranslationInput(e, data, "en");
-                      }}
-                    />
-                  </div>
-                );
-              },
+              render: (_, data) => (
+                <Input
+                  key={data.id + "en"}
+                  defaultValue={data.key}
+                  onChange={(e) => handleTranslationInput(e, data, "en")}
+                />
+              ),
             },
-
             {
               title: "Uzbek",
               dataIndex: "uz",
               key: "uz",
-              render: (value, data) => {
-                return (
-                  <div>
-                    <Input
-                      key={data.id + "uz"}
-                      defaultValue={value}
-                      onChange={(e) => {
-                        handleTranslationInput(e, data, "uz");
-                      }}
-                    />
-                  </div>
-                );
-              },
+              render: (value, data) => (
+                <Input
+                  key={data.id + "uz"}
+                  defaultValue={value}
+                  onChange={(e) => handleTranslationInput(e, data, "uz")}
+                />
+              ),
             },
             {
               title: "Russian",
               dataIndex: "ru",
               key: "ru",
-              render: (value, data) => {
-                return (
-                  <div>
-                    <Input
-                      key={data.id + "ru"}
-                      defaultValue={value}
-                      onChange={(e) => {
-                        handleTranslationInput(e, data, "ru");
-                      }}
-                    />
-                  </div>
-                );
-              },
+              render: (value, data) => (
+                <Input
+                  key={data.id + "ru"}
+                  defaultValue={value}
+                  onChange={(e) => handleTranslationInput(e, data, "ru")}
+                />
+              ),
             },
             {
               title: "Kyrgyz",
               dataIndex: "kg",
               key: "kg",
-              render: (value, data) => {
-                return (
-                  <div>
-                    <Input
-                      key={data.id + "kg"}
-                      defaultValue={value}
-                      onChange={(e) => {
-                        handleTranslationInput(e, data, "kg");
-                      }}
-                    />
-                  </div>
-                );
-              },
+              render: (value, data) => (
+                <Input
+                  key={data.id + "kg"}
+                  defaultValue={value}
+                  onChange={(e) => handleTranslationInput(e, data, "kg")}
+                />
+              ),
             },
             {
               title: "Tadjik",
               dataIndex: "tj",
               key: "tj",
-              render: (value, data) => {
-                return (
-                  <div>
-                    <Input
-                      key={data.id + "tj"}
-                      defaultValue={value}
-                      onChange={(e) => {
-                        handleTranslationInput(e, data, "tj");
-                      }}
-                    />
-                  </div>
-                );
-              },
+              render: (value, data) => (
+                <Input
+                  key={data.id + "tj"}
+                  defaultValue={value}
+                  onChange={(e) => handleTranslationInput(e, data, "tj")}
+                />
+              ),
             },
           ]}
           pagination={{
-            itemRender: itemRender,
+            itemRender,
             disabled: isLoading,
             position: ["bottomRight"],
             current: page,
             total: data?.all_data,
             pageSize: data?.per_page,
             showTotal: (total, range) => (
-              <h1 className="text-[16px] not-italic font-normal leading-[20pxs] p-[5px] absolute left-[32px]">
+              <span>
                 {t("Natija")} {range[1]} - {total}
-              </h1>
+              </span>
             ),
-          }}
-          onChange={(page) => {
-            setPage(page.current || 1);
+            onChange: (current) => setPage(current),
           }}
         />
       </div>
-    </div>
+    </ConfigProvider>
   );
 };
 

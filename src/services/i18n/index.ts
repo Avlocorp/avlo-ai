@@ -11,7 +11,7 @@ i18next
   .use(HttpBackend)
   .init({
     fallbackLng: storage.get("i18nextLng") ?? "uz",
-    supportedLngs: ["uz", "ru", "ky", "tj"],
+    supportedLngs: ["uz", "ru", "ky", "tj", "en"],
     saveMissing: true,
     interpolation: {
       escapeValue: false,

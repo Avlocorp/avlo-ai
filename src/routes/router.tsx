@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ConfigProvider, theme as antdTheme, Spin } from "antd";
 import LayoutComponent from "components/layout";
 import PrivateRoute from "components/private-route";
-import { lazy } from "react";
-
+import { lazy, Suspense } from "react";
+import { useTheme } from "services/contexts/ThemeContext";
 
 const History = lazy(() => import("modules/History"));
 const Settings = lazy(() => import("modules/settings/index"));
@@ -24,7 +25,42 @@ const RedirectPage = lazy(() => import("pages/redirect"));
 const NotFound = lazy(() => import("modules/NotFount"));
 const QAdashboard = lazy(() => import("modules/QAdashboard/index"));
 const UserManage = lazy(() => import("modules/settings/pages/operator-list"));
+const OperatorsDashboard = lazy(() => import("modules/operators/index"));
 
+// Loading component with dark mode support
+function LoadingFallback() {
+  const { theme } = useTheme();
+
+  const containerStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+    backgroundColor: theme === "dark" ? "#1f2937" : "#f9fafb",
+    flexDirection: "column" as const,
+    gap: "16px",
+  };
+
+  const textStyle = {
+    color: theme === "dark" ? "#f3f4f6" : "#111827",
+    fontSize: "16px",
+    fontWeight: "500",
+  };
+
+  const spinnerStyle = {
+    color: "#4338ca",
+  };
+
+  return (
+    <div style={containerStyle}>
+      <Spin
+        size="large"
+        style={spinnerStyle}
+      />
+      <div style={textStyle}>Loading...</div>
+    </div>
+  );
+}
 
 const router = createBrowserRouter([
   {
@@ -46,6 +82,7 @@ const router = createBrowserRouter([
           { path: "history", element: <History /> },
           { path: "statistics", element: <DashboardStatistics /> },
           { path: "settings", element: <Settings /> },
+          { path: "operators", element: <OperatorsDashboard /> }, // Redirect to operators page
           { path: "settings/user-manage", element: <UserManage /> },
           { path: "billings", element: <Billings /> },
           { path: "call-center", element: <CallCenter /> },
@@ -84,5 +121,46 @@ const router = createBrowserRouter([
 ]);
 
 export default function BrowserRouter() {
-  return <RouterProvider router={router} />;
+  const { theme } = useTheme();
+
+  // Theme configuration for Ant Design
+  const getThemeConfig = () => {
+    if (theme === "dark") {
+      return {
+        algorithm: antdTheme.darkAlgorithm,
+        token: {
+          colorPrimary: "#4338ca",
+          borderRadius: 8,
+          colorBgContainer: "#374151",
+          colorBgElevated: "#374151",
+          colorBgLayout: "#1f2937",
+          colorText: "#f3f4f6",
+          colorTextSecondary: "#9ca3af",
+          colorBorder: "#4b5563",
+        },
+      };
+    }
+
+    return {
+      algorithm: antdTheme.defaultAlgorithm,
+      token: {
+        colorPrimary: "#4338ca",
+        borderRadius: 8,
+        colorBgContainer: "#ffffff",
+        colorBgElevated: "#ffffff",
+        colorBgLayout: "#f9fafb",
+        colorText: "#111827",
+        colorTextSecondary: "#6b7280",
+        colorBorder: "#d1d5db",
+      },
+    };
+  };
+
+  return (
+    <ConfigProvider theme={getThemeConfig()}>
+      <Suspense fallback={<LoadingFallback />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ConfigProvider>
+  );
 }

@@ -1,24 +1,30 @@
 
-
 import type { ColumnsType } from "antd/es/table"
 import { useState, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useSearchParams } from "react-router-dom"
 import { skipToken } from "@reduxjs/toolkit/query/react"
 import { useGetLeadsListQuery, useGetSingleStatusQuery } from "services/api/leads/leads.api"
+import { motion } from "framer-motion"
+import { ConfigProvider, theme as antdTheme } from "antd"
 
 import type { Lead } from "services/api/leads/leads.types"
 import Language from "components/language"
 import { useGetSingleOperatorQuery } from "services/api/operators/operators.api"
 import Table from "antd/es/table"
-
-
+import { Eye } from "lucide-react"
+import { Modal } from "antd"
+import { useTheme } from "services/contexts/ThemeContext"
 
 const LeadsPage = () => {
-  const perPage = 10
+  const perPage = 50
   const [searchParams, setSearchParams] = useSearchParams()
   const initialPage = Number(searchParams.get("page")) || 1
   const [currentPage, setCurrentPage] = useState(initialPage)
+  const [selectedLeads, setSelectedLeads] = useState<any>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { theme } = useTheme()
+  const { t } = useTranslation()
 
   // Update current page when URL changes
   useEffect(() => {
@@ -38,13 +44,10 @@ const LeadsPage = () => {
     limit: perPage,
   })
 
-  const { t } = useTranslation()
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
     const newParams = new URLSearchParams(searchParams)
     newParams.set("page", String(page))
-
     setSearchParams(newParams)
   }
 
@@ -61,8 +64,7 @@ const LeadsPage = () => {
     return [...new Set(userIds)]
   }, [leads])
 
-  // Since we can't call hooks in a loop, we'll use conditional queries
-  // for up to 10 possible operators (matching perPage)
+  // Operator queries
   const operator1 = useGetSingleOperatorQuery(
     uniqueResponsibleUserIds[0] ? { operatorId: uniqueResponsibleUserIds[0] } : skipToken,
   )
@@ -98,16 +100,8 @@ const LeadsPage = () => {
   const operatorMap = useMemo(() => {
     const map = new Map()
     const operators = [
-      operator1,
-      operator2,
-      operator3,
-      operator4,
-      operator5,
-      operator6,
-      operator7,
-      operator8,
-      operator9,
-      operator10,
+      operator1, operator2, operator3, operator4, operator5,
+      operator6, operator7, operator8, operator9, operator10,
     ]
 
     operators.forEach((operatorQuery, index) => {
@@ -120,17 +114,10 @@ const LeadsPage = () => {
     return map
   }, [
     uniqueResponsibleUserIds,
-    operator1,
-    operator2,
-    operator3,
-    operator4,
-    operator5,
-    operator6,
-    operator7,
-    operator8,
-    operator9,
-    operator10,
+    operator1, operator2, operator3, operator4, operator5,
+    operator6, operator7, operator8, operator9, operator10,
   ])
+
   const uniqueStatusIds = useMemo(() => {
     const statusIds = leads
       .map((lead) => lead.status_id)
@@ -139,7 +126,7 @@ const LeadsPage = () => {
     return [...new Set(statusIds)]
   }, [leads])
 
-  // statuslar uchun query lar
+  // Status queries
   const status1 = useGetSingleStatusQuery(uniqueStatusIds[0] ? { statusId: uniqueStatusIds[0] } : skipToken)
   const status2 = useGetSingleStatusQuery(uniqueStatusIds[1] ? { statusId: uniqueStatusIds[1] } : skipToken)
   const status3 = useGetSingleStatusQuery(uniqueStatusIds[2] ? { statusId: uniqueStatusIds[2] } : skipToken)
@@ -151,20 +138,12 @@ const LeadsPage = () => {
   const status9 = useGetSingleStatusQuery(uniqueStatusIds[8] ? { statusId: uniqueStatusIds[8] } : skipToken)
   const status10 = useGetSingleStatusQuery(uniqueStatusIds[9] ? { statusId: uniqueStatusIds[9] } : skipToken)
 
-  // statusMap yaratish
+  // Create status map
   const statusMap = useMemo(() => {
     const map = new Map()
     const statuses = [
-      status1,
-      status2,
-      status3,
-      status4,
-      status5,
-      status6,
-      status7,
-      status8,
-      status9,
-      status10,
+      status1, status2, status3, status4, status5,
+      status6, status7, status8, status9, status10
     ]
 
     statuses.forEach((statusQuery, index) => {
@@ -180,6 +159,123 @@ const LeadsPage = () => {
     status1, status2, status3, status4, status5,
     status6, status7, status8, status9, status10
   ])
+
+  // Theme configuration for Ant Design
+  const getThemeConfig = () => {
+    if (theme === "dark") {
+      return {
+        algorithm: antdTheme.darkAlgorithm,
+        token: {
+          colorPrimary: "#4338ca",
+          borderRadius: 8,
+          colorBgContainer: "#374151",
+          colorBgElevated: "#374151",
+          colorBgLayout: "#1f2937",
+          colorText: "#f3f4f6",
+          colorTextSecondary: "#9ca3af",
+          colorBorder: "#4b5563",
+          colorBorderSecondary: "#6b7280",
+          colorFillSecondary: "#4b5563",
+          colorFillTertiary: "#374151",
+          colorFillQuaternary: "#374151",
+          controlItemBgActive: "#4338ca",
+          controlItemBgHover: "#4b5563",
+        },
+      }
+    }
+
+    return {
+      algorithm: antdTheme.defaultAlgorithm,
+      token: {
+        colorPrimary: "#4338ca",
+        borderRadius: 8,
+        colorBgContainer: "#ffffff",
+        colorBgElevated: "#ffffff",
+        colorBgLayout: "#f9fafb",
+        colorText: "#111827",
+        colorTextSecondary: "#6b7280",
+        colorBorder: "#d1d5db",
+        colorBorderSecondary: "#e5e7eb",
+        colorFillSecondary: "#f3f4f6",
+        colorFillTertiary: "#f9fafb",
+        colorFillQuaternary: "#ffffff",
+        controlItemBgActive: "#e0e7ff",
+        controlItemBgHover: "#f3f4f6",
+      },
+    }
+  }
+
+  // Theme-aware styles
+  const containerStyle = {
+    padding: "32px",
+    backgroundColor: theme === "dark" ? "#1f2937" : "#f9fafb",
+    minHeight: "100vh",
+    color: theme === "dark" ? "#f3f4f6" : "#111827",
+  }
+
+  const headerStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "24px",
+  }
+
+  const titleStyle = {
+    fontSize: "28px",
+    fontWeight: "600",
+    color: theme === "dark" ? "#f3f4f6" : "#1f2937",
+    margin: 0,
+  }
+
+  const tableContainerStyle = {
+    border: `1px solid ${theme === "dark" ? "#374151" : "#e5e7eb"}`,
+    borderRadius: "12px",
+    overflow: "hidden",
+    backgroundColor: theme === "dark" ? "#374151" : "#ffffff",
+    boxShadow: theme === "dark"
+      ? "0 4px 6px -1px rgba(0, 0, 0, 0.3)"
+      : "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+  }
+
+  const actionButtonStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "8px",
+    borderRadius: "6px",
+    border: "none",
+    backgroundColor: theme === "dark" ? "#065f46" : "#ecfdf5",
+    cursor: "pointer",
+    transition: "all 0.2s ease-in-out",
+  }
+
+  const modalTableStyle = {
+    width: "100%",
+    borderCollapse: "collapse" as const,
+    backgroundColor: theme === "dark" ? "#374151" : "#ffffff",
+    border: `1px solid ${theme === "dark" ? "#4b5563" : "#e5e7eb"}`,
+    borderRadius: "8px",
+    overflow: "hidden",
+  }
+
+  const modalThStyle = {
+    padding: "12px 16px",
+    width: "40%",
+    fontWeight: "600",
+    textAlign: "left" as const,
+    borderBottom: `1px solid ${theme === "dark" ? "#4b5563" : "#e5e7eb"}`,
+    borderRight: `1px solid ${theme === "dark" ? "#4b5563" : "#e5e7eb"}`,
+    backgroundColor: theme === "dark" ? "#4b5563" : "#f9fafb",
+    color: theme === "dark" ? "#f3f4f6" : "#374151",
+  }
+
+  const modalTdStyle = {
+    padding: "12px 16px",
+    borderBottom: `1px solid ${theme === "dark" ? "#4b5563" : "#e5e7eb"}`,
+    color: theme === "dark" ? "#d1d5db" : "#6b7280",
+    backgroundColor: theme === "dark" ? "#374151" : "#ffffff",
+  }
+
   const columns: ColumnsType<Lead> = [
     {
       title: "No",
@@ -191,64 +287,119 @@ const LeadsPage = () => {
       title: t("Title"),
       dataIndex: "name",
       render: (value) => (
-        <div className="truncate max-w-[180px]" title={value || t("No title")}>
+        <div
+          style={{
+            maxWidth: "180px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: theme === "dark" ? "#f3f4f6" : "#111827"
+          }}
+          title={value || t("No title")}
+        >
           {value || t("No title")}
         </div>
       ),
-      width: 200,
     },
     {
       title: t("Created at"),
       dataIndex: "created_at",
       render: (value) => {
-        if (!value) return "";
+        if (!value) return ""
 
         try {
-          const date = new Date(typeof value === "number" ? value * 1000 : value);
-          const humanReadable = date.toLocaleString("en-US", {
+          const date = new Date(typeof value === "number" ? value * 1000 : value)
+          const dateStr = date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
             year: "numeric",
-            month: "long",
-            day: "numeric",
+          })
+          const timeStr = date.toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
-            second: "2-digit",
-          });
+            hour12: false,
+          })
 
           return (
-            <div className="max-w-[130px]" title={humanReadable}>
-              {humanReadable}
+            <div
+              style={{
+                maxWidth: "130px",
+                color: theme === "dark" ? "#d1d5db" : "#6b7280"
+              }}
+              title={`${dateStr} ${timeStr}`}
+            >
+              {dateStr.replace(/\//g, ".")} <br /> {timeStr}
             </div>
-          );
+          )
         } catch (error) {
-          return <div className="max-w-[130px]">Invalid date</div>;
+          return (
+            <div
+              style={{
+                maxWidth: "130px",
+                color: theme === "dark" ? "#ef4444" : "#dc2626"
+              }}
+            >
+              Invalid date
+            </div>
+          )
         }
       },
-      width: 150,
     },
     {
       title: t("Assigned to"),
       dataIndex: "responsible_user_id",
       render: (responsible_user_id) => {
         if (!responsible_user_id) {
-          return <div className="truncate max-w-[150px]">{t("Not assigned")}</div>;
+          return (
+            <div
+              style={{
+                maxWidth: "150px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                color: theme === "dark" ? "#9ca3af" : "#6b7280"
+              }}
+            >
+              {t("Not assigned")}
+            </div>
+          )
         }
 
-        const operatorData = operatorMap.get(responsible_user_id);
+        const operatorData = operatorMap.get(responsible_user_id)
 
-        // Agar hali yuklanmagan bo'lsa yoki topilmasa
         if (!operatorData) {
-          return <div className="truncate max-w-[150px]">{t("Loading...")}</div>;
+          return (
+            <div
+              style={{
+                maxWidth: "150px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                color: theme === "dark" ? "#9ca3af" : "#6b7280"
+              }}
+            >
+              {t("Loading...")}
+            </div>
+          )
         }
 
-        const operatorName = operatorData?.name || t("Unknown operator");
+        const operatorName = operatorData?.name || t("Unknown operator")
 
         return (
-          <div title={operatorName} className="truncate max-w-[150px]">
+          <div
+            title={operatorName}
+            style={{
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              color: theme === "dark" ? "#f3f4f6" : "#111827"
+            }}
+          >
             {operatorName}
           </div>
-        );
+        )
       },
-      width: 150,
     },
     {
       title: t("Status"),
@@ -256,64 +407,222 @@ const LeadsPage = () => {
       render: (status_id) => {
         if (!status_id) {
           return (
-            <div className="max-w-[150px] truncate">
+            <div
+              style={{
+                maxWidth: "150px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                color: theme === "dark" ? "#9ca3af" : "#6b7280"
+              }}
+            >
               {t("Unknown status")}
             </div>
-          );
+          )
         }
 
-        const statusData = statusMap.get(status_id);
-        const statusName = statusData?.name || t("Unknown status");
+        const statusData = statusMap.get(status_id)
+        const statusName = statusData?.name || t("Unknown status")
 
         return (
-          <div className="max-w-[150px] truncate" title={statusName}>
+          <div
+            style={{
+              maxWidth: "150px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              color: theme === "dark" ? "#f3f4f6" : "#111827"
+            }}
+            title={statusName}
+          >
             {statusName}
           </div>
-        );
+        )
       },
-      width: 150,
     },
-  ];
-
+    {
+      title: t("Actions"),
+      key: "actions",
+      render: (_: any, record: any) => (
+        <motion.button
+          style={actionButtonStyle}
+          whileHover={{
+            scale: 1.05,
+            backgroundColor: theme === "dark" ? "#047857" : "#d1fae5"
+          }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            setSelectedLeads(record)
+            setIsModalOpen(true)
+          }}
+        >
+          <Eye style={{
+            width: "18px",
+            height: "18px",
+            color: theme === "dark" ? "#10b981" : "#059669"
+          }} />
+        </motion.button>
+      ),
+    },
+  ]
 
   if (error) {
     return (
-      <div className="p-4 text-center">
-        <p className="text-red-500">Error loading leads data</p>
+      <div style={containerStyle}>
+        <div style={{
+          textAlign: "center",
+          padding: "48px",
+          color: theme === "dark" ? "#ef4444" : "#dc2626"
+        }}>
+          <p style={{ fontSize: "18px", fontWeight: "500" }}>
+            Error loading leads data
+          </p>
+        </div>
       </div>
     )
   }
 
-  return (
-    <div className="px-8 py-5">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Leads</h1>
-          <Language />
-        </div>
-      </div>
+  const getCustomFieldValue = (fieldName: string) => {
+    if (!selectedLeads?.custom_fields_values) return "-"
 
-      <div className="border rounded-lg overflow-hidden">
-        <Table
-          columns={columns}
-          dataSource={leads}
-          rowKey="id"
-          pagination={{
-            total: totalCount,
-            pageSize: perPage,
-            current: currentPage,
-            showSizeChanger: false,
-            onChange: handlePageChange,
-            showTotal: (total, range) => {
-              const currentPageNum = Math.ceil(range[0] / perPage)
-              const totalPages = Math.ceil(total / perPage)
-              return `Page ${currentPageNum} of ${totalPages} (${total} total items)`
-            },
+    const field = selectedLeads.custom_fields_values.find((fieldArray: any) => {
+      const fieldNameEntry = fieldArray.find((entry: any) =>
+        Array.isArray(entry) && entry[0] === "field_name" && entry[1] === fieldName
+      )
+      return fieldNameEntry !== undefined
+    })
+
+    if (!field) return "-"
+
+    const valuesEntry = field.find((entry: any) =>
+      Array.isArray(entry) && entry[0] === "values"
+    )
+
+    if (!valuesEntry || !valuesEntry[1] || !Array.isArray(valuesEntry[1]) || valuesEntry[1]?.length === 0) {
+      return "-"
+    }
+
+    const firstValue = valuesEntry[1][0]
+    if (!firstValue || !Array.isArray(firstValue)) return "-"
+
+    const valueEntry = firstValue.find((entry: any) =>
+      Array.isArray(entry) && entry[0] === "value"
+    )
+
+    return valueEntry ? valueEntry[1] : "-"
+  }
+
+  return (
+    <ConfigProvider theme={getThemeConfig()}>
+      <motion.div
+        style={containerStyle}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          style={headerStyle}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          <h1 style={titleStyle}>{t("Leads")}</h1>
+          <Language />
+        </motion.div>
+
+        <motion.div
+          style={tableContainerStyle}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <Table
+            columns={columns}
+            dataSource={leads}
+            rowKey="id"
+            pagination={{
+              total: totalCount,
+              pageSize: perPage,
+              current: currentPage,
+              showSizeChanger: false,
+              onChange: handlePageChange,
+              showTotal: (total, range) => {
+                const currentPageNum = Math.ceil(range[0] / perPage)
+                const totalPages = Math.ceil(total / perPage)
+                return `${t("Page")} ${currentPageNum} ${t("of")} ${totalPages} (${total} ${t("total items")})`
+              },
+            }}
+            loading={isLoading || isFetching}
+          />
+        </motion.div>
+
+        <Modal
+          title={
+            <span style={{ color: theme === "dark" ? "#f3f4f6" : "#111827" }}>
+              {t("Leads Details")}
+            </span>
+          }
+          open={isModalOpen}
+          onCancel={() => {
+            setIsModalOpen(false)
+            setSelectedLeads(null)
           }}
-          loading={isLoading || isFetching}
-        />
-      </div>
-    </div>
+          footer={null}
+          width={800}
+          styles={{
+            mask: {
+              backgroundColor: theme === "dark" ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.45)"
+            },
+            content: {
+              backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+              color: theme === "dark" ? "#f3f4f6" : "#111827"
+            },
+            header: {
+              backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+              borderBottom: `1px solid ${theme === "dark" ? "#374151" : "#f0f0f0"}`,
+              color: theme === "dark" ? "#f3f4f6" : "#000000"
+            },
+            body: {
+              backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+            }
+          }}
+        >
+          <div style={{ padding: "16px", width: "100%" }}>
+            {selectedLeads && (
+              <motion.table
+                style={modalTableStyle}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <tbody>
+                  <tr>
+                    <th style={modalThStyle}>{t("Ehtimollik foizi")}</th>
+                    <td style={modalTdStyle}>{getCustomFieldValue("Ehtimollik foizi") + "%"}</td>
+                  </tr>
+                  <tr>
+                    <th style={modalThStyle}>{t("Izoh")}</th>
+                    <td style={modalTdStyle}>{getCustomFieldValue("Izoh")}</td>
+                  </tr>
+                  <tr>
+                    <th style={modalThStyle}>{t("Summary 1")}</th>
+                    <td style={modalTdStyle}>{getCustomFieldValue("Summary-1")}</td>
+                  </tr>
+                  <tr>
+                    <th style={modalThStyle}>{t("Summary 2")}</th>
+                    <td style={modalTdStyle}>{getCustomFieldValue("Summary-2")}</td>
+                  </tr>
+                  <tr>
+                    <th style={modalThStyle}>{t("Summary 3")}</th>
+                    <td style={modalTdStyle}>{getCustomFieldValue("Summary-3")}</td>
+                  </tr>
+                </tbody>
+              </motion.table>
+            )}
+          </div>
+        </Modal>
+      </motion.div>
+    </ConfigProvider>
   )
 }
 

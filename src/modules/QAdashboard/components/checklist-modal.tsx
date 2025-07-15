@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Input, Button, Select, message, Tabs, Pagination } from "antd";
+import { Modal, Input, Button, Select, message, Tabs, Pagination, ConfigProvider, theme as antdTheme } from "antd";
 import { Grid, List, Search, Settings, X } from "lucide-react";
 import {
     useGetCheckListQuery,
@@ -11,9 +11,11 @@ import CreateChecklist from "./create-checklist";
 import EditChecklist from "./edit-checklist";
 import DeleteChecklist from "./delete-checklist";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "services/contexts/ThemeContext";
 
 const ChecklistModals = () => {
     const { t } = useTranslation();
+    const { theme } = useTheme();
     const [isManageModalOpen, setIsManageModalOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [activeTab, setActiveTab] = useState("pipeline-stages");
@@ -52,6 +54,78 @@ const ChecklistModals = () => {
         setSearchValue("");
     };
 
+    // Theme configuration for Ant Design
+    const getThemeConfig = () => {
+        if (theme === "dark") {
+            return {
+                algorithm: antdTheme.darkAlgorithm,
+                token: {
+                    colorPrimary: "#4338ca",
+                    borderRadius: 8,
+                    colorBgContainer: "#374151",
+                    colorBgElevated: "#374151",
+                    colorBgLayout: "#1f2937",
+                    colorText: "#f3f4f6",
+                    colorTextSecondary: "#9ca3af",
+                    colorBorder: "#4b5563",
+                },
+            };
+        }
+
+        return {
+            algorithm: antdTheme.defaultAlgorithm,
+            token: {
+                colorPrimary: "#4338ca",
+                borderRadius: 8,
+                colorBgContainer: "#ffffff",
+                colorBgElevated: "#ffffff",
+                colorBgLayout: "#f9fafb",
+                colorText: "#111827",
+                colorTextSecondary: "#6b7280",
+                colorBorder: "#d1d5db",
+            },
+        };
+    };
+
+    // Dynamic styles based on theme
+    const getStyles = () => {
+        const isDark = theme === "dark";
+        return {
+            tabContent: {
+                backgroundColor: isDark ? "#374151" : "#ffffff",
+                color: isDark ? "#f3f4f6" : "#111827",
+            },
+            statusCard: {
+                backgroundColor: isDark ? "#4b5563" : "#ffffff",
+                borderColor: isDark ? "#6b7280" : "#d1d5db",
+                color: isDark ? "#f3f4f6" : "#111827",
+            },
+            checklistCard: {
+                backgroundColor: isDark ? "#4b5563" : "#ffffff",
+                borderColor: isDark ? "#6b7280" : "#d1d5db",
+                color: isDark ? "#f3f4f6" : "#111827",
+                boxShadow: isDark
+                    ? "0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2)"
+                    : "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+            },
+            loadingText: {
+                color: isDark ? "#9ca3af" : "#6b7280",
+            },
+            emptyText: {
+                color: isDark ? "#9ca3af" : "#6b7280",
+            },
+            description: {
+                color: isDark ? "#9ca3af" : "#6b7280",
+            },
+            criteriaBox: {
+                backgroundColor: isDark ? "#6b7280" : "#f3f4f6",
+                color: isDark ? "#f3f4f6" : "#111827",
+            },
+        };
+    };
+
+    const styles = getStyles();
+
     const tabItems = [
         {
             key: "pipeline-stages",
@@ -61,19 +135,24 @@ const ChecklistModals = () => {
                 </span>
             ),
             children: (
-                <div className="border rounded-md p-4 overflow-y-auto bg-white mt-3">
+                <div className="border rounded-md p-4 overflow-y-auto mt-3" style={styles.tabContent}>
                     {isStatusLoading ? (
-                        <div className="text-center text-gray-400">{t("Loading statuses...")}</div>
+                        <div className="text-center" style={styles.loadingText}>
+                            {t("Loading statuses...")}
+                        </div>
                     ) : statusData?.data?.length ? (
                         <>
                             {statusData.data.map((status) => (
                                 <div
                                     key={status.id}
                                     className="mb-4 border p-3 rounded-md flex justify-between items-center"
+                                    style={styles.statusCard}
                                 >
                                     <div>
-                                        <div className="text-base font-semibold text-gray-800">{status.name}</div>
-                                        <div className="text-gray-500">
+                                        <div className="text-base font-semibold" style={{ color: styles.statusCard.color }}>
+                                            {status.name}
+                                        </div>
+                                        <div style={styles.description}>
                                             {t("Assigned to")}: {status.description}
                                         </div>
                                     </div>
@@ -105,7 +184,7 @@ const ChecklistModals = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="text-center text-gray-500">
+                        <div className="text-center" style={styles.emptyText}>
                             {t("No checklists found. Please create a new one.")}
                         </div>
                     )}
@@ -120,17 +199,23 @@ const ChecklistModals = () => {
                 </span>
             ),
             children: (
-                <div className="border rounded-md p-4 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 bg-white mt-3">
+                <div className="border rounded-md p-4 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 mt-3" style={styles.tabContent}>
                     {isChecklistLoading ? (
-                        <div>{t("Loading checklists...")}</div>
+                        <div style={styles.loadingText}>{t("Loading checklists...")}</div>
                     ) : checklistData?.data?.length ? (
                         checklistData.data.map((item) => (
                             <div
                                 key={item.id}
-                                className="bg-white rounded-lg shadow p-6 hover:shadow-md transition"
+                                className="rounded-lg p-6 hover:shadow-md transition"
+                                style={{
+                                    ...styles.checklistCard,
+                                    border: `1px solid ${styles.checklistCard.borderColor}`,
+                                }}
                             >
                                 <div className="flex items-center justify-between">
-                                    <div className="text-xl font-semibold text-gray-800">{item.name}</div>
+                                    <div className="text-xl font-semibold" style={{ color: styles.checklistCard.color }}>
+                                        {item.name}
+                                    </div>
                                     <div className="flex justify-end gap-2">
                                         <EditChecklist
                                             checklist_id={item.id}
@@ -141,17 +226,21 @@ const ChecklistModals = () => {
                                         <DeleteChecklist id={item.id} />
                                     </div>
                                 </div>
-                                <p className="text-gray-500 text-sm">{item.description}</p>
+                                <p className="text-sm" style={styles.description}>
+                                    {item.description}
+                                </p>
                                 <div className="mt-2 flex justify-between">
-                                    <div>{t("Criteria")}</div>
-                                    <div className="flex items-center rounded-lg bg-gray-100 p-2 h-[22px]">
+                                    <div style={{ color: styles.checklistCard.color }}>{t("Criteria")}</div>
+                                    <div className="flex items-center rounded-lg p-2 h-[22px]" style={styles.criteriaBox}>
                                         {item.criteria_count} {t("items")}
                                     </div>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <div className="text-center text-gray-500">{t("No checklists available.")}</div>
+                        <div className="text-center" style={styles.emptyText}>
+                            {t("No checklists available.")}
+                        </div>
                     )}
                 </div>
             ),
@@ -159,47 +248,53 @@ const ChecklistModals = () => {
     ];
 
     return (
-        <div>
-            <Button
-                icon={<Settings className="w-4 h-4" />}
-                onClick={openModal}
-                className="flex items-center gap-2"
-            >
-                {t("Manage Checklists")}
-            </Button>
+        <ConfigProvider theme={getThemeConfig()}>
+            <div>
+                <Button
+                    icon={<Settings className="w-4 h-4" />}
+                    onClick={openModal}
+                    className="flex items-center gap-2"
+                >
+                    {t("Manage Checklists")}
+                </Button>
 
-            <Modal
-                title={t("Manage Checklists")}
-                open={isManageModalOpen}
-                onCancel={closeModal}
-                centered
-                footer={null}
-                width={1000}
-                closeIcon={<X className="w-6 h-6 text-gray-400" />}
-            >
-                <div className="p-4">
-                    <div className="mb-4 flex items-center justify-between gap-4">
-                        <Input
-                            placeholder={t("Search checklists...")}
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            prefix={<Search className="w-4 h-4 text-gray-400" />}
-                            className="w-full h-10"
+                <Modal
+                    title={t("Manage Checklists")}
+                    open={isManageModalOpen}
+                    onCancel={closeModal}
+                    centered
+                    footer={null}
+                    width={1000}
+                    closeIcon={<X className="w-6 h-6 text-gray-400" />}
+                >
+                    <div className="p-4">
+                        <div className="mb-4 flex items-center justify-between gap-4">
+                            <Input
+                                placeholder={t("Search checklists...")}
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                prefix={<Search className="w-4 h-4 text-gray-400" />}
+                                className="w-full h-10"
+                                size="large"
+                            />
+                            <CreateChecklist refetchChecklist={refetchChecklist} />
+                        </div>
+
+                        <Tabs
+                            activeKey={activeTab}
+                            onChange={setActiveTab}
+                            items={tabItems}
                             size="large"
+                            tabBarStyle={{
+                                padding: "0 24px",
+                                background: theme === "dark" ? "#374151" : "white",
+                                color: theme === "dark" ? "#f3f4f6" : "#111827"
+                            }}
                         />
-                        <CreateChecklist refetchChecklist={refetchChecklist} />
                     </div>
-
-                    <Tabs
-                        activeKey={activeTab}
-                        onChange={setActiveTab}
-                        items={tabItems}
-                        size="large"
-                        tabBarStyle={{ padding: "0 24px", background: "white" }}
-                    />
-                </div>
-            </Modal>
-        </div>
+                </Modal>
+            </div>
+        </ConfigProvider>
     );
 };
 
