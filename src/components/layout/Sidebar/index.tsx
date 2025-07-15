@@ -4,10 +4,10 @@ import {
   BarChart3,
   Users,
   Trophy,
-  ClipboardCheck,
+  // ClipboardCheck,
   Settings as SettingsIcon,
-  UserSquare2,
-  UserRoundCheck,
+  // UserSquare2,
+  // UserRoundCheck,
   ChevronLeft,
   ChevronRight,
   LayoutDashboardIcon,
@@ -57,11 +57,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   // Menu items with Settings moved to the bottom
   const menuItems = [
     { path: '/', icon: BarChart3, label: t('Overall Dashboard') },
-    { path: '/pm/statistics', icon: UserSquare2, label: t('SDR Dashboard') },
+    // { path: '/pm/statistics', icon: UserSquare2, label: t('SDR Dashboard') },
     { path: '/pm/leads', icon: Users, label: t('Leads') },
     { path: '/pm/leaderboard', icon: Trophy, label: t('Leaderboard') },
-    { path: '/pm/operators', icon: UserRoundCheck, label: t('Operators') },
-    { path: '/pm/qa', icon: ClipboardCheck, label: t('Quality Assurance') },
+    // { path: '/pm/operators', icon: UserRoundCheck, label: t('Operators') },
+    // { path: '/pm/qa', icon: ClipboardCheck, label: t('Quality Assurance') },
     { path: "/pm/qadashboard", icon: LayoutDashboardIcon, label: t('QA Dashboard') },
   ];
 
