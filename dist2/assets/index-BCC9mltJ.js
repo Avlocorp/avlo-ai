@@ -1,6 +1,0 @@
-import{z as p,r as l,W as g,j as n}from"./index-DPJpM76q.js";import{i as t}from"./index-Bu88h86I.js";import{a as f}from"./index-BV9ecpN8.js";import{B as x}from"./button-lO7XdXyl.js";/**
- * @license lucide-react v0.474.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */const d=[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20",key:"13o1zl"}],["path",{d:"M2 12h20",key:"9i4pu4"}]],y=p("Globe",d);function j({width:a,height:s}){var c;const[o,i]=l.useState(t.language||g.get("i18nextLng")||"uz");l.useEffect(()=>{const e=m=>{i(m)};return t.on("languageChanged",e),()=>{t.off("languageChanged",e)}},[]);const r=[{key:"uz",label:"O‘zbek"},{key:"en",label:"English"},{key:"ru",label:"Русский"}],u=async({key:e})=>{e!==o&&(await t.changeLanguage(e),g.set("i18nextLng",e))};return n.jsx(f,{menu:{items:r,onClick:u},trigger:["click"],destroyPopupOnHide:!0,children:n.jsxs(x,{className:`h-8 flex items-center justify-center gap-2 ${a?`w-[${a}]`:""}`,style:{...a?{width:a}:{},...s?{height:s}:{}},children:[n.jsx(y,{className:"w-4 h-4"}),n.jsx("p",{children:((c=r.find(e=>e.key===o))==null?void 0:c.label)||"Tilni tanlang"})]})})}export{j as L};

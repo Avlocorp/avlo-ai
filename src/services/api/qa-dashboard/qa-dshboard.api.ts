@@ -2,7 +2,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import config, { ACCESS_TOKEN_KEY } from "config";
 import storage from "services/storage";
-import {
+import type {
+  AudioListResponse,
   ChecklistResponse,
   CriteriaListResponse,
   MetricsResponse,
@@ -21,7 +22,7 @@ export const qadashboardApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Checklist", "Criteria", "Metrics", "Status"],
+  tagTypes: ["Checklist", "Criteria", "Metrics", "Status", "Audio"], // Added "Audio" tag type
   endpoints: (builder) => ({
     // ✅ Get Status List
     getStatusList: builder.query<
@@ -34,7 +35,6 @@ export const qadashboardApi = createApi({
       }),
       providesTags: ["Status"],
     }),
-
     // ✅ Get Checklist List
     getCheckList: builder.query<ResponseCheckList, void>({
       query: () => ({
@@ -42,7 +42,6 @@ export const qadashboardApi = createApi({
       }),
       providesTags: ["Checklist"],
     }),
-
     // ✅ Update Status
     updateStatus: builder.mutation<
       void,
@@ -55,7 +54,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Status"],
     }),
-
     // ✅ Create Checklist
     createChechlist: builder.mutation<
       ChecklistResponse,
@@ -68,7 +66,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Checklist"],
     }),
-
     // ✅ Update Checklist
     updateChecklist: builder.mutation<
       void,
@@ -81,7 +78,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Checklist"],
     }),
-
     // ✅ Delete Checklist
     deleteChecklist: builder.mutation<void, { checklist_id: number }>({
       query: ({ checklist_id }) => ({
@@ -90,7 +86,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Checklist", "Metrics"],
     }),
-
     // ✅ Create Criterion
     createCriteria: builder.mutation<
       void,
@@ -103,7 +98,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Criteria", "Metrics"],
     }),
-
     // ✅ Get Criteria List
     getCriteriaList: builder.query<
       CriteriaListResponse,
@@ -115,7 +109,6 @@ export const qadashboardApi = createApi({
       }),
       providesTags: ["Criteria"],
     }),
-
     // ✅ Update Criterion
     updateCriteria: builder.mutation<
       void,
@@ -128,7 +121,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Criteria", "Metrics"],
     }),
-
     // ✅ Delete Criterion
     deleteCriteria: builder.mutation<void, { criteria_id: number }>({
       query: ({ criteria_id }) => ({
@@ -137,7 +129,6 @@ export const qadashboardApi = createApi({
       }),
       invalidatesTags: ["Criteria", "Metrics"],
     }),
-
     // ✅ Get All Checklists
     getAllCheckList: builder.query<ResponseCheckList, {}>({
       query: () => ({
@@ -145,7 +136,6 @@ export const qadashboardApi = createApi({
       }),
       providesTags: ["Checklist"],
     }),
-
     // ✅ Get Metrics with Date Range Support
     getMetrics: builder.query<
       MetricsResponse,
@@ -158,7 +148,6 @@ export const qadashboardApi = createApi({
     >({
       query: ({ checklist_id, operator_id, start_date, end_date }) => {
         const params = new URLSearchParams();
-
         if (checklist_id !== undefined) {
           params.append("checklist_id", checklist_id.toString());
         }
@@ -171,13 +160,36 @@ export const qadashboardApi = createApi({
         if (end_date) {
           params.append("end_date", end_date);
         }
-
         return {
           url: `api/stats/checklist_check/?${params.toString()}`,
           method: "GET",
         };
       },
       providesTags: ["Metrics"],
+    }),
+    // ✅ Get Audio List with Pagination and Filters
+    getAudioList: builder.query<
+      AudioListResponse,
+      {
+        checklist_id: number;
+        start_date: string;
+        end_date: string;
+        operator_id?: number;
+        page?: number; // Added page parameter
+        per_page?: number; // Added per_page parameter
+      }
+    >({
+      query: ({ page = 1, per_page = 10 }) => {
+        const params = new URLSearchParams();
+
+        params.append("page", page.toString()); // Append page
+        params.append("per_page", per_page.toString()); // Append per_page
+        return {
+          url: `/api/audios/?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Audio"], // Changed to "Audio" tag
     }),
   }),
 });
@@ -195,4 +207,5 @@ export const {
   useDeleteCriteriaMutation,
   useGetAllCheckListQuery,
   useGetMetricsQuery,
+  useGetAudioListQuery,
 } = qadashboardApi;

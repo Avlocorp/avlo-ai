@@ -424,7 +424,7 @@ export default function BusinessDashboard() {
                         <AnalyticsCard
                             icon={<Headset height={36} width={36} style={{ color: "#4338ca" }} />}
                             title={t("Number of minutes analyzed")}
-                            value={totalTalk ? `${Math.floor(totalTalk?.total_duration / 60)} min` : "0 min"}
+                            value={totalTalk ? `${Math.floor(totalTalk?.total_duration || 0 / 60)} min` : "0 min"}
                             description={t("Total audio minutes analyzed during the selected period")}
                             borderColor="border-indigo-500"
                         />
@@ -470,4 +470,3 @@ export default function BusinessDashboard() {
         </ConfigProvider>
     )
 }
-//notification hide

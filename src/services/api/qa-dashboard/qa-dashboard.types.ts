@@ -149,3 +149,36 @@ export interface MetricsFilters {
   start_date?: string;
   end_date?: string;
 }
+
+export interface AudioListResponse {
+  all_data: number;
+  page: number;
+  per_page: number;
+  data: audio[];
+  last_page: number;
+  next_page_url: string;
+  prev_page_url: string;
+  foreignKeys: string[];
+  from: number;
+  to: number;
+}
+
+export interface audio {
+  id: number;
+  operator_id: number;
+  name: string;
+  audio_id: string;
+  phone: string;
+  download_link: string;
+  detail_link: string;
+  size: string;
+  file_upload_date: string;
+  duration: string;
+  lead_id: string;
+  crm_entity_type: string;
+  created_at: string;
+  updated_at: string;
+  call_date: string;
+  analysed: boolean;
+  status: string;
+}
