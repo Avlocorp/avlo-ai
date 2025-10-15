@@ -4,6 +4,9 @@ export interface Operator {
   last_name: string;
   email: string;
   all_calls?: number;
+  successful_calls?: number;
+  all_calls_count?: number;
+  analysed_calls_count?: number;
   avarege_score?: {
     successfully_calls?: number;
     unsuccessfully_calls?: number;

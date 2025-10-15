@@ -1,80 +1,82 @@
+import { useNavigate } from "react-router-dom"
 import { Operator, TableData } from "../types/operators.types"
-import { formatNumber } from "components/lib/utils"
-import { useTranslation } from "react-i18next"
+import { useTheme } from "services/contexts/ThemeContext"
 
 interface OperatorTableRowProps {
     operator: Operator
-    tableData: TableData
+    tableData?: TableData
     isSelected: boolean
     onSelect: (operatorId: number) => void
+    index: number
 }
-
-export const OperatorTableRow = ({ operator, tableData, isSelected, onSelect }: OperatorTableRowProps) => {
-    const { t } = useTranslation()
-
-    const percentage = (tableData.agreedPrice === "-" || tableData.totalPrice === "-")
-        ? 0
-        : isFinite((Number(tableData.totalPrice) / Number(tableData.agreedPrice)) * 100)
-            ? (Number(tableData.totalPrice) / Number(tableData.agreedPrice)) * 100
-            : 0
-
-    const LoadingCell = () => (
-        <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <div className="animate-pulse bg-gray-200 h-4 w-8 rounded"></div>
-        </div>
-    )
+export const OperatorTableRow = ({
+    operator,
+    isSelected,
+    index,
+}: OperatorTableRowProps) => {
+    const { theme } = useTheme()
+    const navigate = useNavigate()
 
     return (
         <tr
-            className={`hover:bg-gray-50 transition-colors cursor-pointer ${isSelected ? "bg-blue-50 border-l-4 border-blue-500" : ""
-                }`}
-            onClick={() => onSelect(operator.id)}
+            className="cursor-pointer transition-colors duration-150 hover:bg-opacity-50"
+            style={{
+                backgroundColor: isSelected
+                    ? (theme === "dark" ? "#4b5563" : "#f3f4f6")
+                    : "transparent"
+            }}
+            // onMouseEnter={(e) => {
+            //     if (!isSelected) {
+            //         e.currentTarget.style.backgroundColor = theme === "dark" ? "#4b556330" : "#f9fafb"
+            //     }
+            // }}
+            // onMouseLeave={(e) => {
+            //     if (!isSelected) {
+            //         e.currentTarget.style.backgroundColor = "transparent"
+            //     }
+            // }}
+            onClick={() => {
+                navigate(`/pm/agents/${operator.id}`)
+            }}
         >
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {operator.id}
+            <td
+                className="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                style={{ color: theme === "dark" ? "#f3f4f6" : "#111827" }}
+            >
+                {index + 1}
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
-                    <div className="">
-                        <div className="text-sm font-medium text-gray-900">
+                    <div
+                        className="h-10 w-10 rounded-full flex items-center justify-center text-white font-medium text-sm"
+                        style={{ backgroundColor: `hsl(${operator.id * 137.5 % 360}, 50%, 45%)` }}
+                    >
+                        {operator.name.charAt(0)}{operator.last_name?.charAt(0) || ''}
+                    </div>
+                    <div className="ml-4">
+                        <div
+                            className="text-sm font-medium"
+                            style={{ color: theme === "dark" ? "#f3f4f6" : "#111827" }}
+                        >
                             {operator.name} {operator.last_name}
                         </div>
-                        <div className="text-sm text-gray-500">{operator.email}</div>
                     </div>
                 </div>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {tableData.isLoading ? <LoadingCell /> : tableData.totalLeads}
+
+            <td
+                className="px-6 py-4 whitespace-nowrap text-sm"
+                style={{ color: theme === "dark" ? "#d1d5db" : "#6b7280" }}
+            >
+                {operator?.all_calls_count ?? 0}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
-                {tableData.isLoading ? (
-                    <div className="animate-pulse bg-gray-200 h-4 w-12 rounded"></div>
-                ) : (
-                    `${formatNumber(tableData.agreedPrice)} ${t("so'm")}`
-                )}
+            <td
+                className="px-6 py-4 whitespace-nowrap text-sm"
+                style={{ color: theme === "dark" ? "#d1d5db" : "#6b7280" }}
+            >
+                {operator?.analysed_calls_count ?? 0}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                {tableData.isLoading ? (
-                    <div className="animate-pulse bg-gray-200 h-4 w-12 rounded"></div>
-                ) : (
-                    `${formatNumber(tableData.totalPrice)} ${t("so'm")}`
-                )}
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-orange-600">
-                {tableData.isLoading ? (
-                    <div className="animate-pulse bg-gray-200 h-4 w-12 rounded"></div>
-                ) : (
-                    `${formatNumber(tableData.remainingPrice)} ${t("so'm")}`
-                )}
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">
-                {tableData.isLoading ? (
-                    <div className="animate-pulse bg-gray-200 h-4 w-12 rounded"></div>
-                ) : (
-                    `${percentage.toFixed(1)}%`
-                )}
-            </td>
+
         </tr>
     )
 }

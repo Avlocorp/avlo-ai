@@ -99,6 +99,12 @@ export const operatorsApi = createApi({
         url: `api/leads/price/`,
       }),
     }),
+
+    getReloadOperators: builder.query<{ success: boolean }, void>({
+      query: () => ({
+        url: `api/operators/reload/`,
+      }),
+    }),
   }),
 });
 
@@ -111,4 +117,5 @@ export const {
   useGetOperatorsStatisticsQuery,
   useGetOperatorDashboardQuery,
   useGetOperatorDashboardStaticsQuery,
+  useGetReloadOperatorsQuery,
 } = operatorsApi;

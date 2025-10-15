@@ -14,6 +14,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { storage } from "services";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "config";
+import { operatorsApi } from "services/api/operators/operators.api";
 
 export default function LoginForm() {
   const [loginPost, { isLoading: isFormSubmitting }] = useLoginMutation();
@@ -27,7 +28,11 @@ export default function LoginForm() {
       storage.set(ACCESS_TOKEN_KEY, response.access);
       storage.set(REFRESH_TOKEN_KEY, response.refresh);
 
+
       dispatch(authApi.util.resetApiState());
+      dispatch(
+        operatorsApi.endpoints.getReloadOperators.initiate(undefined, { forceRefetch: true })
+      );
       navigate("/");
     } catch (error) {
       const err = error as ResponseError;

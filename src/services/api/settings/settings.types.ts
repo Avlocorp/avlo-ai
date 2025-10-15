@@ -42,3 +42,30 @@ export interface SettingsResponse {
   from: number;
   to: number;
 }
+
+export interface OperatorDetailResponse {
+  id: number;
+  operator_id: string;
+  name: string;
+  last_name: string;
+  second_name: any;
+  email: string;
+  birthday: any;
+  user_type: string;
+  work_position: any;
+  mobile_phone: any;
+  uf_phone_inner: string;
+  photo: any;
+  company: Company;
+  analysed_data: AnalysedData;
+}
+
+export interface Company {
+  id: number;
+  name: string;
+}
+
+export interface AnalysedData {
+  top_strengths: string[];
+  top_weaknesses: string[];
+}

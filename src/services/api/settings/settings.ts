@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { ACCESS_TOKEN_KEY } from "config";
 import storage from "services/storage";
-import { SettingsResponse } from "./settings.types";
+import { OperatorDetailResponse, SettingsResponse } from "./settings.types";
 
 export const settingsApi = createApi({
   reducerPath: "settingsApi",
@@ -43,8 +43,17 @@ export const settingsApi = createApi({
         method: "GET",
       }),
     }),
+    getDetailOperator: builder.query<OperatorDetailResponse, { id: number }>({
+      query: ({ id }) => ({
+        url: `api/operators/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetSettingResponseMutation, useGetOperatorListQuery } =
-  settingsApi;
+export const {
+  useGetSettingResponseMutation,
+  useGetOperatorListQuery,
+  useGetDetailOperatorQuery,
+} = settingsApi;

@@ -7,6 +7,9 @@ import type {
   DealsListResponse,
   LeadsQueryParams,
   DealsQueryParams,
+  LeadsNewQueryParams,
+  ResponseNewLeads,
+  ResponseDetailLead,
 } from "./leads.types";
 
 export const leadsApi = createApi({
@@ -57,6 +60,62 @@ export const leadsApi = createApi({
           time: response.time || defaultTime(),
         };
       },
+    }),
+
+    getLeadsListNew: builder.query<ResponseNewLeads, LeadsNewQueryParams>({
+      query: ({
+        page,
+        search,
+        limit = 50,
+        status_id,
+        responsible_user_id,
+        operator_id,
+        from,
+        until,
+        sort,
+        analysed,
+        field = "created_date",
+      }) => ({
+        url: "/api/stats/",
+        method: "POST",
+        params: {
+          page,
+          per_page: limit, // ✅ chunki sizda `per_page` ishlatiladi
+          ...(search && { search }),
+          ...(operator_id && { "filter[operator_id]": operator_id }),
+          ...(status_id && { "filter[status_id]": status_id }),
+          ...(responsible_user_id && { responsible_user_id }),
+          ...(from && { from }),
+          ...(until && { until }),
+          ...(field && { field }),
+          ...(analysed && { analysed }),
+          ...(sort && { sort }),
+
+          include: "operator",
+        },
+      }),
+      providesTags: ["Lead"],
+      transformResponse: (response: any): ResponseNewLeads => {
+        return {
+          all_data: response.all_data,
+          page: response.page,
+          per_page: response.per_page,
+          data: response.data || [],
+          last_page: response.last_page,
+          next_page_url: response.next_page_url,
+          prev_page_url: response.prev_page_url,
+          foreignKeys: response.foreignKeys || [],
+          from: response.from,
+          to: response.to,
+          sort: response.sort || [],
+        };
+      },
+    }),
+    getDetailLead: builder.query<ResponseDetailLead, { leadId: number }>({
+      query: ({ leadId }) => `/api/stats/${leadId}`,
+      providesTags: (_result, _error, { leadId }) => [
+        { type: "Lead", id: leadId },
+      ],
     }),
 
     getDealsList: builder.query<DealsListResponse, DealsQueryParams>({
@@ -125,6 +184,13 @@ export const leadsApi = createApi({
         },
       }),
     }),
+
+    getLeadAnalysis: builder.query<any, number>({
+      query: (leadId) => ({
+        url: `/api/leads/analyse/${leadId}`,
+        // {{url}}/api/leads/analyse/19659
+      }),
+    }),
   }),
 });
 
@@ -147,4 +213,7 @@ export const {
   useUpdateLeadMutation,
   useDeleteLeadMutation,
   useGetSingleStatusQuery,
+  useGetLeadsListNewQuery,
+  useLazyGetLeadAnalysisQuery,
+  useGetDetailLeadQuery,
 } = leadsApi;

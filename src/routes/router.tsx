@@ -4,6 +4,8 @@ import LayoutComponent from "components/layout";
 import PrivateRoute from "components/private-route";
 import { lazy, Suspense } from "react";
 import { useTheme } from "services/contexts/ThemeContext";
+import AgentsDashboard from "modules/Agents";
+import DetailAgents from "modules/operators/components/detail-agents";
 
 const History = lazy(() => import("modules/History"));
 const Settings = lazy(() => import("modules/settings/index"));
@@ -96,6 +98,9 @@ const router = createBrowserRouter([
           { path: "leaderboard", element: <LeaderboardPage /> },
           { path: "qa", element: <QaPage /> },
           { path: "qadashboard", element: <QAdashboard /> },
+          { path: "agents", element: <AgentsDashboard /> },
+          { path: "agents/:id", element: <DetailAgents /> }
+
         ],
       },
     ],
